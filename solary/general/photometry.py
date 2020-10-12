@@ -1,0 +1,1 @@
+import configparserimport mathdef appmag2irr(app_mag):        config = configparser.ConfigParser()    config.read('_config/constants.ini')    appmag_irr_i0 = float(config['photometry']['appmag_irr_i0'])        irradiance = 10.0 ** (-0.4 * app_mag + math.log10(appmag_irr_i0))        return irradiance

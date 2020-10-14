@@ -40,3 +40,15 @@ def test_reduc_mag():
 
     red_mag2 = solary.general.photometry.reduc_mag(abs_mag=0, slope_g=0.15, phase_angle=math.pi/2.0)
     assert red_mag2 == 3.178249562605391
+
+# def test_hg_app_mag():
+    
+#     vec_obj1 = [2.0, 0.0, 0.0]
+#     vec_obs1 = [1.0, 0.0, 0.0]
+    
+#     vec_obj2obs1 = 
+    
+#     app_mag1 = solary.general.photometry.hg_app_mag(abs_mag=0.0, \
+#                                                     slope_g=0.15, \
+#                                                     vec_obj2obs=[], \
+#                                                     vec_obj2ill)

@@ -58,3 +58,13 @@ def test_phase_angle():
     angle_res3 = solary.general.vec.phase_angle(vector1=[1.0, 0.0], \
                                                 vector2=[1.0, 0.0])
     assert angle_res3 == 0.0
+
+def test_substract():
+    
+    vec_diff1 = solary.general.vec.substract(vector1=[4.0, 7.0], \
+                                             vector2=[5.0, 1.0])
+    assert vec_diff1 == [-1.0, 6.0]
+
+    vec_diff2 = solary.general.vec.substract(vector1=[-4.0, -4.0], \
+                                             vector2=[-5.0, 9.0])
+    assert vec_diff2 == [1.0, -13.0]

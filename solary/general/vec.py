@@ -105,3 +105,14 @@ def phase_angle(vector1, vector2):
                           / (norm(vector1) * norm(vector2)))
 
     return angle_rad
+
+def substract(vector1, vector2):
+    
+    diff_vector = []
+    
+    zipped_vector = zip(vector1, vector2)
+
+    for vector1_i, vector2_i in zipped_vector:
+        diff_vector.append(vector1_i - vector2_i)
+    
+    return diff_vector

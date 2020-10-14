@@ -30,3 +30,17 @@ def test_unify():
     
     unit_vec3 = solary.general.vec.unify(vector=[5.0, 5.0, 5.0])
     assert pytest.approx(unit_vec3) == [1.0 / math.sqrt(3), 1.0 / math.sqrt(3), 1.0 / math.sqrt(3)]
+    
+def test_vec_dot_prod():
+    
+    dot_res1 = solary.general.vec.dot_prod(vector1=[1.0, 2.0, 3.0], \
+                                           vector2=[-2.0, 5.0, 8.0])
+    assert dot_res1 == 32.0
+
+    dot_res2 = solary.general.vec.dot_prod(vector1=[-10.0, 20.0], \
+                                           vector2=[-1.0, 0.0])
+    assert dot_res2 == 10.0
+
+    dot_res3 = solary.general.vec.dot_prod(vector1=[23.0, 10.0], \
+                                           vector2=[2.0, 0.01])
+    assert dot_res3 == 46.1

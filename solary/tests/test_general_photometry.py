@@ -32,3 +32,11 @@ def test_phase_func():
     
     phi2_res2 = solary.general.photometry.phase_func(index=2, phase_angle=math.pi/2.0)
     assert phi2_res2 == 0.15412366181513143
+    
+def test_reduc_mag():
+    
+    red_mag1 = solary.general.photometry.reduc_mag(abs_mag=0, slope_g=0.15, phase_angle=0.0)
+    assert red_mag1 == 0.0
+
+    red_mag2 = solary.general.photometry.reduc_mag(abs_mag=0, slope_g=0.15, phase_angle=math.pi/2.0)
+    assert red_mag2 == 3.178249562605391

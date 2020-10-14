@@ -44,3 +44,17 @@ def test_vec_dot_prod():
     dot_res3 = solary.general.vec.dot_prod(vector1=[23.0, 10.0], \
                                            vector2=[2.0, 0.01])
     assert dot_res3 == 46.1
+    
+def test_vec_phase_angle():
+
+    angle_res1 = solary.general.vec.phase_angle(vector1=[1.0, 0.0], \
+                                                vector2=[0.0, 1.0])
+    assert angle_res1 == math.pi / 2.0
+    
+    angle_res2 = solary.general.vec.phase_angle(vector1=[1.0, 0.0], \
+                                                vector2=[-1.0, 0.0])
+    assert angle_res2 == math.pi
+    
+    angle_res3 = solary.general.vec.phase_angle(vector1=[1.0, 0.0], \
+                                                vector2=[1.0, 0.0])
+    assert angle_res3 == 0.0

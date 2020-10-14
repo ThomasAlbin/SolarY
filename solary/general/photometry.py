@@ -69,3 +69,12 @@ def phase_func(index, phase_angle):
 
     # Return the phase function result
     return phi
+
+def reduc_mag(abs_mag, phase_angle, slope_g = 0.15):
+    
+    reduced_magnitude = abs_mag - 2.5 * math.log10((1.0 - slope_g) \
+                                                   * phase_func(index=1, phase_angle=phase_angle) \
+                                                   + slope_g \
+                                                   * phase_func(index=2, phase_angle=phase_angle))  
+
+    return reduced_magnitude

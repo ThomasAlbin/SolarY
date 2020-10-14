@@ -78,3 +78,4 @@ def reduc_mag(abs_mag, phase_angle, slope_g = 0.15):
                                                    * phase_func(index=2, phase_angle=phase_angle))  
 
     return reduced_magnitude
+

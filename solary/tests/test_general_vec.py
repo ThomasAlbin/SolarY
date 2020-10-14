@@ -31,7 +31,7 @@ def test_unify():
     unit_vec3 = solary.general.vec.unify(vector=[5.0, 5.0, 5.0])
     assert pytest.approx(unit_vec3) == [1.0 / math.sqrt(3), 1.0 / math.sqrt(3), 1.0 / math.sqrt(3)]
     
-def test_vec_dot_prod():
+def test_dot_prod():
     
     dot_res1 = solary.general.vec.dot_prod(vector1=[1.0, 2.0, 3.0], \
                                            vector2=[-2.0, 5.0, 8.0])
@@ -45,7 +45,7 @@ def test_vec_dot_prod():
                                            vector2=[2.0, 0.01])
     assert dot_res3 == 46.1
     
-def test_vec_phase_angle():
+def test_phase_angle():
 
     angle_res1 = solary.general.vec.phase_angle(vector1=[1.0, 0.0], \
                                                 vector2=[0.0, 1.0])

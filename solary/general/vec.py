@@ -116,3 +116,9 @@ def substract(vector1, vector2):
         diff_vector.append(vector1_i - vector2_i)
     
     return diff_vector
+
+def inverse(vector):
+    
+    inv_vector = [-1.0 * vector_elem for vector_elem in vector]
+    
+    return inv_vector

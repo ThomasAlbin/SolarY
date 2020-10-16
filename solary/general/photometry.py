@@ -6,6 +6,8 @@ TBD
 import configparser
 import math
 
+import solary
+
 def appmag2irr(app_mag):
     """
     Convert the apparent magnitude to the corresponding irradiance given in
@@ -79,3 +81,15 @@ def reduc_mag(abs_mag, phase_angle, slope_g = 0.15):
 
     return reduced_magnitude
 
+def hg_app_mag(abs_mag, vec_obj2obs, vec_obj2ill, slope_g=0.15):
+
+    vec_obj2obs_norm = solary.general.vec.norm(vec_obj2obs)
+    vec_obj2ill_norm = solary.general.vec.norm(vec_obj2ill)
+
+    obj_phase_angle = solary.general.vec.phase_angle(vec_obj2obs, vec_obj2ill)
+
+    red_mag = reduc_mag(abs_mag, obj_phase_angle, slope_g)
+
+    app_mag = red_mag + 5.0 * math.log10(vec_obj2obs_norm * vec_obj2ill_norm)
+
+    return app_mag

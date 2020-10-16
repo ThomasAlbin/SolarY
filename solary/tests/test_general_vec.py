@@ -68,3 +68,11 @@ def test_substract():
     vec_diff2 = solary.general.vec.substract(vector1=[-4.0, -4.0], \
                                              vector2=[-5.0, 9.0])
     assert vec_diff2 == [1.0, -13.0]
+
+def test_inverse():
+    
+    inverse_vec1 = solary.general.vec.inverse(vector=[1.0, 5.0])
+    assert inverse_vec1 == [-1.0, -5.0]
+
+    inverse_vec2 = solary.general.vec.inverse(vector=[-5.1, -100.0, 0.0])
+    assert inverse_vec2 == [5.1, 100.0, 0.0]

@@ -108,17 +108,20 @@ def phase_angle(vector1, vector2):
 
 def substract(vector1, vector2):
     
+    # Set an empty list for the vector difference / substraction
     diff_vector = []
-    
+
+    # Zip both input vector
     zipped_vector = zip(vector1, vector2)
 
+    # Iterate through all elements and compute the substraction
     for vector1_i, vector2_i in zipped_vector:
         diff_vector.append(vector1_i - vector2_i)
     
     return diff_vector
 
 def inverse(vector):
-    
+
     inv_vector = [-1.0 * vector_elem for vector_elem in vector]
     
     return inv_vector

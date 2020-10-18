@@ -122,6 +122,7 @@ def substract(vector1, vector2):
 
 def inverse(vector):
 
+    # Inverse the vector element entries by multiplying -1.0 to each element
     inv_vector = [-1.0 * vector_elem for vector_elem in vector]
     
     return inv_vector

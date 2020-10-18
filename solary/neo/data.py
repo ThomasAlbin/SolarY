@@ -2,7 +2,7 @@ import urllib.request
 import os
 import time
 
-def download(filename='_data/neo_data_neodys.cat', integrity_chk=True):
+def download(filename='_data/neo_data_neodys.cat'):
     
     downl_file_path, _ = \
         urllib.request.urlretrieve(url='https://newton.spacedys.com/~neodys2/neodys.cat', \
@@ -12,6 +12,7 @@ def download(filename='_data/neo_data_neodys.cat', integrity_chk=True):
     file_mod_time = os.path.getmtime(downl_file_path)
     
     file_mod_diff = file_mod_time - system_time
+    
     if file_mod_diff < 5:
         dl_status = 'OK'
     else:

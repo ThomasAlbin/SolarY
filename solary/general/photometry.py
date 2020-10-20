@@ -54,6 +54,10 @@ def phase_func(index, phase_angle):
     phi : float
         Phase function result.
 
+    See Also
+    --------
+    hg_app_mag : Computing the visual / apparent magnitude of an object
+
     References
     ----------
     [1] https://www.britastro.org/asteroids/dymock4.pdf
@@ -72,24 +76,86 @@ def phase_func(index, phase_angle):
     # Return the phase function result
     return phi
 
-def reduc_mag(abs_mag, phase_angle, slope_g = 0.15):
-    
+def reduc_mag(abs_mag, phase_angle, slope_g=0.15):
+    """
+    Function to compute the reduced magnitude of an object. This function is needed for the
+    H-G visual / apparent magnitude function. See [1]
+
+    Parameters
+    ----------
+    abs_mag : float
+        Absolute magnitude of the object.
+    phase_angle : float
+        Phase angle of the object w.r.t. the illumination source and observer.
+    slope_g : float, optional
+        Slope parameter G for the reduced magnitude. The set default value can be applied for
+        asteroids with unknown slope parameter and the interval is (0, 1). The default is 0.15.
+
+    Returns
+    -------
+    reduced_magnitude : float
+        Reduced magnitude of the object.
+
+    See Also
+    --------
+    hg_app_mag : Computing the visual / apparent magnitude of an object
+
+    References
+    ----------
+    [1] https://www.britastro.org/asteroids/dymock4.pdf
+
+    """
+
+    # Compute the reduced magnitude based on the equations given in the references [1]
     reduced_magnitude = abs_mag - 2.5 * math.log10((1.0 - slope_g) \
                                                    * phase_func(index=1, phase_angle=phase_angle) \
                                                    + slope_g \
-                                                   * phase_func(index=2, phase_angle=phase_angle))  
+                                                   * phase_func(index=2, phase_angle=phase_angle))
 
     return reduced_magnitude
 
 def hg_app_mag(abs_mag, vec_obj2obs, vec_obj2ill, slope_g=0.15):
+    """
+    Compute the visual / apparent magnitude of an asteroid, based on the H-G system [1], where H
+    represents the absolute magnitude and G represents the magnitude slope parameter.
 
+    Parameters
+    ----------
+    abs_mag : float
+        Absolute magnitude.
+    vec_obj2obs : list
+        3 dimensional vector the contains the directional information (x, y, z) from the asteroid
+        to the observer given in AU.
+    vec_obj2ill : TYPE
+        3 dimensional vector the contains the directional information (x, y, z) from the asteroid
+        to the illumination source given in AU.
+    slope_g : float, optional
+        Slope parameter G for the reduced magnitude. The set default value can be applied for
+        asteroids with unknown slope parameter and the interval is (0, 1). The default is 0.15.
+
+    Returns
+    -------
+    app_mag : float
+        Apparent / visual (bolometric) magnitude of the asteroid as seen from the observer.
+
+    References
+    ----------
+    [1] https://www.britastro.org/asteroids/dymock4.pdf
+
+    """
+
+    # Compute the length of the two input vectors
     vec_obj2obs_norm = solary.general.vec.norm(vec_obj2obs)
     vec_obj2ill_norm = solary.general.vec.norm(vec_obj2ill)
 
+    # Compute the phase angle of the asteroid
     obj_phase_angle = solary.general.vec.phase_angle(vec_obj2obs, vec_obj2ill)
 
+    # Compute the reduced magnitude of the asteroid
     red_mag = reduc_mag(abs_mag, obj_phase_angle, slope_g)
 
+    # Merge all information and compute the apparent magnitude of the asteroid as seen from the
+    # observer
     app_mag = red_mag + 5.0 * math.log10(vec_obj2obs_norm * vec_obj2ill_norm)
 
     return app_mag

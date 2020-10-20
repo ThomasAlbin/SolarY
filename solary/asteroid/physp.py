@@ -8,19 +8,19 @@ import math
 
 def ast_size(albedo, abs_mag):
     """
-    TBD
+    Compute the radius of an asteroid by using the asteroid's albedo and absolute magnitude.
 
     Parameters
     ----------
-    albedo : TYPE
-        DESCRIPTION.
-    abs_mag : TYPE
-        DESCRIPTION.
+    albedo : float
+        Albedo of the object ranging within the intervall (0, 1].
+    abs_mag : float
+        Absolute magnitude of the object.
 
     Returns
     -------
-    radius : TYPE
-        DESCRIPTION.
+    radius : float
+        Radius of the object given in meter.
 
     References
     ----------

@@ -6,7 +6,11 @@ Miscellaneous functions regarding astro-dynamical topics can be found here.
 
 # Import standard modules
 import configparser
+import importlib.resources
 import math
+
+# Import the config sub-module
+from solary import _config
 
 def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
     """
@@ -43,7 +47,8 @@ def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
     # semi-major axis can be found in the config file
     if not sem_maj_axis_planet:
         config = configparser.ConfigParser()
-        config.read('_config/constants.ini')
+        config_path_io = importlib.resources.open_binary(_config, 'constants.ini')
+        config.read(config_path_io.name)
         sem_maj_axis_planet = float(config['planets']['sem_maj_axis_jup'])
 
     # Compute the tisserand parameter

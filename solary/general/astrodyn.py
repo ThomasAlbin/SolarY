@@ -51,3 +51,27 @@ def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
                           * math.sqrt((sem_maj_axis_obj / sem_maj_axis_planet) * (1.0 - ecc**2.0))
 
     return tisserand_parameter
+
+def kep_apoapsis(sem_maj_axis, ecc):
+
+    apsis = (1.0 + ecc) * sem_maj_axis
+
+    return apsis
+
+def kep_periapsis(sem_maj_axis, ecc):
+
+    apsis = (1.0 - ecc) * sem_maj_axis
+
+    return apsis
+
+def mjd2jd(m_juldate):
+
+    juldate = m_juldate + 2400000.5
+
+    return juldate
+
+def jd2mjd(juldate):
+
+    m_juldate = juldate - 2400000.5
+
+    return m_juldate

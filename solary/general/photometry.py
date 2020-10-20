@@ -1,11 +1,14 @@
 """
-TBD
+photometry.py
+
+This module contains functions for photometric purposes
 """
 
 # Import standard modules
 import configparser
 import math
 
+# Import solary
 import solary
 
 def appmag2irr(app_mag):

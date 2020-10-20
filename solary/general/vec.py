@@ -2,7 +2,6 @@
 vec.py
 
 Auxiliary function for vector computations
-
 """
 
 # Import standard libraries
@@ -107,7 +106,25 @@ def phase_angle(vector1, vector2):
     return angle_rad
 
 def substract(vector1, vector2):
-    
+    """
+    This function substracts the vector elements of one list with the elements of another list.
+    Alternatively, one can use the Numpy library and Numpy arrays without using this function at
+    all.
+
+    Parameters
+    ----------
+    vector1 : list
+        Input vector #1 of any dimensionality.
+    vector2 : list
+        Input vector #2 with the same dimensionality as vector1.
+
+    Returns
+    -------
+    diff_vector : list
+        Difference vector with the same dimensionality as vector1.
+
+    """
+
     # Set an empty list for the vector difference / substraction
     diff_vector = []
 
@@ -117,12 +134,26 @@ def substract(vector1, vector2):
     # Iterate through all elements and compute the substraction
     for vector1_i, vector2_i in zipped_vector:
         diff_vector.append(vector1_i - vector2_i)
-    
+
     return diff_vector
 
 def inverse(vector):
+    """
+    Inverse the vector's elements. Alternatively, apply -1 on a Numpy array.
+
+    Parameters
+    ----------
+    vector : list
+        Input vector of any dimensionality.
+
+    Returns
+    -------
+    inv_vector : TYPE
+        Inverse output vector with the same dimensionality as vector.
+
+    """
 
     # Inverse the vector element entries by multiplying -1.0 to each element
     inv_vector = [-1.0 * vector_elem for vector_elem in vector]
-    
+
     return inv_vector

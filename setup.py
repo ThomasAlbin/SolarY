@@ -7,6 +7,8 @@ setuptools.setup(
     name="solary",
     version="0.1",
     author="Thomas Albin",
+    packages=setuptools.find_packages(),
+    include_package_data=True,
     description="TBD",
     long_description=long_description,
     url="https://github.com/ThomasAlbin/SolarY",

@@ -8,11 +8,11 @@ setuptools.setup(
     version="0.1",
     author="Thomas Albin",
     packages=setuptools.find_packages(),
+    package_data={'solary': ['_config/constants.ini']},
     include_package_data=True,
     description="TBD",
     long_description=long_description,
     url="https://github.com/ThomasAlbin/SolarY",
-    packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
     ],

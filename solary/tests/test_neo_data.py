@@ -1,14 +1,18 @@
 import solary
 
-def test_download():
+def test__get_neodys_neo_nr():
     
-    # donwload the file and return a check value
-    # perform an assertation test on the very first neo: 433 Eros
-    # maybe also on neodys: check number of rows with number of numbers on website
-    # https://newton.spacedys.com/~neodys2/neodys.cat
+    neo_nr = solary.neo.data._get_neodys_neo_nr()
+    assert type(neo_nr) == int
+    assert neo_nr >= 0
+
+def test_download():
     
     dl_status = solary.neo.data.download()
     assert dl_status == 'OK'
-
-    dl_status = solary.neo.data.download(filename='_data/neodys_test.cat')
-    assert dl_status == 'OK'
+    
+# def test_neo_sqlite_db():
+    
+#     neo_sqlite = solary.neo.data.neodys_database()
+    
+#     neo_sqlite.close()

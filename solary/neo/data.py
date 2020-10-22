@@ -14,7 +14,7 @@ def _get_neodys_neo_nr():
 
     return neodys_nr_neos
 
-def download(download_path=None):
+def download(download_path=None, row_exp=None):
     
     FILENAME = 'neodys.cat'
 
@@ -42,8 +42,12 @@ def download(download_path=None):
     else:
         dl_status = 'ERROR'
 
-    return dl_status
-    
+    neodys_neo_nr = None
+    if row_exp:
+        neodys_neo_nr = _get_neodys_neo_nr()
+
+    return dl_status, neodys_neo_nr
+
 class neodys_database:
     
     def __init__(self, db_name):

@@ -25,7 +25,7 @@ def download(download_path=None, row_exp=None):
         
     else:
 
-        download_filename = os.path.join(download_path, '_data', FILENAME)
+        download_filename = os.path.join(os.getcwd(), download_path, FILENAME)
 
         
     downl_file_path, _ = \
@@ -47,6 +47,38 @@ def download(download_path=None, row_exp=None):
         neodys_neo_nr = _get_neodys_neo_nr()
 
     return dl_status, neodys_neo_nr
+
+def read(path=None):
+    
+    FILENAME = 'neodys.cat'
+
+    if not path:
+
+        module_path = os.path.dirname(__file__)
+        path_filename = os.path.join(module_path, '_data', FILENAME)
+
+    else:
+        
+        path_filename = os.path.join(os.getcwd(), path, FILENAME)
+
+    neo_dict = []
+    with open(path_filename) as f_temp:
+        neo_data = f_temp.readlines()[6:]
+        
+        for neo_data_line_f in neo_data:
+            neo_data_line = neo_data_line_f.split()
+            neo_dict.append({'Name': neo_data_line[0].replace('\'', ''), \
+                             'Epoch_[MJD]': float(neo_data_line[1]), \
+                             'Sem-Maj_Axis_[AU]': float(neo_data_line[2]), \
+                             'Ecc_[]': float(neo_data_line[3]), \
+                             'Incl_[deg]': float(neo_data_line[4]), \
+                             'Long_Asc_Node_[deg]': float(neo_data_line[5]), \
+                             'Arg_P_[deg]': float(neo_data_line[6]), \
+                             'Mean_Anom_[deg]': float(neo_data_line[7]), \
+                             'Abs_Mag_[]': float(neo_data_line[8]), \
+                             'Slope_Param_G_[]': float(neo_data_line[9])})
+
+    return neo_dict
 
 class neodys_database:
     

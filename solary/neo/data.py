@@ -68,25 +68,79 @@ def read(path=None):
         for neo_data_line_f in neo_data:
             neo_data_line = neo_data_line_f.split()
             neo_dict.append({'Name': neo_data_line[0].replace('\'', ''), \
-                             'Epoch_[MJD]': float(neo_data_line[1]), \
-                             'Sem-Maj_Axis_[AU]': float(neo_data_line[2]), \
-                             'Ecc_[]': float(neo_data_line[3]), \
-                             'Incl_[deg]': float(neo_data_line[4]), \
-                             'Long_Asc_Node_[deg]': float(neo_data_line[5]), \
-                             'Arg_P_[deg]': float(neo_data_line[6]), \
-                             'Mean_Anom_[deg]': float(neo_data_line[7]), \
-                             'Abs_Mag_[]': float(neo_data_line[8]), \
-                             'Slope_Param_G_[]': float(neo_data_line[9])})
+                             'Epoch_MJD': float(neo_data_line[1]), \
+                             'SemMajAxis_AU': float(neo_data_line[2]), \
+                             'Ecc_': float(neo_data_line[3]), \
+                             'Incl_deg': float(neo_data_line[4]), \
+                             'LongAscNode_deg': float(neo_data_line[5]), \
+                             'ArgP_deg': float(neo_data_line[6]), \
+                             'MeanAnom_deg': float(neo_data_line[7]), \
+                             'AbsMag_': float(neo_data_line[8]), \
+                             'SlopeParamG_': float(neo_data_line[9])})
 
     return neo_dict
 
 class neodys_database:
     
-    def __init__(self, db_name):
+    def __init__(self, db_filepath=None, new=False):
+
+        if not db_filepath:
+    
+            module_path = os.path.dirname(__file__)
+            self.db_filename = os.path.join(module_path, '_databases', 'neo_neodys.db')
+    
+        else:
+            
+            self.db_filename = os.path.join(os.getcwd(), db_filepath)
+
         
-        self.con = sqlite3.connect(db_name)
+        if new and os.path.exists(self.db_filename):
+            os.remove(self.db_filename)
+
+        self.con = sqlite3.connect(self.db_filename)
         self.cur = self.con.cursor()
+
+    def create(self):
         
+        self.cur.execute('CREATE TABLE IF NOT EXISTS main(Name TEXT PRIMARY KEY, ' \
+                                                         'Epoch_MJD FLOAT, ' \
+                                                         'SemMajAxis_AU FLOAT, ' \
+                                                         'Ecc_ FLOAT, ' \
+                                                         'Incl_deg FLOAT, ' \
+                                                         'LongAscNode_deg FLOAT, ' \
+                                                         'ArgP_deg FLOAT, ' \
+                                                         'MeanAnom_deg FLOAT, ' \
+                                                         'AbsMag_ FLOAT, ' \
+                                                         'SlopeParamG_ FLOAT)')
+
+        self.con.commit()
+    
+        
+        neo_test = read()
+
+        self.cur.executemany('INSERT OR IGNORE INTO main(Name, ' \
+                                                        'Epoch_MJD, ' \
+                                                        'SemMajAxis_AU, ' \
+                                                        'Ecc_, ' \
+                                                        'Incl_deg, ' \
+                                                        'LongAscNode_deg, ' \
+                                                        'ArgP_deg, ' \
+                                                        'MeanAnom_deg, ' \
+                                                        'AbsMag_, ' \
+                                                        'SlopeParamG_) ' \
+                                                    'VALUES (:Name, ' \
+                                                            ':Epoch_MJD, ' \
+                                                            ':SemMajAxis_AU, ' \
+                                                            ':Ecc_, ' \
+                                                            ':Incl_deg, ' \
+                                                            ':LongAscNode_deg, ' \
+                                                            ':ArgP_deg, ' \
+                                                            ':MeanAnom_deg, ' \
+                                                            ':AbsMag_, ' \
+                                                            ':SlopeParamG_)', \
+                             neo_test)
+        self.con.commit()
+
     def close(self):
         
         self.con.close()

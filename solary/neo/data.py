@@ -3,6 +3,7 @@ import os
 import re
 import sqlite3
 import time
+import solary
 
 def _get_neodys_neo_nr():
 
@@ -100,6 +101,16 @@ class neodys_database:
         self.con = sqlite3.connect(self.db_filename)
         self.cur = self.con.cursor()
 
+    def _create_col(self, table, col_name, col_type):
+        
+        sql_col_create = f'ALTER TABLE {table} ADD COLUMN {col_name} {col_type}'
+        
+        try:
+            self.cur.execute(sql_col_create)
+            self.con.commit()
+        except sqlite3.OperationalError:
+            pass
+
     def create(self):
         
         self.cur.execute('CREATE TABLE IF NOT EXISTS main(Name TEXT PRIMARY KEY, ' \
@@ -114,9 +125,8 @@ class neodys_database:
                                                          'SlopeParamG_ FLOAT)')
 
         self.con.commit()
-    
-        
-        neo_test = read()
+     
+        _neo_data = read()
 
         self.cur.executemany('INSERT OR IGNORE INTO main(Name, ' \
                                                         'Epoch_MJD, ' \
@@ -138,8 +148,35 @@ class neodys_database:
                                                             ':MeanAnom_deg, ' \
                                                             ':AbsMag_, ' \
                                                             ':SlopeParamG_)', \
-                             neo_test)
+                             _neo_data)
         self.con.commit()
+
+    def create_deriv_orb(self):
+        
+        self._create_col('main', 'Aphel_AU', 'FLOAT')
+        self._create_col('main', 'Perihel_AU', 'FLOAT')
+
+        self.cur.execute('SELECT Name, SemMajAxis_AU, Ecc_ FROM main')
+
+        _neo_data = self.cur.fetchall()
+        
+        _neo_deriv_param_dict = []
+        for _neo_data_line_f in _neo_data:
+            _neo_deriv_param_dict.append({'Name': _neo_data_line_f[0], \
+                                          'Aphel_AU': \
+                                              solary.general.astrodyn.kep_apoapsis( \
+                                                                sem_maj_axis=_neo_data_line_f[1], \
+                                                                ecc=_neo_data_line_f[2] \
+                                                                                  ), \
+                                          'Perihel_AU': \
+                                              solary.general.astrodyn.kep_periapsis( \
+                                                                sem_maj_axis=_neo_data_line_f[1], \
+                                                                ecc=_neo_data_line_f[2] \
+                                                                                  )})
+                
+        self.cur.executemany('UPDATE main SET Aphel_AU = :Aphel_AU, Perihel_AU = :Perihel_AU ' \
+                             'WHERE Name = :Name', _neo_deriv_param_dict)
+        self.con.commit()        
 
     def close(self):
         

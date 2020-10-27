@@ -176,7 +176,7 @@ class neodys_database:
                 
         self.cur.executemany('UPDATE main SET Aphel_AU = :Aphel_AU, Perihel_AU = :Perihel_AU ' \
                              'WHERE Name = :Name', _neo_deriv_param_dict)
-        self.con.commit()        
+        self.con.commit()
 
     def close(self):
         

@@ -9,6 +9,7 @@ parameters of asteroids.
 # Import standard modules
 import math
 
+
 def ast_size(albedo, abs_mag):
     """
     Compute the radius of an asteroid by using the asteroid's albedo and absolute magnitude.

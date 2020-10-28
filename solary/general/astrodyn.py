@@ -10,6 +10,7 @@ import configparser
 import math
 import os
 
+
 def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
     """
     Compute the Tisserand parameter of an object w.r.t. a larger object. If no semi-major axis of
@@ -40,7 +41,21 @@ def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
     with the largest gas giant. A Tisserand parameter between 2 and 3 (2 < Tisserand < 3) indicates
     a so called Jupiter-Family Comet (JFC).
 
+    Examples
+    --------
+    An example to compute the Tisserand parameter of the comet 67P/Churyumov–Gerasimenko. The data
+    have been obtained from https://ssd.jpl.nasa.gov/sbdb.cgi?sstr=67P
+    
+    >>> import math
+    >>> import solary
+    >>> tisserand_tsch_geras_67p = solary.general.astrodyn.tisserand(sem_maj_axis_obj=3.46, \
+                                                                     inc=math.radians(7.03), \
+                                                                     ecc=0.64)
+    >>> tisserand_tsch_geras_67p
+    2.747580043374075
+
     """
+
     # If no semi-major axis of a larger object is given: Assume the planet Jupiter. Jupiter's
     # semi-major axis can be found in the config file
     if not sem_maj_axis_planet:
@@ -62,25 +77,89 @@ def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
 
     return tisserand_parameter
 
+
 def kep_apoapsis(sem_maj_axis, ecc):
+    """
+    TBD
 
-    apsis = (1.0 + ecc) * sem_maj_axis
+    Parameters
+    ----------
+    sem_maj_axis : float
+        Semi-major axis of the object in any unit.
+    ecc : float
+        Eccentricity of the object.
 
-    return apsis
+    Returns
+    -------
+    apoapsis : float
+        Apoapsis of the object. Unit is identical to input unit of sem_maj_axis.
+
+    """
+
+    apoapsis = (1.0 + ecc) * sem_maj_axis
+
+    return apoapsis
+
 
 def kep_periapsis(sem_maj_axis, ecc):
+    """
+    TBD
 
-    apsis = (1.0 - ecc) * sem_maj_axis
+    Parameters
+    ----------
+    sem_maj_axis : float
+                Semi-major axis of the object in any unit.
+    ecc : float
+        Eccentricity of the object.
 
-    return apsis
+    Returns
+    -------
+    periapsis : float
+        Periapsis of the object. Unit is identical to input unit of sem_maj_axis.
+
+    """
+
+    periapsis = (1.0 - ecc) * sem_maj_axis
+
+    return periapsis
+
 
 def mjd2jd(m_juldate):
+    """
+    TBD
+
+    Parameters
+    ----------
+    m_juldate : float
+        Modified Julian Date.
+
+    Returns
+    -------
+    juldate : float
+        Julian Date.
+
+    """
 
     juldate = m_juldate + 2400000.5
 
     return juldate
 
+
 def jd2mjd(juldate):
+    """
+    TBD
+
+    Parameters
+    ----------
+    juldate : float
+        Julian Date.
+
+    Returns
+    -------
+    m_juldate : float
+        Modified Julian Date.
+
+    """
 
     m_juldate = juldate - 2400000.5
 

@@ -1,20 +1,23 @@
 """
 photometry.py
 
-This module contains functions for photometric purposes
+This module contains functions for photometric purposes.
+
 """
 
 # Import standard modules
 import configparser
 import math
+import os
 
 # Import solary
 import solary
 
+
 def appmag2irr(app_mag):
     """
     Convert the apparent magnitude to the corresponding irradiance given in
-    W/m^2.
+    W/m^2. The zero point magnitude is provided by the IAU in [1].
 
     Parameters
     ----------
@@ -26,18 +29,37 @@ def appmag2irr(app_mag):
     irradiance : float
         Irradiance given in W/m^2.
 
+    References
+    ----------
+    [1] https://www.iau.org/static/resolutions/IAU2015_English.pdf
+
+    Examples
+    --------
+    >>> import solary
+    >>> irradiance = solary.general.photometry.appmag2irr(app_mag=8.0)
+    >>> irradiance
+    1.5887638447672732e-11
+
     """
 
     # Load the configuration file that contains the zero point bolometric
     # irradiance
+    # Set config parser
     config = configparser.ConfigParser()
-    config.read('_config/constants.ini')
+
+    # Find the constants.ini
+    module_path = os.path.dirname(__file__)
+    constants_ini_path = os.path.join(module_path, '..', '_config', 'constants.ini')
+
+    # Read and parse the config file
+    config.read(constants_ini_path)
     appmag_irr_i0 = float(config['photometry']['appmag_irr_i0'])
 
     # Convert apparent magnitude to irradiance
     irradiance = 10.0 ** (-0.4 * app_mag + math.log10(appmag_irr_i0))
 
     return irradiance
+
 
 def phase_func(index, phase_angle):
     """
@@ -65,6 +87,17 @@ def phase_func(index, phase_angle):
     ----------
     [1] https://www.britastro.org/asteroids/dymock4.pdf
 
+    Examples
+    --------
+    >>> import math
+    >>> import solary
+    >>> phi1 = solary.general.photometry.phase_func(index=1, phase_angle=math.pi/4.0)
+    >>> phi1
+    0.14790968630394927
+    >>> phi2 = solary.general.photometry.phase_func(index=2, phase_angle=math.pi/4.0)
+    >>> phi2
+    0.5283212147726485
+
     """
 
     # Dictionaries that contain the A and B constants, depending on the index version
@@ -78,6 +111,7 @@ def phase_func(index, phase_angle):
 
     # Return the phase function result
     return phi
+
 
 def reduc_mag(abs_mag, phase_angle, slope_g=0.15):
     """
@@ -107,6 +141,23 @@ def reduc_mag(abs_mag, phase_angle, slope_g=0.15):
     ----------
     [1] https://www.britastro.org/asteroids/dymock4.pdf
 
+    Examples
+    --------
+    >>> import math
+    >>> import solary
+    >>> reduced_magnitude = solary.general.photometry.reduc_mag(abs_mag=10.0, \
+                                                                phase_angle=math.pi/4.0, \
+                                                                slope_g=0.10)
+    >>> reduced_magnitude
+    11.826504643588578
+
+    Per default, the slope parameter G is set to 0.15 and fits well for most asteroids
+
+    >>> reduced_magnitude = solary.general.photometry.reduc_mag(abs_mag=10.0, \
+                                                                phase_angle=math.pi/4.0)
+    >>> reduced_magnitude
+    11.720766748872016
+
     """
 
     # Compute the reduced magnitude based on the equations given in the references [1]
@@ -116,6 +167,7 @@ def reduc_mag(abs_mag, phase_angle, slope_g=0.15):
                                                    * phase_func(index=2, phase_angle=phase_angle))
 
     return reduced_magnitude
+
 
 def hg_app_mag(abs_mag, vec_obj2obs, vec_obj2ill, slope_g=0.15):
     """
@@ -129,7 +181,7 @@ def hg_app_mag(abs_mag, vec_obj2obs, vec_obj2ill, slope_g=0.15):
     vec_obj2obs : list
         3 dimensional vector the contains the directional information (x, y, z) from the asteroid
         to the observer given in AU.
-    vec_obj2ill : TYPE
+    vec_obj2ill : list
         3 dimensional vector the contains the directional information (x, y, z) from the asteroid
         to the illumination source given in AU.
     slope_g : float, optional
@@ -144,6 +196,16 @@ def hg_app_mag(abs_mag, vec_obj2obs, vec_obj2ill, slope_g=0.15):
     References
     ----------
     [1] https://www.britastro.org/asteroids/dymock4.pdf
+
+    Examples
+    --------
+    >>> import solary
+    >>> apparent_magnitude = solary.general.photometry.hg_app_mag(abs_mag=10.0, \
+                                                                  vec_obj2obs=[-1.0, 0.0, 0.0], \
+                                                                  vec_obj2ill=[-2.0, 0.0, 0.0], \
+                                                                  slope_g=0.10)
+    >>> apparent_magnitude
+    11.505149978319906
 
     """
 

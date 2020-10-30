@@ -3,24 +3,24 @@ import sqlite3
 import pytest
 import solary
 
-# def test__get_neodys_neo_nr():
+def test__get_neodys_neo_nr():
     
-#     neo_nr = solary.neo.data._get_neodys_neo_nr()
-#     assert type(neo_nr) == int
-#     assert neo_nr >= 0
+    neo_nr = solary.neo.data._get_neodys_neo_nr()
+    assert type(neo_nr) == int
+    assert neo_nr >= 0
 
-# def test_download():
+def test_download():
     
-#     dl_status, _ = solary.neo.data.download()
-#     assert dl_status == 'OK'
+    dl_status, _ = solary.neo.data.download()
+    assert dl_status == 'OK'
 
-#     dl_status, _ = solary.neo.data.download(download_path='tests/_temp')
-#     assert dl_status == 'OK'
+    dl_status, _ = solary.neo.data.download(download_path='tests/_temp')
+    assert dl_status == 'OK'
 
-#     dl_status, row_exp = solary.neo.data.download(row_exp=True)
-#     assert dl_status == 'OK'
-#     assert type(row_exp) == int
-#     assert row_exp >= 0
+    dl_status, row_exp = solary.neo.data.download(row_exp=True)
+    assert dl_status == 'OK'
+    assert type(row_exp) == int
+    assert row_exp >= 0
     
 def test_read():
     
@@ -34,7 +34,7 @@ def test_read():
     assert pytest.approx(neo_dict_data[0]['SemMajAxis_AU'], abs=1e-2) == 1.46
     assert pytest.approx(neo_dict_data[0]['Ecc_'], abs=1e-2) == 0.22
 
-def test_neo_sqlite_db():
+def test_neodys_database():
     
     neo_sqlite = solary.neo.data.neodys_database(new=True)
     
@@ -44,7 +44,7 @@ def test_neo_sqlite_db():
     neo_sqlite.create()
     
     query_res_cur = neo_sqlite.cur.execute('SELECT Name, SemMajAxis_AU, ECC_ ' \
-                                           'FROM main WHERE Name = "433"')
+                                            'FROM main WHERE Name = "433"')
     query_res = query_res_cur.fetchone()
 
     assert query_res[0] == '433'
@@ -54,7 +54,7 @@ def test_neo_sqlite_db():
     neo_sqlite.create_deriv_orb()
 
     query_res_cur = neo_sqlite.cur.execute('SELECT Name, Aphel_AU, Perihel_AU ' \
-                                           'FROM main WHERE Name = "433"')
+                                            'FROM main WHERE Name = "433"')
     query_res = query_res_cur.fetchone()
 
     assert query_res[0] == '433'
@@ -62,3 +62,9 @@ def test_neo_sqlite_db():
     assert pytest.approx(query_res[2], abs=1e-3) == 1.133
 
     neo_sqlite.close()
+
+def test_download_gravnik2018():
+    
+    dl_status, md5_hash = solary.neo.data.download_gravnik2018(download_path='tests/_temp')
+    assert dl_status == 'OK'
+    assert md5_hash == '521ddfdc18545c736fee36dbc4879d5e'

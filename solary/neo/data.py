@@ -1,9 +1,25 @@
+import gzip
+import hashlib
+import urllib.parse
 import urllib.request
 import os
 import re
+import shutil
 import sqlite3
 import time
+
 import solary
+
+def _comp_md5(file_name):
+
+    hash_md5 = hashlib.md5()
+    
+    with open(file_name, 'rb') as f_temp:
+        for _seq in iter(lambda: f_temp.read(65536), b''):
+            hash_md5.update(_seq)
+
+    return hash_md5.hexdigest()
+
 
 def _get_neodys_neo_nr():
 
@@ -14,6 +30,7 @@ def _get_neodys_neo_nr():
     neodys_nr_neos = int(re.findall(r'<b>(.*?) objects</b> in the NEODyS', str(html_content))[0])
 
     return neodys_nr_neos
+
 
 def download(download_path=None, row_exp=None):
     
@@ -49,6 +66,47 @@ def download(download_path=None, row_exp=None):
 
     return dl_status, neodys_neo_nr
 
+
+def download_gravnik2018(download_path=None, comp_md5=True):
+
+    FILENAME = 'Granvik+_2018_Icarus.dat.gz'
+
+    if not download_path:
+
+        module_path = os.path.dirname(__file__)
+        download_filename = os.path.join(module_path, '_data', FILENAME)
+        
+    else:
+
+        download_filename = os.path.join(os.getcwd(), download_path, FILENAME)
+
+    url_location = 'https://www.mv.helsinki.fi/home/mgranvik/data/' \
+                   'Granvik+_2018_Icarus/Granvik+_2018_Icarus.dat.gz'
+    
+    downl_file_path, _ = \
+        urllib.request.urlretrieve(url=url_location, \
+                                   filename=download_filename)
+    
+    system_time = time.time()
+    file_mod_time = os.path.getmtime(downl_file_path)
+    
+    file_mod_diff = file_mod_time - system_time
+    
+    if file_mod_diff < 5:
+        dl_status = 'OK'
+    else:
+        dl_status = 'ERROR'
+
+    unzip_file_path = downl_file_path[:-3]
+    with gzip.open(downl_file_path, 'r') as f_in, open(unzip_file_path, 'wb') as f_out:
+        shutil.copyfileobj(f_in, f_out)
+
+    os.remove(downl_file_path)
+
+    md5_hash = _comp_md5(unzip_file_path)
+    
+    return dl_status, md5_hash
+
 def read(path=None):
     
     FILENAME = 'neodys.cat'
@@ -80,6 +138,7 @@ def read(path=None):
                              'SlopeParamG_': float(neo_data_line[9])})
 
     return neo_dict
+
 
 class neodys_database:
     

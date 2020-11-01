@@ -80,7 +80,7 @@ def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
 
 def kep_apoapsis(sem_maj_axis, ecc):
     """
-    TBD
+    Compute the apoapsis, depending on the semi-major axis and eccentricity.
 
     Parameters
     ----------
@@ -103,7 +103,7 @@ def kep_apoapsis(sem_maj_axis, ecc):
 
 def kep_periapsis(sem_maj_axis, ecc):
     """
-    TBD
+    Compute the periapsis, depending on the semi-major axis and eccentricity.
 
     Parameters
     ----------
@@ -126,7 +126,7 @@ def kep_periapsis(sem_maj_axis, ecc):
 
 def mjd2jd(m_juldate):
     """
-    TBD
+    Convert the given Julian Date to the Modified Julian Date.
 
     Parameters
     ----------
@@ -147,7 +147,7 @@ def mjd2jd(m_juldate):
 
 def jd2mjd(juldate):
     """
-    TBD
+    Convert the Modified Julian Date to the Julian Date.
 
     Parameters
     ----------

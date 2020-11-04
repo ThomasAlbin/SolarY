@@ -67,47 +67,7 @@ def download(download_path=None, row_exp=None):
     return dl_status, neodys_neo_nr
 
 
-def download_gravnik2018(download_path=None, comp_md5=True):
-
-    FILENAME = 'Granvik+_2018_Icarus.dat.gz'
-
-    if not download_path:
-
-        module_path = os.path.dirname(__file__)
-        download_filename = os.path.join(module_path, '_data', FILENAME)
-        
-    else:
-
-        download_filename = os.path.join(os.getcwd(), download_path, FILENAME)
-
-    url_location = 'https://www.mv.helsinki.fi/home/mgranvik/data/' \
-                   'Granvik+_2018_Icarus/Granvik+_2018_Icarus.dat.gz'
-    
-    downl_file_path, _ = \
-        urllib.request.urlretrieve(url=url_location, \
-                                   filename=download_filename)
-    
-    system_time = time.time()
-    file_mod_time = os.path.getmtime(downl_file_path)
-    
-    file_mod_diff = file_mod_time - system_time
-    
-    if file_mod_diff < 5:
-        dl_status = 'OK'
-    else:
-        dl_status = 'ERROR'
-
-    unzip_file_path = downl_file_path[:-3]
-    with gzip.open(downl_file_path, 'r') as f_in, open(unzip_file_path, 'wb') as f_out:
-        shutil.copyfileobj(f_in, f_out)
-
-    os.remove(downl_file_path)
-
-    md5_hash = _comp_md5(unzip_file_path)
-    
-    return dl_status, md5_hash
-
-def read(path=None):
+def read_neodys(path=None):
     
     FILENAME = 'neodys.cat'
 
@@ -185,7 +145,7 @@ class neodys_database:
 
         self.con.commit()
      
-        _neo_data = read()
+        _neo_data = read_neodys()
 
         self.cur.executemany('INSERT OR IGNORE INTO main(Name, ' \
                                                         'Epoch_MJD, ' \
@@ -240,3 +200,73 @@ class neodys_database:
     def close(self):
         
         self.con.close()
+
+
+def download_gravnik2018(download_path=None, comp_md5=True):
+
+    FILENAME = r'Granvik+_2018_Icarus.dat.gz'
+
+    if not download_path:
+
+        module_path = os.path.dirname(__file__)
+        download_filename = os.path.join(module_path, '_data', FILENAME)
+        
+    else:
+
+        download_filename = os.path.join(os.getcwd(), download_path, FILENAME)
+
+    url_location = 'https://www.mv.helsinki.fi/home/mgranvik/data/' \
+                   'Granvik+_2018_Icarus/Granvik+_2018_Icarus.dat.gz'
+    
+    downl_file_path, _ = \
+        urllib.request.urlretrieve(url=url_location, \
+                                   filename=download_filename)
+    
+    system_time = time.time()
+    file_mod_time = os.path.getmtime(downl_file_path)
+    
+    file_mod_diff = file_mod_time - system_time
+    
+    if file_mod_diff < 5:
+        dl_status = 'OK'
+    else:
+        dl_status = 'ERROR'
+
+    unzip_file_path = downl_file_path[:-3]
+    with gzip.open(downl_file_path, 'r') as f_in, open(unzip_file_path, 'wb') as f_out:
+        shutil.copyfileobj(f_in, f_out)
+
+    os.remove(downl_file_path)
+
+    md5_hash = _comp_md5(unzip_file_path)
+    
+    return dl_status, md5_hash
+
+def read_granvik2018(path=None):
+    
+    FILENAME = 'Granvik+_2018_Icarus.dat'
+
+    if not path:
+
+        module_path = os.path.dirname(__file__)
+        path_filename = os.path.join(module_path, '_data', FILENAME)
+
+    else:
+        
+        path_filename = os.path.join(os.getcwd(), path, FILENAME)
+
+    neo_dict = []
+    with open(path_filename) as f_temp:
+        neo_data = f_temp.readlines()
+        
+        for neo_data_line_f in neo_data:
+            neo_data_line = neo_data_line_f.split()
+            neo_dict.append({'SemMajAxis_AU': float(neo_data_line[0]), \
+                             'Ecc_': float(neo_data_line[1]), \
+                             'Incl_deg': float(neo_data_line[2]), \
+                             'LongAscNode_deg': float(neo_data_line[3]), \
+                             'ArgP_deg': float(neo_data_line[4]), \
+                             'MeanAnom_deg': float(neo_data_line[5]), \
+                             'AbsMag_': float(neo_data_line[6])})
+
+    return neo_dict

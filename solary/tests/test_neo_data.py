@@ -22,14 +22,14 @@ def test_download():
     assert type(row_exp) == int
     assert row_exp >= 0
     
-def test_read():
+def test_read_neodys():
     
-    neo_dict_data = solary.neo.data.read()
+    neo_dict_data = solary.neo.data.read_neodys()
     assert neo_dict_data[0]['Name'] == '433'
     assert pytest.approx(neo_dict_data[0]['SemMajAxis_AU'], abs=1e-2) == 1.46
     assert pytest.approx(neo_dict_data[0]['Ecc_'], abs=1e-2) == 0.22
 
-    neo_dict_data = solary.neo.data.read(path='tests/_temp')
+    neo_dict_data = solary.neo.data.read_neodys(path='tests/_temp')
     assert neo_dict_data[0]['Name'] == '433'
     assert pytest.approx(neo_dict_data[0]['SemMajAxis_AU'], abs=1e-2) == 1.46
     assert pytest.approx(neo_dict_data[0]['Ecc_'], abs=1e-2) == 0.22
@@ -64,7 +64,31 @@ def test_neodys_database():
     neo_sqlite.close()
 
 def test_download_gravnik2018():
+
+    dl_status, md5_hash = solary.neo.data.download_gravnik2018()
+    assert dl_status == 'OK'
+    assert md5_hash == '521ddfdc18545c736fee36dbc4879d5e'
     
     dl_status, md5_hash = solary.neo.data.download_gravnik2018(download_path='tests/_temp')
     assert dl_status == 'OK'
     assert md5_hash == '521ddfdc18545c736fee36dbc4879d5e'
+
+def test_read_granvik2018():
+    
+    neo_dict_data = solary.neo.data.read_granvik2018()
+    assert pytest.approx(neo_dict_data[0]['SemMajAxis_AU']) == 2.57498121
+    assert pytest.approx(neo_dict_data[0]['Ecc_']) == 0.783616960
+    assert pytest.approx(neo_dict_data[0]['Incl_deg']) == 33.5207634
+    assert pytest.approx(neo_dict_data[0]['LongAscNode_deg']) == 278.480591
+    assert pytest.approx(neo_dict_data[0]['ArgP_deg']) == 75.9520569
+    assert pytest.approx(neo_dict_data[0]['MeanAnom_deg']) == 103.833748
+    assert pytest.approx(neo_dict_data[0]['AbsMag_']) == 21.0643673
+
+    neo_dict_data = solary.neo.data.read_granvik2018(path='tests/_temp')
+    assert pytest.approx(neo_dict_data[0]['SemMajAxis_AU']) == 2.57498121
+    assert pytest.approx(neo_dict_data[0]['Ecc_']) == 0.783616960
+    assert pytest.approx(neo_dict_data[0]['Incl_deg']) == 33.5207634
+    assert pytest.approx(neo_dict_data[0]['LongAscNode_deg']) == 278.480591
+    assert pytest.approx(neo_dict_data[0]['ArgP_deg']) == 75.9520569
+    assert pytest.approx(neo_dict_data[0]['MeanAnom_deg']) == 103.833748
+    assert pytest.approx(neo_dict_data[0]['AbsMag_']) == 21.0643673

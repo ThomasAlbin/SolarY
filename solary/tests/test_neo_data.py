@@ -92,3 +92,30 @@ def test_read_granvik2018():
     assert pytest.approx(neo_dict_data[0]['ArgP_deg']) == 75.9520569
     assert pytest.approx(neo_dict_data[0]['MeanAnom_deg']) == 103.833748
     assert pytest.approx(neo_dict_data[0]['AbsMag_']) == 21.0643673
+
+def test_gravnik2018_database():
+    
+    gravnik2018_sqlite = solary.neo.data.gravnik2018_database(new=True)
+    
+    assert type(gravnik2018_sqlite.con) == sqlite3.Connection
+    assert type(gravnik2018_sqlite.cur) == sqlite3.Cursor
+
+    gravnik2018_sqlite.create()
+    
+    query_res_cur = gravnik2018_sqlite.cur.execute('SELECT ID, SemMajAxis_AU, ECC_ ' \
+                                                   'FROM main WHERE ID = 1')
+    query_res = query_res_cur.fetchone()
+
+    assert query_res[1] == 2.57498121
+    assert query_res[2] == 0.783616960
+
+    gravnik2018_sqlite.create_deriv_orb()
+
+    query_res_cur = gravnik2018_sqlite.cur.execute('SELECT ID, Aphel_AU, Perihel_AU ' \
+                                                   'FROM main WHERE ID = 1')
+    query_res = query_res_cur.fetchone()
+
+    assert query_res[1] == 4.592780157837321
+    assert query_res[2] == 0.5571822621626783
+
+    gravnik2018_sqlite.close()

@@ -270,3 +270,95 @@ def read_granvik2018(path=None):
                              'AbsMag_': float(neo_data_line[6])})
 
     return neo_dict
+
+class gravnik2018_database:
+    
+    def __init__(self, db_filepath=None, new=False):
+
+        if not db_filepath:
+    
+            module_path = os.path.dirname(__file__)
+            self.db_filename = os.path.join(module_path, '_databases', 'neo_gravnik2018.db')
+    
+        else:
+            
+            self.db_filename = os.path.join(os.getcwd(), db_filepath)
+
+        if new and os.path.exists(self.db_filename):
+            os.remove(self.db_filename)
+
+        self.con = sqlite3.connect(self.db_filename)
+        self.cur = self.con.cursor()
+
+    def _create_col(self, table, col_name, col_type):
+        
+        sql_col_create = f'ALTER TABLE {table} ADD COLUMN {col_name} {col_type}'
+        
+        try:
+            self.cur.execute(sql_col_create)
+            self.con.commit()
+        except sqlite3.OperationalError:
+            pass
+
+    def create(self):
+        
+        self.cur.execute('CREATE TABLE IF NOT EXISTS main(ID INTEGER PRIMARY KEY, ' \
+                                                         'SemMajAxis_AU FLOAT, ' \
+                                                         'Ecc_ FLOAT, ' \
+                                                         'Incl_deg FLOAT, ' \
+                                                         'LongAscNode_deg FLOAT, ' \
+                                                         'ArgP_deg FLOAT, ' \
+                                                         'MeanAnom_deg FLOAT, ' \
+                                                         'AbsMag_ FLOAT)')
+
+        self.con.commit()
+     
+        _neo_data = read_granvik2018()
+
+        self.cur.executemany('INSERT OR IGNORE INTO main(SemMajAxis_AU, ' \
+                                                        'Ecc_, ' \
+                                                        'Incl_deg, ' \
+                                                        'LongAscNode_deg, ' \
+                                                        'ArgP_deg, ' \
+                                                        'MeanAnom_deg, ' \
+                                                        'AbsMag_) ' \
+                                                    'VALUES (:SemMajAxis_AU, ' \
+                                                            ':Ecc_, ' \
+                                                            ':Incl_deg, ' \
+                                                            ':LongAscNode_deg, ' \
+                                                            ':ArgP_deg, ' \
+                                                            ':MeanAnom_deg, ' \
+                                                            ':AbsMag_)', \
+                             _neo_data)
+        self.con.commit()
+
+    def create_deriv_orb(self):
+        
+        self._create_col('main', 'Aphel_AU', 'FLOAT')
+        self._create_col('main', 'Perihel_AU', 'FLOAT')
+
+        self.cur.execute('SELECT ID, SemMajAxis_AU, Ecc_ FROM main')
+
+        _neo_data = self.cur.fetchall()
+        
+        _neo_deriv_param_dict = []
+        for _neo_data_line_f in _neo_data:
+            _neo_deriv_param_dict.append({'ID': _neo_data_line_f[0], \
+                                          'Aphel_AU': \
+                                              solary.general.astrodyn.kep_apoapsis( \
+                                                                sem_maj_axis=_neo_data_line_f[1], \
+                                                                ecc=_neo_data_line_f[2] \
+                                                                                  ), \
+                                          'Perihel_AU': \
+                                              solary.general.astrodyn.kep_periapsis( \
+                                                                sem_maj_axis=_neo_data_line_f[1], \
+                                                                ecc=_neo_data_line_f[2] \
+                                                                                  )})
+                
+        self.cur.executemany('UPDATE main SET Aphel_AU = :Aphel_AU, Perihel_AU = :Perihel_AU ' \
+                             'WHERE ID = :ID', _neo_deriv_param_dict)
+        self.con.commit()
+
+    def close(self):
+        
+        self.con.close()

@@ -1,5 +1,8 @@
+import configparser
 import math
+import os
 
+import pytest
 import solary
 
 def test_tisserand():
@@ -50,3 +53,28 @@ def test_jd2mjd():
     
     mjd1 = solary.general.astrodyn.jd2mjd(juldate=2456000.5)
     assert mjd1 == 56000.0
+
+def test_sphere_of_influence():
+
+    # Set config parser
+    config = configparser.ConfigParser()
+
+    # Find the constants.ini
+    module_path = os.path.dirname(__file__)
+    constants_ini_path = os.path.join(module_path, '..', '_config', 'constants.ini')
+
+    # Read and parse the config file
+    config.read(constants_ini_path)
+    sem_maj_axis_earth = float(config['constants']['one_au'])
+    
+    grav_const = float(config['constants']['grav_const'])
+    
+    earth_mass = float(config['constants']['gm_earth']) / grav_const  
+    sun_mass = float(config['constants']['gm_sun']) / grav_const
+
+
+
+    soi_res_earth = solary.general.astrodyn.sphere_of_influence(sem_maj_axis=sem_maj_axis_earth, \
+                                                                minor_mass=earth_mass, \
+                                                                major_mass=sun_mass)
+    assert pytest.approx(soi_res_earth, abs=1e4) == 925000.0

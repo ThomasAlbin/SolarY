@@ -45,7 +45,7 @@ def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
     --------
     An example to compute the Tisserand parameter of the comet 67P/Churyumov–Gerasimenko. The data
     have been obtained from https://ssd.jpl.nasa.gov/sbdb.cgi?sstr=67P
-    
+
     >>> import math
     >>> import solary
     >>> tisserand_tsch_geras_67p = solary.general.astrodyn.tisserand(sem_maj_axis_obj=3.46, \
@@ -164,3 +164,29 @@ def jd2mjd(juldate):
     m_juldate = juldate - 2400000.5
 
     return m_juldate
+
+def sphere_of_influence(sem_maj_axis, minor_mass, major_mass):
+    """
+    Compute the Sphere of Influence (SOI) of a minor object w.r.t. a major object, assuming a
+    spherical SOI
+
+    Parameters
+    ----------
+    sem_maj_axis : float
+        Semi-Major Axis given in any physical dimension.
+    minor_mass : float
+        Mass of the minor object given in any physical dimension.
+    major_mass : float
+        Mass of the major object given in the same physical dimension as minor_mass.
+
+    Returns
+    -------
+    soi_radius : float
+        SOI radius given in the same physical dimension as sem_maj_axis.
+
+    """
+
+    # Compute the Sphere of Influence (SOI)
+    soi_radius = sem_maj_axis * ((minor_mass / major_mass) ** (2.0 / 5.0))
+
+    return soi_radius

@@ -24,7 +24,7 @@ def ast_size(albedo, abs_mag):
     Returns
     -------
     radius : float
-        Radius of the object given in meter.
+        Radius of the object given in kilometer.
 
     References
     ----------
@@ -39,15 +39,12 @@ def ast_size(albedo, abs_mag):
     >>> import solary
     >>> ast_radius = solary.asteroid.physp.ast_size(albedo=0.15, abs_mag=10)
     >>> ast_radius
-    17157.316223698857
+    17.157
 
     """
 
     # Compute the diameter in km
     diameter = (1329.0 / math.sqrt(albedo)) * 10.0 ** (-0.2 * abs_mag)
-
-    # Conver the diameter to m
-    diameter *= 1000.0
 
     # Convert the diameter to radius
     radius = diameter / 2.0

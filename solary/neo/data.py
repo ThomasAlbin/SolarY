@@ -111,7 +111,7 @@ class neodys_database:
     
         else:
             
-            self.db_filename = os.path.join(os.getcwd(), db_filepath)
+            self.db_filename = os.path.join(os.getcwd(), db_filepath, 'neo_neodys.db')
 
         
         if new and os.path.exists(self.db_filename):
@@ -130,7 +130,7 @@ class neodys_database:
         except sqlite3.OperationalError:
             pass
 
-    def create(self):
+    def create(self, neodys_path):
         
         self.cur.execute('CREATE TABLE IF NOT EXISTS main(Name TEXT PRIMARY KEY, ' \
                                                          'Epoch_MJD FLOAT, ' \
@@ -144,8 +144,8 @@ class neodys_database:
                                                          'SlopeParamG_ FLOAT)')
 
         self.con.commit()
-     
-        _neo_data = read_neodys()
+
+        _neo_data = read_neodys(neodys_path)
 
         self.cur.executemany('INSERT OR IGNORE INTO main(Name, ' \
                                                         'Epoch_MJD, ' \
@@ -282,7 +282,7 @@ class gravnik2018_database:
     
         else:
             
-            self.db_filename = os.path.join(os.getcwd(), db_filepath)
+            self.db_filename = os.path.join(os.getcwd(), db_filepath, 'neo_gravnik2018.db')
 
         if new and os.path.exists(self.db_filename):
             os.remove(self.db_filename)
@@ -300,7 +300,7 @@ class gravnik2018_database:
         except sqlite3.OperationalError:
             pass
 
-    def create(self):
+    def create(self, granvik2018_path):
         
         self.cur.execute('CREATE TABLE IF NOT EXISTS main(ID INTEGER PRIMARY KEY, ' \
                                                          'SemMajAxis_AU FLOAT, ' \
@@ -313,7 +313,7 @@ class gravnik2018_database:
 
         self.con.commit()
      
-        _neo_data = read_granvik2018()
+        _neo_data = read_granvik2018(granvik2018_path)
 
         self.cur.executemany('INSERT OR IGNORE INTO main(SemMajAxis_AU, ' \
                                                         'Ecc_, ' \

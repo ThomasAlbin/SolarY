@@ -103,7 +103,7 @@ def test_gravnik2018_database():
     gravnik2018_sqlite.create()
     
     query_res_cur = gravnik2018_sqlite.cur.execute('SELECT ID, SemMajAxis_AU, ECC_ ' \
-                                                   'FROM main WHERE ID = 1')
+                                                    'FROM main WHERE ID = 1')
     query_res = query_res_cur.fetchone()
 
     assert query_res[1] == 2.57498121
@@ -112,7 +112,7 @@ def test_gravnik2018_database():
     gravnik2018_sqlite.create_deriv_orb()
 
     query_res_cur = gravnik2018_sqlite.cur.execute('SELECT ID, Aphel_AU, Perihel_AU ' \
-                                                   'FROM main WHERE ID = 1')
+                                                    'FROM main WHERE ID = 1')
     query_res = query_res_cur.fetchone()
 
     assert query_res[1] == 4.592780157837321

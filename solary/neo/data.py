@@ -3,12 +3,15 @@ import hashlib
 import urllib.parse
 import urllib.request
 import os
+import pathlib
 import re
 import shutil
 import sqlite3
 import time
 
 import solary
+
+from solary import ROOT_DIR
 
 def _comp_md5(file_name):
 
@@ -31,20 +34,22 @@ def _get_neodys_neo_nr():
 
     return neodys_nr_neos
 
-
-def download(download_path=None, row_exp=None):
+def setnget_file_path(dl_path, filename):
     
-    FILENAME = 'neodys.cat'
+    home_dir = os.path.expanduser('~')
+    
+    compl_dl_path = os.path.join(home_dir, dl_path)
+    
+    pathlib.Path(compl_dl_path).mkdir(parents=True, exist_ok=True)
 
-    if not download_path:
+    file_path = os.path.join(compl_dl_path, filename)
 
-        module_path = os.path.dirname(__file__)
-        download_filename = os.path.join(module_path, '_data', FILENAME)
-        
-    else:
+    return file_path
 
-        download_filename = os.path.join(os.getcwd(), download_path, FILENAME)
-
+def download(row_exp=None):
+    
+    
+    download_filename = setnget_file_path('solary_data/neo/data', 'neodys.cat')
         
     downl_file_path, _ = \
         urllib.request.urlretrieve(url='https://newton.spacedys.com/~neodys2/neodys.cat', \
@@ -67,18 +72,9 @@ def download(download_path=None, row_exp=None):
     return dl_status, neodys_neo_nr
 
 
-def read_neodys(path=None):
+def read_neodys():
     
-    FILENAME = 'neodys.cat'
-
-    if not path:
-
-        module_path = os.path.dirname(__file__)
-        path_filename = os.path.join(module_path, '_data', FILENAME)
-
-    else:
-        
-        path_filename = os.path.join(os.getcwd(), path, FILENAME)
+    path_filename = setnget_file_path('solary_data/neo/data', 'neodys.cat')
 
     neo_dict = []
     with open(path_filename) as f_temp:
@@ -102,16 +98,9 @@ def read_neodys(path=None):
 
 class neodys_database:
     
-    def __init__(self, db_filepath=None, new=False):
-
-        if not db_filepath:
+    def __init__(self, new=False):
     
-            module_path = os.path.dirname(__file__)
-            self.db_filename = os.path.join(module_path, '_databases', 'neo_neodys.db')
-    
-        else:
-            
-            self.db_filename = os.path.join(os.getcwd(), db_filepath, 'neo_neodys.db')
+        self.db_filename = setnget_file_path('solary_data/neo/databases', 'neo_neodys.db')
 
         
         if new and os.path.exists(self.db_filename):
@@ -130,7 +119,7 @@ class neodys_database:
         except sqlite3.OperationalError:
             pass
 
-    def create(self, neodys_path):
+    def create(self):
         
         self.cur.execute('CREATE TABLE IF NOT EXISTS main(Name TEXT PRIMARY KEY, ' \
                                                          'Epoch_MJD FLOAT, ' \
@@ -145,7 +134,7 @@ class neodys_database:
 
         self.con.commit()
 
-        _neo_data = read_neodys(neodys_path)
+        _neo_data = read_neodys()
 
         self.cur.executemany('INSERT OR IGNORE INTO main(Name, ' \
                                                         'Epoch_MJD, ' \
@@ -202,18 +191,9 @@ class neodys_database:
         self.con.close()
 
 
-def download_gravnik2018(download_path=None, comp_md5=True):
+def download_gravnik2018(comp_md5=True):
 
-    FILENAME = r'Granvik+_2018_Icarus.dat.gz'
-
-    if not download_path:
-
-        module_path = os.path.dirname(__file__)
-        download_filename = os.path.join(module_path, '_data', FILENAME)
-        
-    else:
-
-        download_filename = os.path.join(os.getcwd(), download_path, FILENAME)
+    download_filename = setnget_file_path('solary_data/neo/data', 'Granvik+_2018_Icarus.dat.gz')
 
     url_location = 'https://www.mv.helsinki.fi/home/mgranvik/data/' \
                    'Granvik+_2018_Icarus/Granvik+_2018_Icarus.dat.gz'
@@ -242,18 +222,9 @@ def download_gravnik2018(download_path=None, comp_md5=True):
     
     return dl_status, md5_hash
 
-def read_granvik2018(path=None):
-    
-    FILENAME = 'Granvik+_2018_Icarus.dat'
+def read_granvik2018():
 
-    if not path:
-
-        module_path = os.path.dirname(__file__)
-        path_filename = os.path.join(module_path, '_data', FILENAME)
-
-    else:
-        
-        path_filename = os.path.join(os.getcwd(), path, FILENAME)
+    path_filename = setnget_file_path('solary_data/neo/data', 'Granvik+_2018_Icarus.dat')
 
     neo_dict = []
     with open(path_filename) as f_temp:
@@ -273,17 +244,11 @@ def read_granvik2018(path=None):
 
 class gravnik2018_database:
     
-    def __init__(self, db_filepath=None, new=False):
+    def __init__(self, new=False):
 
-        if not db_filepath:
+        self.db_filename = setnget_file_path('solary_data/neo/databases', \
+                                             'neo_gravnik2018.db')
     
-            module_path = os.path.dirname(__file__)
-            self.db_filename = os.path.join(module_path, '_databases', 'neo_gravnik2018.db')
-    
-        else:
-            
-            self.db_filename = os.path.join(os.getcwd(), db_filepath, 'neo_gravnik2018.db')
-
         if new and os.path.exists(self.db_filename):
             os.remove(self.db_filename)
 
@@ -300,7 +265,7 @@ class gravnik2018_database:
         except sqlite3.OperationalError:
             pass
 
-    def create(self, granvik2018_path):
+    def create(self):
         
         self.cur.execute('CREATE TABLE IF NOT EXISTS main(ID INTEGER PRIMARY KEY, ' \
                                                          'SemMajAxis_AU FLOAT, ' \
@@ -313,7 +278,7 @@ class gravnik2018_database:
 
         self.con.commit()
      
-        _neo_data = read_granvik2018(granvik2018_path)
+        _neo_data = read_granvik2018()
 
         self.cur.executemany('INSERT OR IGNORE INTO main(SemMajAxis_AU, ' \
                                                         'Ecc_, ' \

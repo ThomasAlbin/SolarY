@@ -1,28 +1,22 @@
+"""
+data.py
+
+NEO data download, parsing and database creation functions are part of this sub-module.
+
+"""
+
+# Import standard libraries
 import gzip
-import hashlib
 import urllib.parse
 import urllib.request
 import os
-import pathlib
 import re
 import shutil
 import sqlite3
 import time
 
+# Import SolarY
 import solary
-
-from solary import ROOT_DIR
-
-def _comp_md5(file_name):
-
-    hash_md5 = hashlib.md5()
-    
-    with open(file_name, 'rb') as f_temp:
-        for _seq in iter(lambda: f_temp.read(65536), b''):
-            hash_md5.update(_seq)
-
-    return hash_md5.hexdigest()
-
 
 def _get_neodys_neo_nr():
 
@@ -34,32 +28,23 @@ def _get_neodys_neo_nr():
 
     return neodys_nr_neos
 
-def setnget_file_path(dl_path, filename):
-    
-    home_dir = os.path.expanduser('~')
-    
-    compl_dl_path = os.path.join(home_dir, dl_path)
-    
-    pathlib.Path(compl_dl_path).mkdir(parents=True, exist_ok=True)
 
-    file_path = os.path.join(compl_dl_path, filename)
-
-    return file_path
 
 def download(row_exp=None):
-    
-    
-    download_filename = setnget_file_path('solary_data/neo/data', 'neodys.cat')
-        
+
+
+    download_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', \
+                                                                 'neodys.cat')
+
     downl_file_path, _ = \
         urllib.request.urlretrieve(url='https://newton.spacedys.com/~neodys2/neodys.cat', \
                                    filename=download_filename)
-    
+
     system_time = time.time()
     file_mod_time = os.path.getmtime(downl_file_path)
-    
+
     file_mod_diff = file_mod_time - system_time
-    
+
     if file_mod_diff < 5:
         dl_status = 'OK'
     else:
@@ -73,13 +58,13 @@ def download(row_exp=None):
 
 
 def read_neodys():
-    
-    path_filename = setnget_file_path('solary_data/neo/data', 'neodys.cat')
+
+    path_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', 'neodys.cat')
 
     neo_dict = []
     with open(path_filename) as f_temp:
         neo_data = f_temp.readlines()[6:]
-        
+
         for neo_data_line_f in neo_data:
             neo_data_line = neo_data_line_f.split()
             neo_dict.append({'Name': neo_data_line[0].replace('\'', ''), \
@@ -96,13 +81,14 @@ def read_neodys():
     return neo_dict
 
 
-class neodys_database:
-    
-    def __init__(self, new=False):
-    
-        self.db_filename = setnget_file_path('solary_data/neo/databases', 'neo_neodys.db')
+class NEOdysDatabase:
 
-        
+    def __init__(self, new=False):
+
+        self.db_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/databases', \
+                                                                    'neo_neodys.db')
+
+
         if new and os.path.exists(self.db_filename):
             os.remove(self.db_filename)
 
@@ -110,9 +96,9 @@ class neodys_database:
         self.cur = self.con.cursor()
 
     def _create_col(self, table, col_name, col_type):
-        
+
         sql_col_create = f'ALTER TABLE {table} ADD COLUMN {col_name} {col_type}'
-        
+
         try:
             self.cur.execute(sql_col_create)
             self.con.commit()
@@ -120,7 +106,7 @@ class neodys_database:
             pass
 
     def create(self):
-        
+
         self.cur.execute('CREATE TABLE IF NOT EXISTS main(Name TEXT PRIMARY KEY, ' \
                                                          'Epoch_MJD FLOAT, ' \
                                                          'SemMajAxis_AU FLOAT, ' \
@@ -160,14 +146,14 @@ class neodys_database:
         self.con.commit()
 
     def create_deriv_orb(self):
-        
+
         self._create_col('main', 'Aphel_AU', 'FLOAT')
         self._create_col('main', 'Perihel_AU', 'FLOAT')
 
         self.cur.execute('SELECT Name, SemMajAxis_AU, Ecc_ FROM main')
 
         _neo_data = self.cur.fetchall()
-        
+
         _neo_deriv_param_dict = []
         for _neo_data_line_f in _neo_data:
             _neo_deriv_param_dict.append({'Name': _neo_data_line_f[0], \
@@ -181,32 +167,33 @@ class neodys_database:
                                                                 sem_maj_axis=_neo_data_line_f[1], \
                                                                 ecc=_neo_data_line_f[2] \
                                                                                   )})
-                
+
         self.cur.executemany('UPDATE main SET Aphel_AU = :Aphel_AU, Perihel_AU = :Perihel_AU ' \
                              'WHERE Name = :Name', _neo_deriv_param_dict)
         self.con.commit()
 
     def close(self):
-        
+
         self.con.close()
 
 
-def download_gravnik2018(comp_md5=True):
+def download_granvik2018():
 
-    download_filename = setnget_file_path('solary_data/neo/data', 'Granvik+_2018_Icarus.dat.gz')
+    download_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', \
+                                                                 'Granvik+_2018_Icarus.dat.gz')
 
     url_location = 'https://www.mv.helsinki.fi/home/mgranvik/data/' \
                    'Granvik+_2018_Icarus/Granvik+_2018_Icarus.dat.gz'
-    
+
     downl_file_path, _ = \
         urllib.request.urlretrieve(url=url_location, \
                                    filename=download_filename)
-    
+
     system_time = time.time()
     file_mod_time = os.path.getmtime(downl_file_path)
-    
+
     file_mod_diff = file_mod_time - system_time
-    
+
     if file_mod_diff < 5:
         dl_status = 'OK'
     else:
@@ -218,18 +205,19 @@ def download_gravnik2018(comp_md5=True):
 
     os.remove(downl_file_path)
 
-    md5_hash = _comp_md5(unzip_file_path)
-    
+    md5_hash = solary.auxiliary.parse.comp_md5(unzip_file_path)
+
     return dl_status, md5_hash
 
 def read_granvik2018():
 
-    path_filename = setnget_file_path('solary_data/neo/data', 'Granvik+_2018_Icarus.dat')
+    path_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', \
+                                                             'Granvik+_2018_Icarus.dat')
 
     neo_dict = []
     with open(path_filename) as f_temp:
         neo_data = f_temp.readlines()
-        
+
         for neo_data_line_f in neo_data:
             neo_data_line = neo_data_line_f.split()
             neo_dict.append({'SemMajAxis_AU': float(neo_data_line[0]), \
@@ -242,13 +230,13 @@ def read_granvik2018():
 
     return neo_dict
 
-class gravnik2018_database:
-    
+class Granvik2018Database:
+
     def __init__(self, new=False):
 
-        self.db_filename = setnget_file_path('solary_data/neo/databases', \
-                                             'neo_gravnik2018.db')
-    
+        self.db_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/databases', \
+                                                                    'neo_granvik2018.db')
+
         if new and os.path.exists(self.db_filename):
             os.remove(self.db_filename)
 
@@ -256,9 +244,9 @@ class gravnik2018_database:
         self.cur = self.con.cursor()
 
     def _create_col(self, table, col_name, col_type):
-        
+
         sql_col_create = f'ALTER TABLE {table} ADD COLUMN {col_name} {col_type}'
-        
+
         try:
             self.cur.execute(sql_col_create)
             self.con.commit()
@@ -266,7 +254,7 @@ class gravnik2018_database:
             pass
 
     def create(self):
-        
+
         self.cur.execute('CREATE TABLE IF NOT EXISTS main(ID INTEGER PRIMARY KEY, ' \
                                                          'SemMajAxis_AU FLOAT, ' \
                                                          'Ecc_ FLOAT, ' \
@@ -277,7 +265,7 @@ class gravnik2018_database:
                                                          'AbsMag_ FLOAT)')
 
         self.con.commit()
-     
+
         _neo_data = read_granvik2018()
 
         self.cur.executemany('INSERT OR IGNORE INTO main(SemMajAxis_AU, ' \
@@ -298,14 +286,14 @@ class gravnik2018_database:
         self.con.commit()
 
     def create_deriv_orb(self):
-        
+
         self._create_col('main', 'Aphel_AU', 'FLOAT')
         self._create_col('main', 'Perihel_AU', 'FLOAT')
 
         self.cur.execute('SELECT ID, SemMajAxis_AU, Ecc_ FROM main')
 
         _neo_data = self.cur.fetchall()
-        
+
         _neo_deriv_param_dict = []
         for _neo_data_line_f in _neo_data:
             _neo_deriv_param_dict.append({'ID': _neo_data_line_f[0], \
@@ -319,11 +307,11 @@ class gravnik2018_database:
                                                                 sem_maj_axis=_neo_data_line_f[1], \
                                                                 ecc=_neo_data_line_f[2] \
                                                                                   )})
-                
+
         self.cur.executemany('UPDATE main SET Aphel_AU = :Aphel_AU, Perihel_AU = :Perihel_AU ' \
                              'WHERE ID = :ID', _neo_deriv_param_dict)
         self.con.commit()
 
     def close(self):
-        
+
         self.con.close()

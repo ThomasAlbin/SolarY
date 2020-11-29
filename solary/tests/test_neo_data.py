@@ -26,9 +26,9 @@ def test_read_neodys():
     assert pytest.approx(neo_dict_data[0]['SemMajAxis_AU'], abs=1e-2) == 1.46
     assert pytest.approx(neo_dict_data[0]['Ecc_'], abs=1e-2) == 0.22
 
-def test_neodys_database():
+def test_NEOdysDatabase():
     
-    neo_sqlite = solary.neo.data.neodys_database(new=True)
+    neo_sqlite = solary.neo.data.NEOdysDatabase(new=True)
     
     assert type(neo_sqlite.con) == sqlite3.Connection
     assert type(neo_sqlite.cur) == sqlite3.Cursor
@@ -55,9 +55,9 @@ def test_neodys_database():
 
     neo_sqlite.close()
 
-def test_download_gravnik2018():
+def test_download_granvik2018():
 
-    dl_status, md5_hash = solary.neo.data.download_gravnik2018()
+    dl_status, md5_hash = solary.neo.data.download_granvik2018()
     assert dl_status == 'OK'
     assert md5_hash == '521ddfdc18545c736fee36dbc4879d5e'
 
@@ -72,9 +72,9 @@ def test_read_granvik2018():
     assert pytest.approx(neo_dict_data[0]['MeanAnom_deg']) == 103.833748
     assert pytest.approx(neo_dict_data[0]['AbsMag_']) == 21.0643673
 
-def test_gravnik2018_database():
+def test_Granvik2018Database():
     
-    gravnik2018_sqlite = solary.neo.data.gravnik2018_database(new=True)
+    gravnik2018_sqlite = solary.neo.data.Granvik2018Database(new=True)
     
     assert type(gravnik2018_sqlite.con) == sqlite3.Connection
     assert type(gravnik2018_sqlite.cur) == sqlite3.Cursor

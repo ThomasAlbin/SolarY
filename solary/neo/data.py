@@ -19,37 +19,80 @@ import time
 import solary
 
 def _get_neodys_neo_nr():
+    """
+    This function gets the number of currently known NEOs from the NEODyS webpage. The information
+    is obtained by a Crawler-like script that may need frequent maintenance.
 
+    Returns
+    -------
+    neodys_nr_neos : int
+        Number of catalogued NEOs in the NEODyS database.
+
+    """
+
+    # Open the NEODyS link, where the current number of NEOs is shown
     http_response = urllib.request.urlopen('https://newton.spacedys.com/neodys/index.php?pc=1.0')
 
+    # Get the HTML response and read its content
     html_content = http_response.read()
 
+    # Extract the number of NEOs from a specific HTML position, using a regular expression. The
+    # number is displayed in bold like "[...] <b>1000 objects</b> in the NEODys [...]"
     neodys_nr_neos = int(re.findall(r'<b>(.*?) objects</b> in the NEODyS', str(html_content))[0])
 
     return neodys_nr_neos
 
 
-
 def download(row_exp=None):
+    """
+    This function downloads a file with the orbital elements of currently all known NEOs from the
+    NEODyS database. The file has the ending .cat and is basically a csv / ascii formatted file
+    that can be read by any editor.
 
+    Parameters
+    ----------
+    row_exp : bool, optional
+        Boolean value. If the input is set to True the number of NEOs that are listed in the
+        downloaded file are compared with the number of expected NEOs (number of NEOs listed on the
+        NEODyS page). The default is None.
 
+    Returns
+    -------
+    dl_status : str
+        Human-readable status report that returns 'OK' or 'ERROR', depending on the download's
+        success.
+    neodys_neo_nr : int
+        Number of NEOs (from the NEODyS page and thus optional). This value can be compared with
+        the content of the downloaded file to determine whether entries are missing or not. Per
+        default None is returned.
+
+    """
+
+    # Set the complete filepath. The file is stored in the user's home directory
     download_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', \
                                                                  'neodys.cat')
 
+    # Download the file
     downl_file_path, _ = \
         urllib.request.urlretrieve(url='https://newton.spacedys.com/~neodys2/neodys.cat', \
                                    filename=download_filename)
 
+    # To check whether the file has been successfully updated (if a file was present before) one
+    # needs to compare the "last modification time" of the file with the current system's time. If
+    # the deviation is too high, it is very likely that no new file has been downloaded and
+    # consequently updated
     system_time = time.time()
     file_mod_time = os.path.getmtime(downl_file_path)
-
     file_mod_diff = file_mod_time - system_time
 
+    # Set status message, if the file has been updated or not. A time difference of less than 5 s
+    # shall indicate whether the file is new or not
     if file_mod_diff < 5:
         dl_status = 'OK'
     else:
         dl_status = 'ERROR'
 
+    # Optional: Get the number of expected NEOs from the NEODyS webpage
     neodys_neo_nr = None
     if row_exp:
         neodys_neo_nr = _get_neodys_neo_nr()
@@ -58,13 +101,26 @@ def download(row_exp=None):
 
 
 def read_neodys():
+    """
+    Read the content of the downloaded NEODyS file and return a dictionary with its content.
 
+    Returns
+    -------
+    neo_dict : dict
+        Dictionary that contains the NEO data from the NEODyS download.
+
+    """
+
+    # Set the download file path. The file shall be stored in the home direoctry
     path_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', 'neodys.cat')
 
+    # Set a placeholder dictionary where the data will be stored
     neo_dict = []
+
+    # Open the NEODyS file. Ignore the header (first 6 rows) and iterate through the file row-wise.
+    # Read the content adn save it in the dictionary
     with open(path_filename) as f_temp:
         neo_data = f_temp.readlines()[6:]
-
         for neo_data_line_f in neo_data:
             neo_data_line = neo_data_line_f.split()
             neo_dict.append({'Name': neo_data_line[0].replace('\'', ''), \

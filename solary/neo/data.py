@@ -110,8 +110,8 @@ def read_neodys():
 
     Returns
     -------
-    neo_dict : dict
-        Dictionary that contains the NEO data from the NEODyS download.
+    neo_dict : list
+        List of dictionaries that contains the NEO data from the NEODyS download.
 
     """
 
@@ -166,12 +166,12 @@ class NEOdysDatabase:
     create_deriv_orb()
         Compute derived orbital elements from the raw input data.
     close()
-        Clsoe the SQLite database.
+        Close the SQLite database.
 
     See also
     --------
-    solary.neo.data.(row_exp=None)
-    solary.neo.data.read_neodys
+    solary.neo.data.download(row_exp=None)
+    solary.neo.data.read_neodys()
 
     """
 
@@ -370,11 +370,25 @@ def download_granvik2018():
 
     return md5_hash
 
-def read_granvik2018():
 
+def read_granvik2018():
+    """
+    Read the content of the downloaded Granvik et al. (2018) NEO model data file and return a
+    dictionary with its content.
+
+    Returns
+    -------
+    neo_dict : list
+        List of dictionaries that contains the NEO data from the downloaded model data.
+
+    """
+
+    # Set the download path of the model file
     path_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', \
                                                              'Granvik+_2018_Icarus.dat')
 
+    # Iterate through the downloaded file and write the content in a list of dictionaries. Each
+    # dictionary contains an individual simulated NEO
     neo_dict = []
     with open(path_filename) as f_temp:
         neo_data = f_temp.readlines()
@@ -391,31 +405,106 @@ def read_granvik2018():
 
     return neo_dict
 
+
 class Granvik2018Database:
+    """
+    Class to create, update and read an SQLite based database that contains the Granvik et al.
+    (2018) NEO model data (raw and derived parameters)
+
+    Attributes
+    ----------
+    db_filename : str
+        Absolute path to the SQLite Granvik et al. (2018) database
+    con : sqlite3.Connection
+        Connection to the SQLite Granvik et al. (2018) database
+    cur: sqlite3.Cursor
+        Cursor to the SQLite Granvik et al. (2018) database
+
+    Methods
+    -------
+    __init__(new=False)
+        Init function at the class call. Allows one to re-create a new SQLite database from
+        scratch.
+    create()
+        Create the main table of the SQLite Granvik et al. (2018) database (contains only the raw
+        input data, no derived parameters).
+    create_deriv_orb()
+        Compute derived orbital elements from the raw input data.
+    close()
+        Close the SQLite database.
+
+    See also
+    --------
+    solary.neo.data.download_granvik2018()
+    solary.neo.data.read_granvik2018()
+
+    """
+
 
     def __init__(self, new=False):
+        """
+        Init. function of the Granvik2018Database class. This method creates a new database or
+        opens an existing one (if applicable) and sets a cursor.
 
+        Parameters
+        ----------
+        new : bool, optional
+            If True: a new database will be created from scratch. WARNING: this will delete any
+            previously built SQLite database with the name "neo_granvik2018.db" in the home
+            directory. The default is False.
+
+        """
+
+        # Set the database path to the home directory
         self.db_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/databases', \
                                                                     'neo_granvik2018.db')
 
+        # Delete any existing database, if requested
         if new and os.path.exists(self.db_filename):
             os.remove(self.db_filename)
 
+        # Establish a connection and set a cursor to the database
         self.con = sqlite3.connect(self.db_filename)
         self.cur = self.con.cursor()
 
-    def _create_col(self, table, col_name, col_type):
 
+    def _create_col(self, table, col_name, col_type):
+        """
+        Private method to create new columns in tables
+
+        Parameters
+        ----------
+        table : str
+            Table name, where a new column shall be added.
+        col_name : str
+            Column name.
+        col_type : str
+            SQLite column type (FLOAT, INT, TEXT, etc.).
+
+        """
+
+        # Generic f-string that represents an SQLite command to alter a table (adding a new column
+        # with its dtype).
         sql_col_create = f'ALTER TABLE {table} ADD COLUMN {col_name} {col_type}'
 
+        # Try to create a new column. If is exists an sqlite3.OperationalError weill raise. Pass
+        # this error.
+        #TODO: change the error passing and merge with the same method in NEODySDatabase
         try:
             self.cur.execute(sql_col_create)
             self.con.commit()
         except sqlite3.OperationalError:
             pass
 
-    def create(self):
 
+    def create(self):
+        """
+        Method to create the Granvik et al. (2018) main table, read the downloaded content and fill
+        the database with the raw data.
+
+        """
+
+        # Create main table for the raw data
         self.cur.execute('CREATE TABLE IF NOT EXISTS main(ID INTEGER PRIMARY KEY, ' \
                                                          'SemMajAxis_AU FLOAT, ' \
                                                          'Ecc_ FLOAT, ' \
@@ -424,11 +513,12 @@ class Granvik2018Database:
                                                          'ArgP_deg FLOAT, ' \
                                                          'MeanAnom_deg FLOAT, ' \
                                                          'AbsMag_ FLOAT)')
-
         self.con.commit()
 
+        # Read the Granvik et al. (2018) data
         _neo_data = read_granvik2018()
 
+        # Insert the raw Granvik et al. (2018) data into the SQLite database
         self.cur.executemany('INSERT OR IGNORE INTO main(SemMajAxis_AU, ' \
                                                         'Ecc_, ' \
                                                         'Incl_deg, ' \
@@ -446,15 +536,23 @@ class Granvik2018Database:
                              _neo_data)
         self.con.commit()
 
-    def create_deriv_orb(self):
 
+    def create_deriv_orb(self):
+        """
+        Method to compute and insert derived orbital elements into the SQLite database.
+
+        """
+
+        # Create new columns
         self._create_col('main', 'Aphel_AU', 'FLOAT')
         self._create_col('main', 'Perihel_AU', 'FLOAT')
 
+        # Get all relevant information from the database
         self.cur.execute('SELECT ID, SemMajAxis_AU, Ecc_ FROM main')
-
         _neo_data = self.cur.fetchall()
 
+
+        # Iterate through the results and compute the derived orbital parameters
         _neo_deriv_param_dict = []
         for _neo_data_line_f in _neo_data:
             _neo_deriv_param_dict.append({'ID': _neo_data_line_f[0], \
@@ -469,10 +567,16 @@ class Granvik2018Database:
                                                                 ecc=_neo_data_line_f[2] \
                                                                                   )})
 
+        # Insert the derived paramters into the database
         self.cur.executemany('UPDATE main SET Aphel_AU = :Aphel_AU, Perihel_AU = :Perihel_AU ' \
                              'WHERE ID = :ID', _neo_deriv_param_dict)
         self.con.commit()
 
+
     def close(self):
+        """
+        Close the Granvik et al. (2018) database.
+
+        """
 
         self.con.close()

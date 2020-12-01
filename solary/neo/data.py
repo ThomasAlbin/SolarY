@@ -328,36 +328,47 @@ class NEOdysDatabase:
 
 
 def download_granvik2018():
+    """
+    Function to download the model data from Granvik et al. (2018) -1-. The data can be found in
+    -2-.
 
+    Returns
+    -------
+    md5_hash : str
+        MD5 hash of the downloaded file.
+
+    References
+    ----------
+    -1- Granvik, Morbidelli, Jedicke, Bolin, Bottke, Beshore, Vokrouhlicky, Nesvorny, and Michel
+        (2018). Debiased orbit and absolute-magnitude distributions for near-Earth objects.
+        Accepted for publication in Icarus.
+    -2- https://www.mv.helsinki.fi/home/mgranvik/data/Granvik+_2018_Icarus/
+    """
+
+    # Set the download path to the home directory
     download_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', \
                                                                  'Granvik+_2018_Icarus.dat.gz')
 
+    # Set the downlaod URL
     url_location = 'https://www.mv.helsinki.fi/home/mgranvik/data/' \
                    'Granvik+_2018_Icarus/Granvik+_2018_Icarus.dat.gz'
 
-    downl_file_path, _ = \
-        urllib.request.urlretrieve(url=url_location, \
-                                   filename=download_filename)
+    # Retrieve the data (download)
+    downl_file_path, _ = urllib.request.urlretrieve(url=url_location, \
+                                                    filename=download_filename)
 
-    system_time = time.time()
-    file_mod_time = os.path.getmtime(downl_file_path)
-
-    file_mod_diff = file_mod_time - system_time
-
-    if file_mod_diff < 5:
-        dl_status = 'OK'
-    else:
-        dl_status = 'ERROR'
-
+    # Get the file name (without the gzip ending). Open the gzip file and move the .dat file out.
     unzip_file_path = downl_file_path[:-3]
     with gzip.open(downl_file_path, 'r') as f_in, open(unzip_file_path, 'wb') as f_out:
         shutil.copyfileobj(f_in, f_out)
 
+    # Delete the gzip file
     os.remove(downl_file_path)
 
+    # Compute the MD5 hash
     md5_hash = solary.auxiliary.parse.comp_md5(unzip_file_path)
 
-    return dl_status, md5_hash
+    return md5_hash
 
 def read_granvik2018():
 

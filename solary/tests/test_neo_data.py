@@ -57,8 +57,7 @@ def test_NEOdysDatabase():
 
 def test_download_granvik2018():
 
-    dl_status, md5_hash = solary.neo.data.download_granvik2018()
-    assert dl_status == 'OK'
+    md5_hash = solary.neo.data.download_granvik2018()
     assert md5_hash == '521ddfdc18545c736fee36dbc4879d5e'
 
 def test_read_granvik2018():

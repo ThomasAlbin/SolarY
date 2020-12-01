@@ -47,7 +47,7 @@ def download(row_exp=None):
     """
     This function downloads a file with the orbital elements of currently all known NEOs from the
     NEODyS database. The file has the ending .cat and is basically a csv / ascii formatted file
-    that can be read by any editor.
+    that can be read by any editor. See -1-
 
     Parameters
     ----------
@@ -65,6 +65,10 @@ def download(row_exp=None):
         Number of NEOs (from the NEODyS page and thus optional). This value can be compared with
         the content of the downloaded file to determine whether entries are missing or not. Per
         default None is returned.
+
+    References
+    ----------
+    -1- Link to the NEODyS data: https://newton.spacedys.com/neodys/index.php?pc=1.0
 
     """
 
@@ -138,31 +142,104 @@ def read_neodys():
 
 
 class NEOdysDatabase:
+    """
+    Class to create, update and read an SQLite based database that contains NEO data (raw and
+    derived parameters) based on the NEODyS data.
+
+    Attributes
+    ----------
+    db_filename : str
+        Absolute path to the SQLite NEODyS database
+    con : sqlite3.Connection
+        Connection to the SQLite NEODyS database
+    cur: sqlite3.Cursor
+        Cursor to the SQLite NEODyS database
+
+    Methods
+    -------
+    __init__(new=False)
+        Init function at the class call. Allows one to re-create a new SQLite database from
+        scratch.
+    create()
+        Create the main table of the SQLite NEODyS database (contains only the raw input data, no
+        derived parameters).
+    create_deriv_orb()
+        Compute derived orbital elements from the raw input data.
+    close()
+        Clsoe the SQLite database.
+
+    See also
+    --------
+    solary.neo.data.(row_exp=None)
+    solary.neo.data.read_neodys
+
+    """
+
 
     def __init__(self, new=False):
+        """
+        Init. function of the NEODySDatabase class. This method creates a new database or opens an
+        existing one (if applicable) and sets a cursor.
 
+        Parameters
+        ----------
+        new : bool, optional
+            If True: a new database will be created from scratch. WARNING: this will delete any
+            previously built SQLite database with the name "neo_neodys.db" in the home directory.
+            The default is False.
+
+        """
+
+        # Set / Get an SQLite database path + filename
         self.db_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/databases', \
                                                                     'neo_neodys.db')
 
-
+        # Delete any existing database, if requested
         if new and os.path.exists(self.db_filename):
             os.remove(self.db_filename)
 
+        # Connect / Build database and set a cursor
         self.con = sqlite3.connect(self.db_filename)
         self.cur = self.con.cursor()
 
-    def _create_col(self, table, col_name, col_type):
 
+    def _create_col(self, table, col_name, col_type):
+        """
+        Private method to create new columns in tables
+
+        Parameters
+        ----------
+        table : str
+            Table name, where a new column shall be added.
+        col_name : str
+            Column name.
+        col_type : str
+            SQLite column type (FLOAT, INT, TEXT, etc.).
+
+        """
+
+        # Generic f-string that represents an SQLite command to alter a table (adding a new column
+        # with its dtype).
         sql_col_create = f'ALTER TABLE {table} ADD COLUMN {col_name} {col_type}'
 
+        # Try to create a new column. If is exists an sqlite3.OperationalError weill raise. Pass
+        # this error.
+        #TODO: change the error passing
         try:
             self.cur.execute(sql_col_create)
             self.con.commit()
         except sqlite3.OperationalError:
             pass
 
-    def create(self):
 
+    def create(self):
+        """
+        Method to create the NEODyS main table, read the downloaded content and fill the database
+        with the raw data.
+
+        """
+
+        # Create the main table
         self.cur.execute('CREATE TABLE IF NOT EXISTS main(Name TEXT PRIMARY KEY, ' \
                                                          'Epoch_MJD FLOAT, ' \
                                                          'SemMajAxis_AU FLOAT, ' \
@@ -173,11 +250,12 @@ class NEOdysDatabase:
                                                          'MeanAnom_deg FLOAT, ' \
                                                          'AbsMag_ FLOAT, ' \
                                                          'SlopeParamG_ FLOAT)')
-
         self.con.commit()
 
+        # Read the NEODyS raw data
         _neo_data = read_neodys()
 
+        # Insert the raw data into the database
         self.cur.executemany('INSERT OR IGNORE INTO main(Name, ' \
                                                         'Epoch_MJD, ' \
                                                         'SemMajAxis_AU, ' \
@@ -201,15 +279,25 @@ class NEOdysDatabase:
                              _neo_data)
         self.con.commit()
 
-    def create_deriv_orb(self):
 
+    def create_deriv_orb(self):
+        """
+        Method to compute and insert derived orbital elements into the SQLite database.
+
+        """
+
+        # Add new columns in the main table
         self._create_col('main', 'Aphel_AU', 'FLOAT')
         self._create_col('main', 'Perihel_AU', 'FLOAT')
 
+        # Get orbital elements to compute the derived parameters
         self.cur.execute('SELECT Name, SemMajAxis_AU, Ecc_ FROM main')
 
+        # Fetch the data
         _neo_data = self.cur.fetchall()
 
+        # Iterate throuh the results, compute the derived elements and put them in a list of
+        # dicitionaries
         _neo_deriv_param_dict = []
         for _neo_data_line_f in _neo_data:
             _neo_deriv_param_dict.append({'Name': _neo_data_line_f[0], \
@@ -224,11 +312,17 @@ class NEOdysDatabase:
                                                                 ecc=_neo_data_line_f[2] \
                                                                                   )})
 
+        # Insert the data into the main table
         self.cur.executemany('UPDATE main SET Aphel_AU = :Aphel_AU, Perihel_AU = :Perihel_AU ' \
                              'WHERE Name = :Name', _neo_deriv_param_dict)
         self.con.commit()
 
+
     def close(self):
+        """
+        Close the SQLite NEODyS database.
+
+        """
 
         self.con.close()
 

@@ -5,16 +5,18 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="solary",
-    version="0.1",
+    version="0.2",
     author="Thomas Albin",
     packages=setuptools.find_packages(),
     package_data={'solary': ['_config/constants.ini']},
     include_package_data=True,
-    description="TBD",
-    long_description=long_description,
+    description="A Space Science library for asteroid, comets and meteors",
     url="https://github.com/ThomasAlbin/SolarY",
     classifiers=[
         "Programming Language :: Python :: 3",
     ],
     python_requires='>=3.8',
+    install_requires=[
+        "pytest>=6.1.0",
+    ],
 )

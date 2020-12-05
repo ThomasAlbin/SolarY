@@ -61,7 +61,7 @@ def test_sphere_of_influence():
 
     # Find the constants.ini
     module_path = os.path.dirname(__file__)
-    constants_ini_path = os.path.join(module_path, '..', '_config', 'constants.ini')
+    constants_ini_path = os.path.join(module_path, '../..', '_config', 'constants.ini')
 
     # Read and parse the config file
     config.read(constants_ini_path)

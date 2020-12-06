@@ -18,5 +18,6 @@ setuptools.setup(
     python_requires='>=3.8',
     install_requires=[
         "pytest>=6.1.0",
+        "certifi"
     ],
 )

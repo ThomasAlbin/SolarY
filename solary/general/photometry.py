@@ -6,9 +6,7 @@ This module contains functions for photometric purposes.
 """
 
 # Import standard modules
-import configparser
 import math
-import os
 
 # Import solary
 import solary
@@ -44,15 +42,7 @@ def appmag2irr(app_mag):
 
     # Load the configuration file that contains the zero point bolometric
     # irradiance
-    # Set config parser
-    config = configparser.ConfigParser()
-
-    # Find the constants.ini
-    module_path = os.path.dirname(__file__)
-    constants_ini_path = os.path.join(module_path, '..', '_config', 'constants.ini')
-
-    # Read and parse the config file
-    config.read(constants_ini_path)
+    config = solary.auxiliary.config.get_constants()
     appmag_irr_i0 = float(config['photometry']['appmag_irr_i0'])
 
     # Convert apparent magnitude to irradiance

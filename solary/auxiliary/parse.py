@@ -45,7 +45,7 @@ def comp_md5(file_name):
 def setnget_file_path(dl_path, filename):
     """
     Compute the path of a file, depending on its download path. The standard download path is:
-        ~$HOME/solary_data/
+        ~$HOME/
 
     Parameters
     ----------

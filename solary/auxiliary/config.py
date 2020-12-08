@@ -20,7 +20,7 @@ def get_constants():
     Returns
     -------
     config : configparser.ConfigParser
-        Configuration Parser that constains miscellaneous constants (like astrodynmical, time,
+        Configuration Parser that contains miscellaneous constants (like astrodynmical, time,
         etc.)
 
     """
@@ -33,5 +33,28 @@ def get_constants():
 
     # Read and parse the config file
     config.read(constants_ini_path)
+
+    return config
+
+def get_paths():
+    """
+    Function to get the paths.dir file from the _config directory
+
+    Returns
+    -------
+    config : configparser.ConfigParser
+        Configuration Parser that contains miscellaneous paths to store / access / etc. downloaded
+        files, created database etc.
+
+    """
+
+    # Set the config parser
+    config = configparser.ConfigParser()
+
+    # Get the constants ini file
+    paths_ini_path = os.path.join(ROOT_DIR, '_config', 'paths.ini')
+
+    # Read and parse the config file
+    config.read(paths_ini_path)
 
     return config

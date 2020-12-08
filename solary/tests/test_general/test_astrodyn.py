@@ -1,6 +1,4 @@
-import configparser
 import math
-import os
 
 import pytest
 import solary
@@ -56,15 +54,9 @@ def test_jd2mjd():
 
 def test_sphere_of_influence():
 
-    # Set config parser
-    config = configparser.ConfigParser()
+    # Read the config file
+    config = solary.auxiliary.config.get_constants()
 
-    # Find the constants.ini
-    module_path = os.path.dirname(__file__)
-    constants_ini_path = os.path.join(module_path, '../..', '_config', 'constants.ini')
-
-    # Read and parse the config file
-    config.read(constants_ini_path)
     sem_maj_axis_earth = float(config['constants']['one_au'])
     
     grav_const = float(config['constants']['grav_const'])

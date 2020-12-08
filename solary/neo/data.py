@@ -18,6 +18,9 @@ import time
 # Import SolarY
 import solary
 
+# Get the file paths
+PATH_CONFIG = solary.auxiliary.config.get_paths()
+
 def _get_neodys_neo_nr():
     """
     This function gets the number of currently known NEOs from the NEODyS webpage. The information
@@ -73,8 +76,9 @@ def download(row_exp=None):
     """
 
     # Set the complete filepath. The file is stored in the user's home directory
-    download_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', \
-                                                                 'neodys.cat')
+    download_filename = \
+        solary.auxiliary.parse.setnget_file_path(PATH_CONFIG['neo']['neodys_raw_dir'], \
+                                                 PATH_CONFIG['neo']['neodys_raw_file'])
 
     # Download the file
     downl_file_path, _ = \
@@ -116,7 +120,8 @@ def read_neodys():
     """
 
     # Set the download file path. The file shall be stored in the home direoctry
-    path_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', 'neodys.cat')
+    path_filename = solary.auxiliary.parse.setnget_file_path(PATH_CONFIG['neo']['neodys_raw_dir'], \
+                                                             PATH_CONFIG['neo']['neodys_raw_file'])
 
     # Set a placeholder dictionary where the data will be stored
     neo_dict = []
@@ -191,8 +196,9 @@ class NEOdysDatabase:
         """
 
         # Set / Get an SQLite database path + filename
-        self.db_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/databases', \
-                                                                    'neo_neodys.db')
+        self.db_filename = \
+            solary.auxiliary.parse.setnget_file_path(PATH_CONFIG['neo']['neodys_db_dir'], \
+                                                     PATH_CONFIG['neo']['neodys_db_file'])
 
         # Delete any existing database, if requested
         if new and os.path.exists(self.db_filename):
@@ -346,8 +352,9 @@ def download_granvik2018():
     """
 
     # Set the download path to the home directory
-    download_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', \
-                                                                 'Granvik+_2018_Icarus.dat.gz')
+    download_filename = \
+        solary.auxiliary.parse.setnget_file_path(PATH_CONFIG['neo']['granvik2018_raw_dir'], \
+                                                 PATH_CONFIG['neo']['granvik2018_raw_file'])
 
     # Set the downlaod URL
     url_location = 'https://www.mv.helsinki.fi/home/mgranvik/data/' \
@@ -384,8 +391,9 @@ def read_granvik2018():
     """
 
     # Set the download path of the model file
-    path_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/data', \
-                                                             'Granvik+_2018_Icarus.dat')
+    path_filename = \
+        solary.auxiliary.parse.setnget_file_path(PATH_CONFIG['neo']['granvik2018_raw_dir'], \
+                                                 PATH_CONFIG['neo']['granvik2018_unzip_file'])
 
     # Iterate through the downloaded file and write the content in a list of dictionaries. Each
     # dictionary contains an individual simulated NEO
@@ -456,8 +464,9 @@ class Granvik2018Database:
         """
 
         # Set the database path to the home directory
-        self.db_filename = solary.auxiliary.parse.setnget_file_path('solary_data/neo/databases', \
-                                                                    'neo_granvik2018.db')
+        self.db_filename = \
+            solary.auxiliary.parse.setnget_file_path(PATH_CONFIG['neo']['granvik2018_db_dir'], \
+                                                     PATH_CONFIG['neo']['granvik2018_db_file'])
 
         # Delete any existing database, if requested
         if new and os.path.exists(self.db_filename):

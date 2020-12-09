@@ -46,12 +46,29 @@ def test_NEOdysDatabase():
     neo_sqlite.create_deriv_orb()
 
     query_res_cur = neo_sqlite.cur.execute('SELECT Name, Aphel_AU, Perihel_AU ' \
-                                            'FROM main WHERE Name = "433"')
+                                           'FROM main WHERE Name = "433"')
     query_res = query_res_cur.fetchone()
 
     assert query_res[0] == '433'
     assert pytest.approx(query_res[1], abs=1e-3) == 1.783
     assert pytest.approx(query_res[2], abs=1e-3) == 1.133
+
+
+    query_res_cur = neo_sqlite.cur.execute('SELECT COUNT(*) FROM main')
+    original_count = query_res_cur.fetchone()[0]
+    
+    neo_sqlite.cur.execute('DELETE FROM main WHERE Name="433"')
+    neo_sqlite.con.commit()
+    query_res_cur = neo_sqlite.cur.execute('SELECT COUNT(*) FROM main')
+    manip_count = query_res_cur.fetchone()[0]
+
+    assert manip_count == original_count-1
+
+    neo_sqlite.update()
+    query_res_cur = neo_sqlite.cur.execute('SELECT COUNT(*) FROM main')
+    update_count = query_res_cur.fetchone()[0]
+
+    assert update_count == original_count
 
     neo_sqlite.close()
 
@@ -73,27 +90,27 @@ def test_read_granvik2018():
 
 def test_Granvik2018Database():
     
-    gravnik2018_sqlite = solary.neo.data.Granvik2018Database(new=True)
+    granvik2018_sqlite = solary.neo.data.Granvik2018Database(new=True)
     
-    assert type(gravnik2018_sqlite.con) == sqlite3.Connection
-    assert type(gravnik2018_sqlite.cur) == sqlite3.Cursor
+    assert type(granvik2018_sqlite.con) == sqlite3.Connection
+    assert type(granvik2018_sqlite.cur) == sqlite3.Cursor
 
-    gravnik2018_sqlite.create()
+    granvik2018_sqlite.create()
     
-    query_res_cur = gravnik2018_sqlite.cur.execute('SELECT ID, SemMajAxis_AU, ECC_ ' \
+    query_res_cur = granvik2018_sqlite.cur.execute('SELECT ID, SemMajAxis_AU, ECC_ ' \
                                                     'FROM main WHERE ID = 1')
     query_res = query_res_cur.fetchone()
 
     assert query_res[1] == 2.57498121
     assert query_res[2] == 0.783616960
 
-    gravnik2018_sqlite.create_deriv_orb()
+    granvik2018_sqlite.create_deriv_orb()
 
-    query_res_cur = gravnik2018_sqlite.cur.execute('SELECT ID, Aphel_AU, Perihel_AU ' \
+    query_res_cur = granvik2018_sqlite.cur.execute('SELECT ID, Aphel_AU, Perihel_AU ' \
                                                     'FROM main WHERE ID = 1')
     query_res = query_res_cur.fetchone()
 
     assert query_res[1] == 4.592780157837321
     assert query_res[2] == 0.5571822621626783
 
-    gravnik2018_sqlite.close()
+    granvik2018_sqlite.close()

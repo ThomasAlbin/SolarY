@@ -324,6 +324,17 @@ class NEOdysDatabase:
         self.con.commit()
 
 
+    def update(self):
+        """
+        Update the NEODyS Database with all content.
+
+        """
+
+        # Call the create functions that insert new data
+        self.create()
+        self.create_deriv_orb()
+
+
     def close(self):
         """
         Close the SQLite NEODyS database.

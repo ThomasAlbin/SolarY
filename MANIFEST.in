@@ -1,1 +1,2 @@
 include solary/_config/constants.ini
+include solary/_config/paths.ini

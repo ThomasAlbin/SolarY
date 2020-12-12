@@ -1,14 +1,16 @@
 import setuptools
 
+import solary
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="solary",
-    version="0.2",
-    author="Thomas Albin",
+    name='solary',
+    version=solary.__version__,
+    author=solary.__author__,
     packages=setuptools.find_packages(),
-    package_data={'solary': ['_config/constants.ini']},
+    package_data={'solary': ['_config/constants.ini', '_config/paths.ini']},
     include_package_data=True,
     description="A Space Science library for asteroid, comets and meteors",
     url="https://github.com/ThomasAlbin/SolarY",

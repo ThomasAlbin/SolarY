@@ -3,7 +3,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 __project__ = "SolarY"
 __author__ = "Dr.-Ing. Thomas Albin"
-__version__ = "ON_GIT_RELEASE"
+__version__ = "deploy"
 
 from . import _config
 

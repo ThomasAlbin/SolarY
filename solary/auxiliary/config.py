@@ -36,9 +36,14 @@ def get_constants():
 
     return config
 
-def get_paths():
+def get_paths(test=False):
     """
     Function to get the paths.dir file from the _config directory
+
+    Parameters
+    ----------
+    test : bool
+        Boolean value whether to use the default (prod.) or test configs. Default: False
 
     Returns
     -------
@@ -51,8 +56,11 @@ def get_paths():
     # Set the config parser
     config = configparser.ConfigParser()
 
-    # Get the constants ini file
-    paths_ini_path = os.path.join(ROOT_DIR, '_config', 'paths.ini')
+    # Get the paths ini file, differentiate between prod and test
+    if test:
+        paths_ini_path = os.path.join(ROOT_DIR, 'tests/_resources/_config', 'test_paths.ini')
+    else:
+        paths_ini_path = os.path.join(ROOT_DIR, '_config', 'paths.ini')
 
     # Read and parse the config file
     config.read(paths_ini_path)

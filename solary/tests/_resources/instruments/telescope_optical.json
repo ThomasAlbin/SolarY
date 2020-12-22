@@ -1,6 +1,6 @@
 {
     "main_mirror_dia" : 1.0,
-    "sec_mirr_dia" : 0.2,
+    "sec_mirror_dia" : 0.2,
     "optical_throughput" : 0.6,
     "focal_length" : 10.0
 }

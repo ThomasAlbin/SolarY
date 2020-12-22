@@ -3,6 +3,9 @@ TBD
 
 """
 
+# Import standard libraries
+import math
+
 # Import installed libraries
 import pytest
 
@@ -32,6 +35,16 @@ def test_Optical(telescope_test_optics):
     test_telescope = solary.instruments.telescope.Optical(telescope_test_optics)
     
     assert test_telescope.main_mirror_dia == telescope_test_optics['main_mirror_dia']
-    assert test_telescope.sec_mirr_dia == telescope_test_optics['sec_mirr_dia']
+    assert test_telescope.sec_mirror_dia == telescope_test_optics['sec_mirror_dia']
     assert test_telescope.optical_throughput == telescope_test_optics['optical_throughput']
     assert test_telescope.focal_length == telescope_test_optics['focal_length']
+    
+    # test now the property
+    assert test_telescope.main_mirror_area == math.pi \
+        * ((telescope_test_optics['main_mirror_dia'] / 2.0) ** 2.0)
+        
+    assert test_telescope.sec_mirror_area == math.pi \
+        * ((telescope_test_optics['sec_mirror_dia'] / 2.0) ** 2.0)
+        
+    assert test_telescope.collect_area == \
+        test_telescope.main_mirror_area - test_telescope.sec_mirror_area

@@ -1,0 +1,7 @@
+{
+    "pixels" : [4096, 4112],
+    "pixel_size" : 15.0,
+    "dark_noise" : 1.0,
+    "readout_noise" : 10.0,
+    "full_well": 300000.0
+}

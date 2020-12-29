@@ -14,7 +14,7 @@ import solary
 
 
 @pytest.fixture
-def ccd_test_optics():
+def ccd_test_config():
     
     test_paths_config = solary.auxiliary.config.get_paths(test=True)
 
@@ -30,19 +30,19 @@ def test_read_ccd_config(ccd_test_optics):
     
     assert ccd_test_optics['pixels'] == [4096, 4112]
 
-def test_Optical(ccd_test_optics):
+def test_Optical(ccd_test_config):
     
-    test_ccd = solary.instruments.camera.CCD(ccd_test_optics)
+    test_ccd = solary.instruments.camera.CCD(ccd_test_config)
     
-    assert test_ccd.pixels == ccd_test_optics['pixels']
-    assert test_ccd.pixel_size == ccd_test_optics['pixel_size']
-    assert test_ccd.dark_noise == ccd_test_optics['dark_noise']
-    assert test_ccd.readout_noise == ccd_test_optics['readout_noise']
-    assert test_ccd.full_well == ccd_test_optics['full_well']
+    assert test_ccd.pixels == ccd_test_config['pixels']
+    assert test_ccd.pixel_size == ccd_test_config['pixel_size']
+    assert test_ccd.dark_noise == ccd_test_config['dark_noise']
+    assert test_ccd.readout_noise == ccd_test_config['readout_noise']
+    assert test_ccd.full_well == ccd_test_config['full_well']
 
     # test now the chip size
     assert test_ccd.chip_size[0] == \
-        ccd_test_optics['pixels'][0] * ccd_test_optics['pixel_size'] / 1000.0
+        ccd_test_config['pixels'][0] * ccd_test_config['pixel_size'] / 1000.0
         
 #     assert test_telescope.sec_mirror_area == math.pi \
 #         * ((telescope_test_optics['sec_mirror_dia'] / 2.0) ** 2.0)

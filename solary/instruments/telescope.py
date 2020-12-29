@@ -7,12 +7,30 @@ import json
 
 # Import solary
 import solary
-#import solary.instruments.optics.Reflector as Reflector
 
+from . import camera
 from . import optics
 
-# class ReflectorCCD(solary.instruments.optics.Reflector, solary.instruments.camera.CCD):
+def comp_fov(sensor_dim, focal_length):
     
-#     def __init__(self):
+    # https://www.celestron.com/blogs/knowledgebase/
+    # how-do-i-determine-the-field-of-view-for-my-ccd-chip-and-telescope
+    
+    return (3436.62 * sensor_dim / focal_length) * 60.0
+    
+
+class ReflectorCCD(optics.Reflector, camera.CCD):
+    
+    def __init__(self, optics_config, ccd_config):
         
-#         None
+        optics.Reflector.__init__(self, optics_config)
+        camera.CCD.__init__(self, ccd_config)
+    
+    @property
+    def fov(self):
+        
+        fov_res = []
+        for chip_dim in self.chip_size:
+            fov_res.append(comp_fov(sensor_dim=chip_dim, focal_length=self.focal_length*1000.0))
+        
+        return fov_res

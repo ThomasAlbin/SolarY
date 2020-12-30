@@ -39,6 +39,7 @@ def test_Optical(ccd_test_config):
     assert test_ccd.dark_noise == ccd_test_config['dark_noise']
     assert test_ccd.readout_noise == ccd_test_config['readout_noise']
     assert test_ccd.full_well == ccd_test_config['full_well']
+    assert test_ccd.quantum_eff == ccd_test_config['quantum_eff']
 
     # test now the chip size
     assert test_ccd.chip_size[0] == \

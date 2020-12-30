@@ -50,4 +50,19 @@ def test_Optical(telescope_test_properties):
     assert test_telescope.main_mirror_dia == test_reflector_config['main_mirror_dia']
     
     # test now the telescope specific properties
-    assert len(test_telescope.fov) == 2
+    assert pytest.approx(test_telescope.fov[0], abs=0.1) == 1266.8
+    assert pytest.approx(test_telescope.fov[1], abs=0.1) == 1271.8
+    
+    assert test_telescope.ifov[0] == \
+               test_telescope.fov[0] / test_telescope.pixels[0]
+
+    assert test_telescope.ifov[1] == \
+               test_telescope.fov[1] / test_telescope.pixels[1]
+               
+    # set aperture in arcseconds
+    test_telescope.aperture = 10.0
+    assert test_telescope.aperture == 10.0
+    
+    # set exposure time in seconds
+    test_telescope.exposure_time = 60.0
+    assert test_telescope.exposure_time == 60.0

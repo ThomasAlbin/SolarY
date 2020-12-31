@@ -58,11 +58,19 @@ def test_Optical(telescope_test_properties):
 
     assert test_telescope.ifov[1] == \
                test_telescope.fov[1] / test_telescope.pixels[1]
-               
+
     # set aperture in arcseconds
     test_telescope.aperture = 10.0
     assert test_telescope.aperture == 10.0
     
+    # set half flux diameter
+    test_telescope.hfdia = 10.0
+    assert test_telescope.hfdia == 10.0
+    
+    # check how many pixels are aperture
+    assert test_telescope.pixels_in_aperture == \
+        int(round(math.pi * (0.5 * test_telescope.aperture) ** 2.0 / math.prod(test_telescope.ifov), 0))
+
     # set exposure time in seconds
     test_telescope.exposure_time = 60.0
     assert test_telescope.exposure_time == 60.0

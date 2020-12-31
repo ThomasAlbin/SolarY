@@ -4,6 +4,7 @@ TBD
 """
 
 import json
+import math
 
 # Import solary
 import solary
@@ -53,6 +54,16 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
     def aperture(self, apert):
         
         self._aperture = apert
+
+    @property
+    def hfdia(self):
+        
+        return self._hfdia
+        
+    @hfdia.setter
+    def hfdia(self, halfflux_dia):
+        
+        self._hfdia = halfflux_dia
         
     @property
     def exposure_time(self):
@@ -63,8 +74,14 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
     def exposure_time(self, exp_time):
         self._exposure_time = exp_time
     
-    # def _comp_electrons_total(self, mag):
+    @property
+    def pixels_in_aperture(self):
+
+        frac_pixels_in_aperture = math.pi * (0.5 * self.aperture) ** 2.0 / math.prod(self.ifov)
         
+        pixels_in_aperture = int(round(frac_pixels_in_aperture, 0))
+
+        return pixels_in_aperture
         
     
     

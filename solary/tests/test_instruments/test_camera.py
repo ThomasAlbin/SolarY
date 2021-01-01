@@ -26,9 +26,9 @@ def ccd_test_config():
 
     return test_ccd
 
-def test_read_ccd_config(ccd_test_optics):
+def test_read_ccd_config(ccd_test_config):
     
-    assert ccd_test_optics['pixels'] == [4096, 4112]
+    assert ccd_test_config['pixels'] == [4096, 4112]
 
 def test_Optical(ccd_test_config):
     
@@ -44,7 +44,10 @@ def test_Optical(ccd_test_config):
     # test now the chip size
     assert test_ccd.chip_size[0] == \
         ccd_test_config['pixels'][0] * ccd_test_config['pixel_size'] / 1000.0
-        
+    
+    # test now the pixel size in m**2
+    assert test_ccd.pixel_size_sq_m == (ccd_test_config['pixel_size'] ** 2.0) * 10.0 ** (-12.0)
+    
 #     assert test_telescope.sec_mirror_area == math.pi \
 #         * ((telescope_test_optics['sec_mirror_dia'] / 2.0) ** 2.0)
         

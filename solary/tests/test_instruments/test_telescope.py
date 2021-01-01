@@ -39,7 +39,7 @@ def test_comp_fov():
     
     assert pytest.approx(fov1 / 60.0, abs=0.1) == 87.3
 
-def test_Optical(telescope_test_properties):
+def test_reflectorccd(telescope_test_properties):
     
     test_reflector_config, test_ccd_config = telescope_test_properties
     
@@ -48,6 +48,10 @@ def test_Optical(telescope_test_properties):
     
     assert test_telescope.pixels == test_ccd_config['pixels']
     assert test_telescope.main_mirror_dia == test_reflector_config['main_mirror_dia']
+    
+    # test if config has been loaded
+    config = solary.auxiliary.config.get_constants()
+    assert test_telescope._photon_flux_v == float(config['photometry']['photon_flux_V'])
     
     # test now the telescope specific properties
     assert pytest.approx(test_telescope.fov[0], abs=0.1) == 1266.8
@@ -74,3 +78,10 @@ def test_Optical(telescope_test_properties):
     # set exposure time in seconds
     test_telescope.exposure_time = 60.0
     assert test_telescope.exposure_time == 60.0
+    
+    # compute the light fraction in aperture
+    assert test_telescope._ratio_light_aperture == \
+        math.erf((test_telescope.aperture) / (solary.general.geometry.fwhm2std(test_telescope.hfdia)*math.sqrt(2)))**2.0
+    
+    
+    

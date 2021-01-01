@@ -27,6 +27,9 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         optics.Reflector.__init__(self, optics_config)
         camera.CCD.__init__(self, ccd_config)
     
+        config = solary.auxiliary.config.get_constants()
+        self._photon_flux_v = float(config['photometry']['photon_flux_V'])
+    
     @property
     def fov(self):
         
@@ -82,6 +85,18 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         pixels_in_aperture = int(round(frac_pixels_in_aperture, 0))
 
         return pixels_in_aperture
+
+    @property
+    def _ratio_light_aperture(self):
+        sigma = solary.general.geometry.fwhm2std(self.hfdia)
         
+        _ratio = math.erf(self.aperture / (sigma * math.sqrt(2))) ** 2.0
+
+        return _ratio
     
-    
+    # def object_esignal(self, obj_mag):
+
+    #     obj_sig_aper = 10.0 ** (-0.4 * obj_mag) * self._photon_flux_v * self.exposure_time \
+    #         * self.collect_area * self.__ratio_light_aperture * self.quantum_eff
+            
+    #     return obj_sig_aper

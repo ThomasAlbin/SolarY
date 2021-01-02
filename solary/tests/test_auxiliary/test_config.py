@@ -52,4 +52,4 @@ def test_get_paths():
     # If the reading was successful the config object shall have miscellaneous sections and
     # corresponding values. One of them contains "instruments_telescope_optical"
     test_paths_config_sections = test_paths_config.sections()
-    assert 'instruments_telescope_optical' in test_paths_config_sections
+    assert 'instruments_optics_reflector' in test_paths_config_sections

@@ -92,13 +92,23 @@ def test_reflectorccd(telescope_test_properties):
     assert object_electrons_apert == exp_e_signal
     
     # compute sky background signal
+    total_sky_mag = solary.general.photometry.surmag2intmag(surmag=19.0, \
+                                                            area=math.prod(test_telescope.fov))
+    
+    exp_sky_esignal = round(10.0 ** (-0.4 * total_sky_mag) \
+        * float(config['photometry']['photon_flux_V']) * 60.0 * test_telescope.collect_area \
+        * test_telescope.quantum_eff * test_telescope.optical_throughput \
+        * (test_telescope.pixels_in_aperture / math.prod(test_telescope.pixels)), 0)
+    object_electrons_apert = test_telescope.object_esignal(mag=10.0)
     sky_electrons_apert = test_telescope.sky_esignal(mag_arcsec_sq=19.0)
-    assert sky_electrons_apert == 30.0
+    assert sky_electrons_apert == exp_sky_esignal
     
+    # test the dark current
+    assert test_telescope.dark_esignal_aperture == round(float(test_ccd_config['dark_noise']) \
+        * 60.0 * test_telescope.pixels_in_aperture, 0)
     
-    
-    
-    
+    # now test the SNR
+    assert test_telescope.object_snr(obj_mag=19.0, sky_mag_arcsec_sq=19.0) == 5.0
     
     
     

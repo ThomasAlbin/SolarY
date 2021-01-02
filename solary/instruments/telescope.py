@@ -112,12 +112,28 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
             * self.collect_area * (self.pixels_in_aperture / math.prod(self.pixels)) \
             * self.quantum_eff * self.optical_throughput
 
+        sky_sig_aper = round(sky_sig_aper, 0)
 
         return sky_sig_aper
     
-    # def object_snr(obj_mag, sky_mag_arcsec_sq):
+    @property
+    def dark_esignal_aperture(self):
         
+        dark_sig_aper = self.dark_noise * self.exposure_time * self.pixels_in_aperture
+
+        dark_sig_aper = round(dark_sig_aper, 0)
+
+        return dark_sig_aper
+    
+    def object_snr(self, obj_mag, sky_mag_arcsec_sq):
         
+        signal = self.object_esignal(mag=obj_mag)
+        noise = math.sqrt(signal + self.sky_esignal(mag_arcsec_sq=sky_mag_arcsec_sq)
+                          + self.dark_esignal_aperture)
+        
+        snr = signal/noise
+        
+        return snr
 
 
 

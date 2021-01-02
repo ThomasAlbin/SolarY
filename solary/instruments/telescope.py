@@ -94,9 +94,32 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
 
         return _ratio
     
-    # def object_esignal(self, obj_mag):
+    def object_esignal(self, mag):
 
-    #     obj_sig_aper = 10.0 ** (-0.4 * obj_mag) * self._photon_flux_v * self.exposure_time \
-    #         * self.collect_area * self.__ratio_light_aperture * self.quantum_eff
-            
-    #     return obj_sig_aper
+        obj_sig_aper = 10.0 ** (-0.4 * mag) * self._photon_flux_v * self.exposure_time \
+            * self.collect_area * self._ratio_light_aperture * self.quantum_eff * self.optical_throughput
+        
+        obj_sig_aper = round(obj_sig_aper, 0)
+        
+        return obj_sig_aper
+
+    def sky_esignal(self, mag_arcsec_sq):
+        
+        total_sky_mag = solary.general.photometry.surmag2intmag(surmag=mag_arcsec_sq, \
+                                                                area=math.prod(self.fov))
+        
+        sky_sig_aper = 10.0 ** (-0.4 * total_sky_mag) * self._photon_flux_v * self.exposure_time \
+            * self.collect_area * (self.pixels_in_aperture / math.prod(self.pixels)) \
+            * self.quantum_eff * self.optical_throughput
+
+
+        return sky_sig_aper
+    
+    # def object_snr(obj_mag, sky_mag_arcsec_sq):
+        
+        
+
+
+
+
+

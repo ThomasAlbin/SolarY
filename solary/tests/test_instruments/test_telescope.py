@@ -83,5 +83,25 @@ def test_reflectorccd(telescope_test_properties):
     assert test_telescope._ratio_light_aperture == \
         math.erf((test_telescope.aperture) / (solary.general.geometry.fwhm2std(test_telescope.hfdia)*math.sqrt(2)))**2.0
     
+    # compute raw object magnitude
+    exp_e_signal = round(10.0 ** (-0.4 * 10.0) \
+        * float(config['photometry']['photon_flux_V']) * 60.0 * test_telescope.collect_area \
+        * test_telescope.quantum_eff * test_telescope.optical_throughput \
+        * test_telescope._ratio_light_aperture, 0)
+    object_electrons_apert = test_telescope.object_esignal(mag=10.0)
+    assert object_electrons_apert == exp_e_signal
+    
+    # compute sky background signal
+    sky_electrons_apert = test_telescope.sky_esignal(mag_arcsec_sq=19.0)
+    assert sky_electrons_apert == 30.0
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     

@@ -51,6 +51,57 @@ def appmag2irr(app_mag):
     return irradiance
 
 
+def intmag2surmag(intmag, area):
+    """
+    Convert the integrated magnitude, given over a certain area in the sky to the corresponding
+    surface brightness.
+
+    Parameters
+    ----------
+    intmag : float
+        Integrated magnitude given in mag.
+    area : float
+        Area of the object given in arcsec^2.
+
+    Returns
+    -------
+    surface_mag : float
+        Surface brightness of the object given in mag/arcsec^2.
+
+    """
+
+    # Compute the surface brightness
+    surface_mag = intmag + 2.5 * math.log10(area)
+
+    return surface_mag
+
+
+def surmag2intmag(surmag, area):
+    """
+    Convert the surface brightness and a sky area to an integrated magnitude. The integrated
+    magnitude can later be used to e.g., convert the night sky background brightness to an
+    irradiance.
+
+    Parameters
+    ----------
+    surmag : float
+        Surface brightness given in mag/arcsec^2.
+    area : float
+        Area given in arcsec^2.
+
+    Returns
+    -------
+    intmag : float
+        Integrated magnitude given in mag.
+
+    """
+
+    # Compute the integrated magnitude
+    intmag = surmag - 2.5 * math.log10(area)
+
+    return intmag
+
+
 def phase_func(index, phase_angle):
     """
     Phase function that is needed for the H-G visual / apparent magnitude function. The function

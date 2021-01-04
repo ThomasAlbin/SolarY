@@ -10,6 +10,9 @@ import hashlib
 import pathlib
 import os
 
+# Get the ROOT DIR
+from solary import ROOT_DIR
+
 
 def comp_md5(file_name):
     """
@@ -74,3 +77,25 @@ def setnget_file_path(dl_path, filename):
     file_path = os.path.join(compl_dl_path, filename)
 
     return file_path
+
+
+def get_test_file_path(file_path):
+    """
+    Compute the absolute path to a file within the testing suite.
+
+    Parameters
+    ----------
+    file_path : str
+        Relative filepath of the test file w.r.t. the root directory.
+
+    Returns
+    -------
+    compl_test_file_path : str
+        Absolute filepath to the testing file.
+
+    """
+
+    # Join the root directory of SolarY with the given filepath.
+    compl_test_file_path = os.path.join(ROOT_DIR, file_path)
+
+    return compl_test_file_path

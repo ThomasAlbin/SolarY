@@ -42,6 +42,38 @@ def test_appmag2irr():
     assert pytest.approx(irradiance3) == 1.0024422165005002e-08
 
 
+def test_intmag2surmag():
+    """
+    Testing the function intmag2surmag that converts the integrated magnitude and over all area of
+    the object to a surface brightness given in mag/arcsec^2.
+
+    Returns
+    -------
+    None.
+
+    """
+
+    # Set a simple example, since the equation is quite trivial
+    surf_bright = solary.general.photometry.intmag2surmag(intmag=10.0, area=10.0)
+    assert surf_bright == 12.5
+
+
+def test_surmag2intmag():
+    """
+    Testing the function surmag2intmag that converts the surface brightness and area to a
+    corresponding integrated magnitude.
+
+    Returns
+    -------
+    None.
+
+    """
+
+    # Set the same example as shown for the function intmag2surmag
+    intmag = solary.general.photometry.surmag2intmag(surmag=12.5, area=10.0)
+    assert intmag == 10.0
+
+
 def test_phase_func():
     """
     This function tests the phase function that is needed for the apparent magnitude computation of

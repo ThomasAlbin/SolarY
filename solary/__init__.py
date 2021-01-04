@@ -13,3 +13,5 @@ from . import auxiliary
 from . import general
 from . import asteroid
 from . import neo
+
+from . import instruments

@@ -45,3 +45,11 @@ def test_get_paths():
     # corresponding values. One of them is called "neo"
     paths_config_sections = paths_config.sections()
     assert 'neo' in paths_config_sections
+
+    # Testing now the test config
+    test_paths_config = solary.auxiliary.config.get_paths(test=True)
+
+    # If the reading was successful the config object shall have miscellaneous sections and
+    # corresponding values. One of them contains "instruments_telescope_optical"
+    test_paths_config_sections = test_paths_config.sections()
+    assert 'instruments_optics_reflector' in test_paths_config_sections

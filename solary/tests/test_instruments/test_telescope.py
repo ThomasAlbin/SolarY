@@ -69,75 +69,121 @@ def test_comp_fov():
 
 
 def test_reflectorccd(telescope_test_properties):
+    """
+    Testing the telescope class. To compare the rather complex and error-prone computation, a PERL
+    based script from [1] has been used for rough computation comparisons.
 
+    Parameters
+    ----------
+    telescope_test_properties : tuple
+        Tuple with 2 dictionaries: reflector config dict and CCD config dict.
+
+    Returns
+    -------
+    None.
+
+    References
+    ----------
+    [1] http://spiff.rit.edu/richmond/signal.shtml 04.Jan.2021
+
+    """
+
+    # Set some settings for later use
+    photometric_aperture = 10.0
+    half_flux_diameter = 10.0
+    expos_time = 60.0
+
+    # Set some observational parameters
+    object_brightness = 19.0
+    sky_brightness = 19.0
+
+    # Check if the property tuple is correctly formatted
+    assert isinstance(telescope_test_properties, tuple)
+    assert len(telescope_test_properties) == 2
+
+    # Get the config dictionaries
     test_reflector_config, test_ccd_config = telescope_test_properties
 
+    # Initiate the telescope class
     test_telescope = solary.instruments.telescope.ReflectorCCD(test_reflector_config,
                                                                test_ccd_config)
 
+    # Check attributes
     assert test_telescope.pixels == test_ccd_config['pixels']
     assert test_telescope.main_mirror_dia == test_reflector_config['main_mirror_dia']
 
-    # test if config has been loaded
+    # Test if constants config has been loaded
     config = solary.auxiliary.config.get_constants()
     assert test_telescope._photon_flux_v == float(config['photometry']['photon_flux_V'])
 
-    # test now the telescope specific properties
+    # Test now the telescope specific properties, FOV
     assert pytest.approx(test_telescope.fov[0], abs=0.1) == 1266.8
     assert pytest.approx(test_telescope.fov[1], abs=0.1) == 1271.8
 
-    assert test_telescope.ifov[0] == \
-               test_telescope.fov[0] / test_telescope.pixels[0]
+    # Check iFOV
+    assert test_telescope.ifov[0] == test_telescope.fov[0] / test_telescope.pixels[0]
 
-    assert test_telescope.ifov[1] == \
-               test_telescope.fov[1] / test_telescope.pixels[1]
+    assert test_telescope.ifov[1] == test_telescope.fov[1] / test_telescope.pixels[1]
 
-    # set aperture in arcseconds
-    test_telescope.aperture = 10.0
-    assert test_telescope.aperture == 10.0
+    # Set aperture in arcsec
+    test_telescope.aperture = photometric_aperture
+    assert test_telescope.aperture == photometric_aperture
 
-    # set half flux diameter
-    test_telescope.hfdia = 10.0
-    assert test_telescope.hfdia == 10.0
+    # Set the half flux diameter in arcsec
+    test_telescope.hfdia = half_flux_diameter
+    assert test_telescope.hfdia == half_flux_diameter
 
-    # check how many pixels are aperture
+    # Check how many pixels are aperture
     assert test_telescope.pixels_in_aperture == \
-        int(round(math.pi * (0.5 * test_telescope.aperture) ** 2.0 \
+        int(round(solary.general.geometry.circle_area(0.5 * test_telescope.aperture) \
                   / math.prod(test_telescope.ifov), 0))
 
-    # set exposure time in seconds
-    test_telescope.exposure_time = 60.0
-    assert test_telescope.exposure_time == 60.0
+    # Set exposure time in seconds
+    test_telescope.exposure_time = expos_time
+    assert test_telescope.exposure_time == expos_time
 
-    # compute the light fraction in aperture
+    # Compute the light fraction in aperture
     assert test_telescope._ratio_light_aperture == \
         math.erf((test_telescope.aperture) \
                  / (solary.general.geometry.fwhm2std(test_telescope.hfdia)*math.sqrt(2)))**2.0
 
-    # compute raw object magnitude
-    exp_e_signal = round(10.0 ** (-0.4 * 10.0) \
-        * float(config['photometry']['photon_flux_V']) * 60.0 * test_telescope.collect_area \
-        * test_telescope.quantum_eff * test_telescope.optical_throughput \
-        * test_telescope._ratio_light_aperture, 0)
-    object_electrons_apert = test_telescope.object_esignal(mag=10.0)
+    # Compute raw object electrons (expectation)
+    exp_e_signal = round(10.0 ** (-0.4 * object_brightness) \
+                         * float(config['photometry']['photon_flux_V']) \
+                         * expos_time \
+                         * test_telescope.collect_area \
+                         * test_telescope.quantum_eff \
+                         * test_telescope.optical_throughput \
+                         * test_telescope._ratio_light_aperture, 0)
+
+    # Compute the electron signal and compare the results
+    object_electrons_apert = test_telescope.object_esignal(mag=object_brightness)
     assert object_electrons_apert == exp_e_signal
 
-    # compute sky background signal
-    total_sky_mag = solary.general.photometry.surmag2intmag(surmag=19.0, \
+    # Compute sky background signal (expectation)
+    # Convert surface brightness to integrated brightness over entire FOV
+    total_sky_mag = solary.general.photometry.surmag2intmag(surmag=sky_brightness, \
                                                             area=math.prod(test_telescope.fov))
-
     exp_sky_esignal = round(10.0 ** (-0.4 * total_sky_mag) \
-        * float(config['photometry']['photon_flux_V']) * 60.0 * test_telescope.collect_area \
-        * test_telescope.quantum_eff * test_telescope.optical_throughput \
-        * (test_telescope.pixels_in_aperture / math.prod(test_telescope.pixels)), 0)
-    object_electrons_apert = test_telescope.object_esignal(mag=10.0)
-    sky_electrons_apert = test_telescope.sky_esignal(mag_arcsec_sq=19.0)
+                            * float(config['photometry']['photon_flux_V']) \
+                            * expos_time \
+                            * test_telescope.collect_area \
+                            * test_telescope.quantum_eff \
+                            * test_telescope.optical_throughput \
+                            * (test_telescope.pixels_in_aperture
+                               / math.prod(test_telescope.pixels)), 0)
+
+    # Compare computation with expectation
+    sky_electrons_apert = test_telescope.sky_esignal(mag_arcsec_sq=sky_brightness)
     assert sky_electrons_apert == exp_sky_esignal
 
-    # test the dark current
-    assert test_telescope.dark_esignal_aperture == round(float(test_ccd_config['dark_noise']) \
-        * 60.0 * test_telescope.pixels_in_aperture, 0)
+    # Test the dark current
+    assert test_telescope.dark_esignal_aperture == \
+        round(float(test_ccd_config['dark_noise']) \
+              * expos_time \
+              * test_telescope.pixels_in_aperture, 0)
 
-    # now test the SNR
-    assert pytest.approx(test_telescope.object_snr(obj_mag=19.0, sky_mag_arcsec_sq=19.0),
-                         abs=0.1) == 5.0
+    # Now test the SNR
+    assert pytest.approx(test_telescope.object_snr(obj_mag=object_brightness,
+                                                   sky_mag_arcsec_sq=sky_brightness),
+                                                   abs=0.1) == 5.0

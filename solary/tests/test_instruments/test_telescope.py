@@ -18,15 +18,30 @@ import solary
 
 @pytest.fixture(name='telescope_test_properties')
 def fixture_telescope_test_properties():
+    """
+    Fixture to load the test configuration files.
 
+
+    Returns
+    -------
+    test_reflector : dict
+        Reflector test configuration.
+    test_ccd : dict
+        CCD test configuration.
+
+    """
+
+    # Get the test config paths
     test_paths_config = solary.auxiliary.config.get_paths(test=True)
 
+    # Load and parse the reflector config
     test_reflector_path = \
         solary.auxiliary.parse.get_test_file_path(
             test_paths_config['instruments_optics_reflector']['properties'])
 
     test_reflector = solary.instruments.optics.read_reflector_config(test_reflector_path)
 
+    # Load and parse the CCD properties
     test_ccd_path = \
         solary.auxiliary.parse.get_test_file_path(
             test_paths_config['instruments_camera_ccd']['properties'])
@@ -35,12 +50,23 @@ def fixture_telescope_test_properties():
 
     return test_reflector, test_ccd
 
-def test_comp_fov():
 
+def test_comp_fov():
+    """
+    Test the Field-Of-View computation function
+
+    Returns
+    -------
+    None.
+
+    """
+
+    # Test sample with a sensor dimension / size of 25.4 mm and a telescope focial length of 1000
+    # mm
     fov1 = solary.instruments.telescope.comp_fov(sensor_dim=25.4,
                                                  focal_length=1000.0)
-
     assert pytest.approx(fov1 / 60.0, abs=0.1) == 87.3
+
 
 def test_reflectorccd(telescope_test_properties):
 

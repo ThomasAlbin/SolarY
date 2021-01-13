@@ -189,25 +189,55 @@ def sphere_of_influence(sem_maj_axis, minor_mass, major_mass):
 
 class Orbit:
     """
-    TBD
+    The Orbit class is a base class for further classes. Basic orbital computations are performed
+    that are object type agnostic (like computating the apoapsis of an object). The base class
+    requires the values of an orbit as well as the corresponding units for the spatial and angle
+    information.
+
+    Attributes
+    ----------
+    peri : float
+        Periapsis. Given in any spatial dimension.
+    ecc : float
+        Eccentricity.
+    incl : float
+        Inclination. Given in degrees or radians.
+    long_asc_node : float
+        Longitude of ascending node. Given in the same units as incl.
+    arg_peri : float
+        Argument of periapsis. Given in the same uniuts as incl.
+    units_dict : dict
+        Dictionary that contains the keys "spatial" and "angle" that provide the units "km", "AU"
+        and "rad" and "deg" respectively.
+
+    Static Properties
+    -----------------
+    sem_maj_axis : float
+        Semi-major axis. Given in the same units as peri.
+    apo : float
+        Apoapsis. Given in the same units as peri.
+
     """
+
 
     def __init__(self, orbit_values, orbit_units):
         """
-        
+        Init function.
 
         Parameters
         ----------
-        orbit_values : TYPE
-            DESCRIPTION.
-        orbit_units : TYPE
-            DESCRIPTION.
+        orbit_values : dict
+            Dictionary that contains the orbit's values. The spatial and angle unit are given by
+            the orbit_units dictionary
+        orbit_units : dict
+            Dictionary that contains the orbit's values corresponding units (spatial and angle).
 
         Returns
         -------
         None.
 
         """
+
         # Setting attribute placeholders
         self.peri = None
         self.ecc = None
@@ -227,30 +257,34 @@ class Orbit:
     @property
     def semi_maj_axis(self):
         """
-        Get
+        Get the semi-major axis
 
         Returns
         -------
-        _semi_maj_axis : TYPE
-            DESCRIPTION.
+        _semi_maj_axis : float
+            Semi-major axis. Given in the same spatial dimension as the input parameters.
 
         """
+
+        # Compute the semi-major axis
         _semi_maj_axis = self.peri / (1.0-self.ecc)
-        
+
         return _semi_maj_axis
 
 
     @property
     def apo(self):
         """
-        
+        Get the apoapsis
 
         Returns
         -------
-        _apo : TYPE
-            DESCRIPTION.
+        _apo : float
+            Apoapsis. Given in the the same spatial dimension as the input parameters.
 
         """
+
+        # Comput the apoapsis
         _apo = kep_apoapsis(sem_maj_axis=self.semi_maj_axis, ecc=self.ecc)
-        
+
         return _apo

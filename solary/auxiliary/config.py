@@ -13,7 +13,7 @@ import os
 from solary import ROOT_DIR
 
 
-def get_constants():
+def get_constants() -> configparser.ConfigParser:
     """
     Function to get the constants.ini file from the _config directory
 
@@ -36,7 +36,7 @@ def get_constants():
 
     return config
 
-def get_paths(test=False):
+def get_paths(test: bool=False) -> configparser.ConfigParser:
     """
     Function to get the paths.dir file from the _config directory
 

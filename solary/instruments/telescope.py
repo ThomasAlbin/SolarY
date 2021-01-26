@@ -7,17 +7,18 @@ Script that contains telescope classes that mostly consists of base classes (e.g
 """
 
 # Import standard libraries
+import typing as t
 import math
 
 # Import solary
 import solary
 
 # Import the camera and optics script from the same directory
-from . import camera
-from . import optics
+from .optics import Reflector
+from .camera import CCD
 
 
-def comp_fov(sensor_dim, focal_length):
+def comp_fov(sensor_dim: float, focal_length: float) -> float:
     """
     Compute the Field-Of-View (FOV) depending on a camera's chip size and telescope's focal length.
     See [1].
@@ -47,7 +48,7 @@ def comp_fov(sensor_dim, focal_length):
     return fov_arcsec
 
 
-class ReflectorCCD(optics.Reflector, camera.CCD):
+class ReflectorCCD(Reflector, CCD):
     """
     Class of a reflector telescope with a CCD camera system. This class loads config files and sets
     attributes of a telescope system. Further, one can set observationsl settings like e.g., the
@@ -100,8 +101,7 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
 
     """
 
-
-    def __init__(self, optics_config, ccd_config):
+    def __init__(self, optics_config: t.Dict[str, t.Any], ccd_config: t.Dict[str, t.Any]) -> None:
         """
         Init function.
 
@@ -126,8 +126,8 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         """
 
         # Init the optics and camera classes accordingly
-        optics.Reflector.__init__(self, optics_config)
-        camera.CCD.__init__(self, ccd_config)
+        Reflector.__init__(self, optics_config)
+        CCD.__init__(self, ccd_config)
 
         # Load the constants config file and get the photon flux (Given in m^-2 * s^-1)
         config = solary.auxiliary.config.get_constants()
@@ -135,7 +135,7 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
 
 
     @property
-    def fov(self):
+    def fov(self) -> t.Tuple[float, float]:
         """
         Get the Field-Of-View (FOV) of the telescope in x and y dimensions.
 
@@ -154,11 +154,11 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         for chip_dim in self.chip_size:
             fov_res.append(comp_fov(sensor_dim=chip_dim, focal_length=self.focal_length*1000.0))
 
-        return fov_res
+        return fov_res[0], fov_res[1]
 
 
     @property
-    def ifov(self):
+    def ifov(self) -> t.Tuple[float, float]:
         """
         Get the individual Field-Of-View (iFOV). The iFOV is the FOV that applies for each pixel.
 
@@ -177,11 +177,11 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         for fov_dim, pixel_dim in zip(self.fov, self.pixels):
             ifov_res.append(fov_dim / pixel_dim)
 
-        return ifov_res
+        return ifov_res[0], ifov_res[1]
 
 
     @property
-    def aperture(self):
+    def aperture(self) -> float:
         """
         Get the aperture.
 
@@ -191,12 +191,11 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
             Photometry aperture. Given in arcsec.
 
         """
-
         return self._aperture
 
 
     @aperture.setter
-    def aperture(self, apert):
+    def aperture(self, apert: float) -> None:
         """
         Set the aperture
 
@@ -210,12 +209,11 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         None.
 
         """
-
         self._aperture = apert
 
 
     @property
-    def hfdia(self):
+    def hfdia(self) -> float:
         """
         Get the half flux diameter of an object / star.
 
@@ -230,7 +228,7 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
 
 
     @hfdia.setter
-    def hfdia(self, halfflux_dia):
+    def hfdia(self, halfflux_dia: float) -> None:
         """
         Set the half flux diameter of an object / star.
 
@@ -244,12 +242,11 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         None.
 
         """
-
         self._hfdia = halfflux_dia
 
 
     @property
-    def exposure_time(self):
+    def exposure_time(self) -> float:
         """
         Get the exposure time.
 
@@ -259,12 +256,11 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
             Exposure time. Given in s.
 
         """
-
         return self._exposure_time
 
 
     @exposure_time.setter
-    def exposure_time(self, exp_time):
+    def exposure_time(self, exp_time: float) -> None:
         """
         Set the exposure time.
 
@@ -278,12 +274,11 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         None.
 
         """
-
         self._exposure_time = exp_time
 
 
     @property
-    def pixels_in_aperture(self):
+    def pixels_in_aperture(self) -> int:
         """
         Get the number of pixels within the photometric aperture.
 
@@ -305,7 +300,7 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
 
 
     @property
-    def _ratio_light_aperture(self):
+    def _ratio_light_aperture(self) -> float:
         """
         Get the ratio of light that is collected within the photometric aperture.
         Assumption: the light of an object is Gaussian distributed (in both directions equally);
@@ -329,7 +324,7 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         return _ratio
 
 
-    def object_esignal(self, mag):
+    def object_esignal(self, mag: float) -> float:
         """
         Function to compute the number of the object's corresponding electrons that are created
         within the photometric aperture on the CCD.
@@ -368,7 +363,7 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         return obj_sig_aper
 
 
-    def sky_esignal(self, mag_arcsec_sq):
+    def sky_esignal(self, mag_arcsec_sq: float) -> float:
         """
         Function to compute the number of electrons within the photometric aperture caused by the
         background sky brightness.
@@ -414,7 +409,7 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
 
 
     @property
-    def dark_esignal_aperture(self):
+    def dark_esignal_aperture(self) -> float:
         """
         Get the number of dark current induced electrons within the aperture
 
@@ -435,7 +430,7 @@ class ReflectorCCD(optics.Reflector, camera.CCD):
         return dark_sig_aper
 
 
-    def object_snr(self, obj_mag, sky_mag_arcsec_sq):
+    def object_snr(self, obj_mag: float, sky_mag_arcsec_sq: float) -> float:
         """
         Compute the Signal-To-Noise ratio (SNR) of an object.
 

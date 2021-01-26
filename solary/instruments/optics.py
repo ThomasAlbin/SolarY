@@ -7,13 +7,14 @@ This script contains classes and functions that are needed for optical systems.
 """
 
 # Import standard libraries
+import typing as t
 import json
 
 # Import solary
 import solary
 
 
-def read_reflector_config(config_filepath):
+def read_reflector_config(config_filepath: str) -> t.Dict[str, t.Any]:
     """
     Function to read the configuration file for a reflector system.
 
@@ -67,7 +68,7 @@ class Reflector:
     """
 
 
-    def __init__(self, optics_config):
+    def __init__(self, optics_config: t.Dict[str, t.Any]) -> None:
         """
         Init function.
 
@@ -83,19 +84,14 @@ class Reflector:
         """
 
         # Setting attribute placeholders
-        self.main_mirror_dia = None
-        self.sec_mirror_dia = None
-        self.optical_throughput = None
-        self.focal_length = None
-
-        # Set the attributes dynamically in a for loop and set the values accordingly.
-        valid_keys = ['main_mirror_dia', 'sec_mirror_dia', 'optical_throughput', 'focal_length']
-        for key in valid_keys:
-            setattr(self, key, optics_config.get(key))
+        self.main_mirror_dia = optics_config["main_mirror_dia"]
+        self.sec_mirror_dia = optics_config["sec_mirror_dia"]
+        self.optical_throughput = optics_config["optical_throughput"]
+        self.focal_length = optics_config["focal_length"]
 
 
     @property
-    def main_mirror_area(self):
+    def main_mirror_area(self) -> float:
         """
         Get the main mirror area, assuming a circular shaped mirror.
 
@@ -111,7 +107,7 @@ class Reflector:
 
 
     @property
-    def sec_mirror_area(self):
+    def sec_mirror_area(self) -> float:
         """
         Get the secondary mirror area, assuming a circular shaped mirror.
 
@@ -127,7 +123,7 @@ class Reflector:
 
 
     @property
-    def collect_area(self):
+    def collect_area(self) -> float:
         """
         Get the photon collection area. This propery simply substracts the secondary mirror area
         from the main one.

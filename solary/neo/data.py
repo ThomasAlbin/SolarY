@@ -6,6 +6,7 @@ NEO data download, parsing and database creation functions are part of this sub-
 """
 
 # Import standard libraries
+import typing as t
 import gzip
 import urllib.parse
 import urllib.request
@@ -21,7 +22,7 @@ import solary
 # Get the file paths
 PATH_CONFIG = solary.auxiliary.config.get_paths()
 
-def _get_neodys_neo_nr():
+def _get_neodys_neo_nr() -> int:
     """
     This function gets the number of currently known NEOs from the NEODyS webpage. The information
     is obtained by a Crawler-like script that may need frequent maintenance.
@@ -46,7 +47,7 @@ def _get_neodys_neo_nr():
     return neodys_nr_neos
 
 
-def download(row_exp=None):
+def download(row_exp: t.Optional[bool] = None) -> t.Tuple[str, t.Optional[int]]:
     """
     This function downloads a file with the orbital elements of currently all known NEOs from the
     NEODyS database. The file has the ending .cat and is basically a csv / ascii formatted file
@@ -108,7 +109,7 @@ def download(row_exp=None):
     return dl_status, neodys_neo_nr
 
 
-def read_neodys():
+def read_neodys() -> t.List[t.Dict[str, t.Any]]:
     """
     Read the content of the downloaded NEODyS file and return a dictionary with its content.
 
@@ -180,8 +181,7 @@ class NEOdysDatabase:
 
     """
 
-
-    def __init__(self, new=False):
+    def __init__(self, new: bool = False) -> None:
         """
         Init. function of the NEODySDatabase class. This method creates a new database or opens an
         existing one (if applicable) and sets a cursor.
@@ -197,7 +197,7 @@ class NEOdysDatabase:
 
         # Set / Get an SQLite database path + filename
         self.db_filename = \
-            solary.auxiliary.parse.setnget_file_path(PATH_CONFIG['neo']['neodys_db_dir'], \
+            solary.auxiliary.parse.setnget_file_path(PATH_CONFIG['neo']['neodys_db_dir'],
                                                      PATH_CONFIG['neo']['neodys_db_file'])
 
         # Delete any existing database, if requested
@@ -208,8 +208,7 @@ class NEOdysDatabase:
         self.con = sqlite3.connect(self.db_filename)
         self.cur = self.con.cursor()
 
-
-    def _create_col(self, table, col_name, col_type):
+    def _create_col(self, table: str, col_name: str, col_type: str) -> None:
         """
         Private method to create new columns in tables
 
@@ -237,8 +236,7 @@ class NEOdysDatabase:
         except sqlite3.OperationalError:
             pass
 
-
-    def create(self):
+    def create(self) -> None:
         """
         Method to create the NEODyS main table, read the downloaded content and fill the database
         with the raw data.
@@ -285,8 +283,7 @@ class NEOdysDatabase:
                              _neo_data)
         self.con.commit()
 
-
-    def create_deriv_orb(self):
+    def create_deriv_orb(self) -> None:
         """
         Method to compute and insert derived orbital elements into the SQLite database.
 
@@ -323,8 +320,7 @@ class NEOdysDatabase:
                              'WHERE Name = :Name', _neo_deriv_param_dict)
         self.con.commit()
 
-
-    def update(self):
+    def update(self) -> None:
         """
         Update the NEODyS Database with all content.
 
@@ -334,8 +330,7 @@ class NEOdysDatabase:
         self.create()
         self.create_deriv_orb()
 
-
-    def close(self):
+    def close(self) -> None:
         """
         Close the SQLite NEODyS database.
 
@@ -344,7 +339,7 @@ class NEOdysDatabase:
         self.con.close()
 
 
-def download_granvik2018():
+def download_granvik2018() -> str:
     """
     Function to download the model data from Granvik et al. (2018) -1-. The data can be found in
     -2-.
@@ -389,7 +384,7 @@ def download_granvik2018():
     return md5_hash
 
 
-def read_granvik2018():
+def read_granvik2018() -> t.List[t.Dict[str, t.Any]]:
     """
     Read the content of the downloaded Granvik et al. (2018) NEO model data file and return a
     dictionary with its content.
@@ -459,8 +454,7 @@ class Granvik2018Database:
 
     """
 
-
-    def __init__(self, new=False):
+    def __init__(self, new: bool = False):
         """
         Init. function of the Granvik2018Database class. This method creates a new database or
         opens an existing one (if applicable) and sets a cursor.
@@ -487,8 +481,7 @@ class Granvik2018Database:
         self.con = sqlite3.connect(self.db_filename)
         self.cur = self.con.cursor()
 
-
-    def _create_col(self, table, col_name, col_type):
+    def _create_col(self, table: str, col_name: str, col_type: str) -> None:
         """
         Private method to create new columns in tables
 
@@ -516,8 +509,7 @@ class Granvik2018Database:
         except sqlite3.OperationalError:
             pass
 
-
-    def create(self):
+    def create(self) -> None:
         """
         Method to create the Granvik et al. (2018) main table, read the downloaded content and fill
         the database with the raw data.
@@ -556,8 +548,7 @@ class Granvik2018Database:
                              _neo_data)
         self.con.commit()
 
-
-    def create_deriv_orb(self):
+    def create_deriv_orb(self) -> None:
         """
         Method to compute and insert derived orbital elements into the SQLite database.
 
@@ -592,8 +583,7 @@ class Granvik2018Database:
                              'WHERE ID = :ID', _neo_deriv_param_dict)
         self.con.commit()
 
-
-    def close(self):
+    def close(self) -> None:
         """
         Close the Granvik et al. (2018) database.
 

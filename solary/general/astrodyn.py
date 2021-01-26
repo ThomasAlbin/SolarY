@@ -4,7 +4,7 @@ astrodyn.py
 Miscellaneous functions regarding astro-dynamical topics can be found here.
 
 """
-
+import typing as t
 # Import standard modules
 import math
 
@@ -12,7 +12,7 @@ import math
 import solary
 
 
-def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
+def tisserand(sem_maj_axis_obj: float, inc: float, ecc: float, sem_maj_axis_planet: t.Optional[float] = None) -> float:
     """
     Compute the Tisserand parameter of an object w.r.t. a larger object. If no semi-major axis of
     a larger object is given, the values for Jupiter are assumed.
@@ -72,7 +72,7 @@ def tisserand(sem_maj_axis_obj, inc, ecc, sem_maj_axis_planet=None):
     return tisserand_parameter
 
 
-def kep_apoapsis(sem_maj_axis, ecc):
+def kep_apoapsis(sem_maj_axis: float, ecc: float) -> float:
     """
     Compute the apoapsis, depending on the semi-major axis and eccentricity.
 
@@ -95,7 +95,7 @@ def kep_apoapsis(sem_maj_axis, ecc):
     return apoapsis
 
 
-def kep_periapsis(sem_maj_axis, ecc):
+def kep_periapsis(sem_maj_axis: float, ecc: float) -> float:
     """
     Compute the periapsis, depending on the semi-major axis and eccentricity.
 
@@ -118,7 +118,7 @@ def kep_periapsis(sem_maj_axis, ecc):
     return periapsis
 
 
-def mjd2jd(m_juldate):
+def mjd2jd(m_juldate: float) -> float:
     """
     Convert the given Julian Date to the Modified Julian Date.
 
@@ -139,7 +139,7 @@ def mjd2jd(m_juldate):
     return juldate
 
 
-def jd2mjd(juldate):
+def jd2mjd(juldate: float) -> float:
     """
     Convert the Modified Julian Date to the Julian Date.
 
@@ -160,7 +160,7 @@ def jd2mjd(juldate):
     return m_juldate
 
 
-def sphere_of_influence(sem_maj_axis, minor_mass, major_mass):
+def sphere_of_influence(sem_maj_axis: float, minor_mass: float, major_mass: float) -> float:
     """
     Compute the Sphere of Influence (SOI) of a minor object w.r.t. a major object, assuming a
     spherical SOI
@@ -219,8 +219,7 @@ class Orbit:
 
     """
 
-
-    def __init__(self, orbit_values, orbit_units):
+    def __init__(self, orbit_values: t.Dict[str, float], orbit_units: t.Dict[str, float]) -> None:
         """
         Init function.
 
@@ -239,8 +238,8 @@ class Orbit:
         """
 
         # Setting attribute placeholders
-        self.peri = None
-        self.ecc = None
+        self._peri = None  # type: t.Optional[float]
+        self._ecc = None  # type: t.Optional[float]
         self.incl = None
         self.long_asc_node = None
         self.arg_peri = None
@@ -253,9 +252,22 @@ class Orbit:
         for key in valid_keys:
             setattr(self, key, orbit_values.get(key))
 
+    @property
+    def ecc(self) -> float:
+        """Retrieve the eccentricity."""
+        if self._ecc is None:
+            raise AttributeError("`ecc` is not initialized.")
+        return self._ecc
 
     @property
-    def semi_maj_axis(self):
+    def peri(self) -> float:
+        """Retrieve the peri."""
+        if self._peri is None:
+            raise AttributeError("`peri` is not initialized.")
+        return self._peri
+
+    @property
+    def semi_maj_axis(self) -> float:
         """
         Get the semi-major axis
 
@@ -273,7 +285,7 @@ class Orbit:
 
 
     @property
-    def apo(self):
+    def apo(self) -> float:
         """
         Get the apoapsis
 

@@ -6,13 +6,14 @@ This module contains functions for photometric purposes.
 """
 
 # Import standard modules
+import typing as t
 import math
 
 # Import solary
 import solary
 
 
-def appmag2irr(app_mag):
+def appmag2irr(app_mag: t.Union[int, float]) -> float:
     """
     Convert the apparent magnitude to the corresponding irradiance given in
     W/m^2. The zero point magnitude is provided by the IAU in [1].
@@ -51,7 +52,7 @@ def appmag2irr(app_mag):
     return irradiance
 
 
-def intmag2surmag(intmag, area):
+def intmag2surmag(intmag: float, area: float) -> float:
     """
     Convert the integrated magnitude, given over a certain area in the sky to the corresponding
     surface brightness.
@@ -76,7 +77,7 @@ def intmag2surmag(intmag, area):
     return surface_mag
 
 
-def surmag2intmag(surmag, area):
+def surmag2intmag(surmag: float, area: float) -> float:
     """
     Convert the surface brightness and a sky area to an integrated magnitude. The integrated
     magnitude can later be used to e.g., convert the night sky background brightness to an
@@ -102,7 +103,7 @@ def surmag2intmag(surmag, area):
     return intmag
 
 
-def phase_func(index, phase_angle):
+def phase_func(index: int, phase_angle: float) -> float:
     """
     Phase function that is needed for the H-G visual / apparent magnitude function. The function
     has two versions, depending on the index ('1' or '2'). See [1].
@@ -142,9 +143,9 @@ def phase_func(index, phase_angle):
     """
 
     # Dictionaries that contain the A and B constants, depending on the index version
-    a_factor = {1: 3.33, \
+    a_factor = {1: 3.33,
                 2: 1.87}
-    b_factor = {1: 0.63, \
+    b_factor = {1: 0.63,
                 2: 1.22}
 
     # Phase function
@@ -154,7 +155,7 @@ def phase_func(index, phase_angle):
     return phi
 
 
-def reduc_mag(abs_mag, phase_angle, slope_g=0.15):
+def reduc_mag(abs_mag: float, phase_angle: float, slope_g: float = 0.15) -> float:
     """
     Function to compute the reduced magnitude of an object. This function is needed for the
     H-G visual / apparent magnitude function. See [1]
@@ -202,15 +203,18 @@ def reduc_mag(abs_mag, phase_angle, slope_g=0.15):
     """
 
     # Compute the reduced magnitude based on the equations given in the references [1]
-    reduced_magnitude = abs_mag - 2.5 * math.log10((1.0 - slope_g) \
-                                                   * phase_func(index=1, phase_angle=phase_angle) \
-                                                   + slope_g \
+    reduced_magnitude = abs_mag - 2.5 * math.log10((1.0 - slope_g)
+                                                   * phase_func(index=1, phase_angle=phase_angle)
+                                                   + slope_g
                                                    * phase_func(index=2, phase_angle=phase_angle))
 
     return reduced_magnitude
 
 
-def hg_app_mag(abs_mag, vec_obj2obs, vec_obj2ill, slope_g=0.15):
+def hg_app_mag(abs_mag: float,
+               vec_obj2obs: t.Union[t.List[float], t.Tuple[float, float, float]],
+               vec_obj2ill: t.Union[t.List[float], t.Tuple[float, float, float]],
+               slope_g: float = 0.15) -> float:
     """
     Compute the visual / apparent magnitude of an asteroid, based on the H-G system [1], where H
     represents the absolute magnitude and G represents the magnitude slope parameter.
@@ -249,6 +253,8 @@ def hg_app_mag(abs_mag, vec_obj2obs, vec_obj2ill, slope_g=0.15):
     11.505149978319906
 
     """
+    vec_obj2obs = list(vec_obj2obs)
+    vec_obj2ill = list(vec_obj2ill)
 
     # Compute the length of the two input vectors
     vec_obj2obs_norm = solary.general.vec.norm(vec_obj2obs)

@@ -238,33 +238,14 @@ class Orbit:
         """
 
         # Setting attribute placeholders
-        self._peri = None  # type: t.Optional[float]
-        self._ecc = None  # type: t.Optional[float]
-        self.incl = None
-        self.long_asc_node = None
-        self.arg_peri = None
+        self.peri = orbit_values["peri"]  # type: float
+        self.ecc = orbit_values["ecc"]  # type: float
+        self.incl = orbit_values["incl"]  # type: float
+        self.long_asc_node = orbit_values["long_asc_node"]  # type: float
+        self.arg_peri = orbit_values["arg_peri"]  # type: float
 
         # Set the units dictionary
         self.units_dict = orbit_units
-
-        # Set the attributes dynamically in a for loop and set the values accordingly.
-        valid_keys = ['peri', 'ecc', 'incl', 'long_asc_node', 'arg_peri']
-        for key in valid_keys:
-            setattr(self, key, orbit_values.get(key))
-
-    @property
-    def ecc(self) -> float:
-        """Retrieve the eccentricity."""
-        if self._ecc is None:
-            raise AttributeError("`ecc` is not initialized.")
-        return self._ecc
-
-    @property
-    def peri(self) -> float:
-        """Retrieve the peri."""
-        if self._peri is None:
-            raise AttributeError("`peri` is not initialized.")
-        return self._peri
 
     @property
     def semi_maj_axis(self) -> float:

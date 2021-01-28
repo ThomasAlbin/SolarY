@@ -4,12 +4,12 @@ camera.py
 Script that contains miscellaneous functions and classes for / of camera system (e.g., CCDs).
 
 """
-
+import typing as t
 # Import standard libraries
 import json
 
 
-def read_ccd_config(config_filepath):
+def read_ccd_config(config_filepath: str) -> t.Dict[str, t.Any]:
     """
     Function to read the configuration file for a CCD system.
 
@@ -60,7 +60,7 @@ class CCD:
     """
 
 
-    def __init__(self, ccd_config):
+    def __init__(self, ccd_config: t.Dict[str, t.Any]):
         """
         Init function.
 
@@ -76,12 +76,12 @@ class CCD:
         """
 
         # Placeholders for the static attributes
-        self.pixels = [None, None]
-        self.pixel_size = None
-        self.dark_noise = None
-        self.readout_noise = None
-        self.full_well = None
-        self.quantum_eff = None
+        self.pixel_size = ccd_config["pixel_size"]  # type: float
+        self.pixels = ccd_config["pixels"]  # type: t.Tuple[float, float]
+        self.dark_noise = ccd_config["dark_noise"]  # type: float
+        self.readout_noise = ccd_config["readout_noise"]  # type: float
+        self.full_well = ccd_config["full_well"]  # type: float
+        self.quantum_eff = ccd_config["quantum_eff"]  # type: float
 
         # Set the attributes dynamically in a for loop and set the values accordingly.
         valid_keys = ['pixels', 'pixel_size', 'dark_noise', 'readout_noise', 'full_well',
@@ -89,9 +89,8 @@ class CCD:
         for key in valid_keys:
             setattr(self, key, ccd_config.get(key))
 
-
     @property
-    def chip_size(self):
+    def chip_size(self) -> t.Tuple[float, float]:
         """
         Get the chip size (x and y dimension). Given in mm.
 
@@ -113,11 +112,11 @@ class CCD:
         for pixel_dim in self.pixels:
             chip_size.append(pixel_dim*pixel_size_mm)
 
-        return chip_size
+        return chip_size[0], chip_size[1]
 
 
     @property
-    def pixel_size_sq_m(self):
+    def pixel_size_sq_m(self) -> float:
         """
         Get the size of a single pixel in m^2.
 

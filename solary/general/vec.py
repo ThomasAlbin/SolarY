@@ -4,12 +4,12 @@ vec.py
 Auxiliary functions for vector computations.
 
 """
-
+import typing as t
 # Import standard libraries
 import math
 
 
-def norm(vector):
+def norm(vector: t.List[float]) -> float:
     """
     This function computes the norm of a given vector. The current version computes only the
     Euclidean Norm, respectivels the p2 norm.
@@ -39,7 +39,7 @@ def norm(vector):
     return norm_res
 
 
-def unify(vector):
+def unify(vector: t.List[float]) -> t.List[float]:
     """
     This function normalises the input vector. So, the elements of the vector are divided by the
     norm of the vector. The result is a unit vector with the length 1.
@@ -78,7 +78,7 @@ def unify(vector):
     return unit_vector
 
 
-def dot_prod(vector1, vector2):
+def dot_prod(vector1: t.List[float], vector2: t.List[float]) -> float:
     """
     This function computes the dot product between two given vectors.
 
@@ -111,7 +111,7 @@ def dot_prod(vector1, vector2):
     return dotp_res
 
 
-def phase_angle(vector1, vector2):
+def phase_angle(vector1: t.List[float], vector2: t.List[float]) -> float:
     """
     This function compute the phase angle between two vectors. The phase angle is the enclosed
     angle between the vectors at their corresponding point of origin.
@@ -150,7 +150,7 @@ def phase_angle(vector1, vector2):
     return angle_rad
 
 
-def substract(vector1, vector2):
+def substract(vector1: t.List[float], vector2: t.List[float]) -> t.List[float]:
     """
     This function substracts the vector elements of one list with the elements of another list.
     Alternatively, one can use the Numpy library and Numpy arrays without using this function at
@@ -191,7 +191,7 @@ def substract(vector1, vector2):
     return diff_vector
 
 
-def inverse(vector):
+def inverse(vector: t.List[float]) -> t.List[float]:
     """
     Inverse the vector's elements. Alternatively, apply -1 on a Numpy array.
 

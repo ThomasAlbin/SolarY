@@ -14,7 +14,7 @@ import os
 from solary import ROOT_DIR
 
 
-def comp_md5(file_name):
+def comp_md5(file_name: str) -> str:
     """
     Compute the MD5 hash of a file.
 
@@ -45,7 +45,7 @@ def comp_md5(file_name):
     return md5_res
 
 
-def setnget_file_path(dl_path, filename):
+def setnget_file_path(dl_path: str, filename: str) -> str:
     """
     Compute the path of a file, depending on its download path. The standard download path is:
         ~$HOME/
@@ -79,7 +79,7 @@ def setnget_file_path(dl_path, filename):
     return file_path
 
 
-def get_test_file_path(file_path):
+def get_test_file_path(file_path: str) -> str:
     """
     Compute the absolute path to a file within the testing suite.
 

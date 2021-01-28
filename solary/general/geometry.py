@@ -9,7 +9,7 @@ Auxiliary functions for geometric purposes.
 import math
 
 
-def circle_area(radius):
+def circle_area(radius: float) -> float:
     """
     Compute the area of a perfect with a given radius.
 
@@ -31,7 +31,7 @@ def circle_area(radius):
     return area
 
 
-def fwhm2std(fwhm):
+def fwhm2std(fwhm: float) -> float:
     """
     Convert the Full Width at Half Maximum to the corresponding Gaussian standard deviation.
 

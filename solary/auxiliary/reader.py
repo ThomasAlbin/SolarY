@@ -6,9 +6,10 @@ Auxiliary reader for miscellaneous files.
 """
 
 # Import standard libraries
+import typing as t
 import json
 
-def read_orbit(orbit_path):
+def read_orbit(orbit_path: str) -> t.Tuple[t.Dict[str, float], t.Dict[str, float]]:
     """
     Function to read an orbit properties file.
 

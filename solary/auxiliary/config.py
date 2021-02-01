@@ -58,7 +58,7 @@ def get_paths(test: bool=False) -> configparser.ConfigParser:
 
     # Get the paths ini file, differentiate between prod and test
     if test:
-        paths_ini_path = os.path.join(ROOT_DIR, 'tests/_resources/_config', 'test_paths.ini')
+        paths_ini_path = os.path.join(ROOT_DIR, '../', 'tests/_resources/_config', 'test_paths.ini')
     else:
         paths_ini_path = os.path.join(ROOT_DIR, '_config', 'paths.ini')
 

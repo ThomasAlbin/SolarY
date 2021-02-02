@@ -218,3 +218,7 @@ def test_Granvik2018Database():
 
     # Close the Granvik database
     granvik2018_sqlite.close()
+
+# test_download()
+# test_download_granvik2018()
+# test__get_neodys_neo_nr()

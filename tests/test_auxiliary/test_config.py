@@ -53,3 +53,6 @@ def test_get_paths():
     # corresponding values. One of them contains "instruments_telescope_optical"
     test_paths_config_sections = test_paths_config.sections()
     assert 'instruments_optics_reflector' in test_paths_config_sections
+
+
+# test_get_paths()

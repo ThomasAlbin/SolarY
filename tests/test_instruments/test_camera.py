@@ -31,7 +31,7 @@ def fixture_ccd_test_config():
     # Get the path to the CCD config file
     test_ccd_path = \
         solary.auxiliary.parse.get_test_file_path(
-            test_paths_config['instruments_camera_ccd']['properties'])
+            '../' + test_paths_config['instruments_camera_ccd']['properties'])
 
     # Read and parse the CCD config file and return a dictionary with the properties
     test_ccd_dict = solary.instruments.camera.read_ccd_config(test_ccd_path)

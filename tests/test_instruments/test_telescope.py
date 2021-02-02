@@ -37,14 +37,14 @@ def fixture_telescope_test_properties():
     # Load and parse the reflector config
     test_reflector_path = \
         solary.auxiliary.parse.get_test_file_path(
-            test_paths_config['instruments_optics_reflector']['properties'])
+            '../' + test_paths_config['instruments_optics_reflector']['properties'])
 
     test_reflector = solary.instruments.optics.read_reflector_config(test_reflector_path)
 
     # Load and parse the CCD properties
     test_ccd_path = \
         solary.auxiliary.parse.get_test_file_path(
-            test_paths_config['instruments_camera_ccd']['properties'])
+            '../' + test_paths_config['instruments_camera_ccd']['properties'])
 
     test_ccd = solary.instruments.camera.read_ccd_config(test_ccd_path)
 

@@ -34,7 +34,7 @@ def fixture_test_orbit_data():
 
     test_orbit_path = \
         solary.auxiliary.parse.get_test_file_path(
-            test_paths_config['general_astrodyn']['base_class_orbit'])
+            '../' + test_paths_config['general_astrodyn']['base_class_orbit'])
 
     test_orbit_values, test_orbit_units = \
         solary.auxiliary.reader.read_orbit(test_orbit_path)

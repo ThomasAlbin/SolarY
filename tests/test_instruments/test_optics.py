@@ -32,7 +32,7 @@ def fixture_reflector_test_optics():
     # Get the path to the relfector config file
     test_reflector_path = \
         solary.auxiliary.parse.get_test_file_path(
-            test_paths_config['instruments_optics_reflector']['properties'])
+            '../' + test_paths_config['instruments_optics_reflector']['properties'])
 
     # Read and parse the reflector config file and return a dictionary with the properties
     test_reflector_dict = solary.instruments.optics.read_reflector_config(test_reflector_path)

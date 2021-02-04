@@ -8,13 +8,15 @@ NEO data download, parsing and database creation functions are part of this sub-
 # Import standard libraries
 import typing as t
 import gzip
-import urllib.parse
-import urllib.request
+# import urllib.parse
+# import urllib.request
 import os
 import re
 import shutil
 import sqlite3
 import time
+import requests
+from pathlib import Path
 
 # Import SolarY
 import solary
@@ -35,10 +37,13 @@ def _get_neodys_neo_nr() -> int:
     """
 
     # Open the NEODyS link, where the current number of NEOs is shown
-    http_response = urllib.request.urlopen('https://newton.spacedys.com/neodys/index.php?pc=1.0')
+    # http_response = urllib.request.urlopen('https://newton.spacedys.com/neodys/index.php?pc=1.0')
 
     # Get the HTML response and read its content
-    html_content = http_response.read()
+    # html_content = http_response.read()
+
+    http_response = requests.get('https://newton.spacedys.com/neodys/index.php?pc=1.0')
+    html_content = http_response.content
 
     # Extract the number of NEOs from a specific HTML position, using a regular expression. The
     # number is displayed in bold like "[...] <b>1000 objects</b> in the NEODys [...]"
@@ -82,16 +87,22 @@ def download(row_exp: t.Optional[bool] = None) -> t.Tuple[str, t.Optional[int]]:
                                                  PATH_CONFIG['neo']['neodys_raw_file'])
 
     # Download the file
-    downl_file_path, _ = \
-        urllib.request.urlretrieve(url='https://newton.spacedys.com/~neodys2/neodys.cat', \
-                                   filename=download_filename)
+    response = requests.get('https://newton.spacedys.com/~neodys2/neodys.cat')
+    download_file_path = Path(download_filename)
+    with download_file_path.open(mode='wb+') as file_obj:
+        file_obj.write(response.content)
+
+    # downl_file_path, _ = \
+    #     urllib.request.urlretrieve(url='https://newton.spacedys.com/~neodys2/neodys.cat', \
+    #                                filename=download_filename)
 
     # To check whether the file has been successfully updated (if a file was present before) one
     # needs to compare the "last modification time" of the file with the current system's time. If
     # the deviation is too high, it is very likely that no new file has been downloaded and
     # consequently updated
     system_time = time.time()
-    file_mod_time = os.path.getmtime(downl_file_path)
+    # file_mod_time = os.path.getmtime(downl_file_path)
+    file_mod_time = download_file_path.stat().st_mtime
     file_mod_diff = file_mod_time - system_time
 
     # Set status message, if the file has been updated or not. A time difference of less than 5 s
@@ -367,11 +378,17 @@ def download_granvik2018() -> str:
                    'Granvik+_2018_Icarus/Granvik+_2018_Icarus.dat.gz'
 
     # Retrieve the data (download)
-    downl_file_path, _ = urllib.request.urlretrieve(url=url_location, \
-                                                    filename=download_filename)
+    response = requests.get(url_location)
+    downl_file_path = Path(download_filename)
+    with downl_file_path.open(mode='wb+') as file_obj:
+        file_obj.write(response.content)
+
+    # downl_file_path, _ = urllib.request.urlretrieve(url=url_location, \
+    #                                                 filename=download_filename)
 
     # Get the file name (without the gzip ending). Open the gzip file and move the .dat file out.
-    unzip_file_path = downl_file_path[:-3]
+    # unzip_file_path = downl_file_path[:-3]
+    unzip_file_path = downl_file_path.with_suffix('')
     with gzip.open(downl_file_path, 'r') as f_in, open(unzip_file_path, 'wb') as f_out:
         shutil.copyfileobj(f_in, f_out)
 

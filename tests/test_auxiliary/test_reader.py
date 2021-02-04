@@ -25,7 +25,7 @@ def test_read_orbit():
     # Parse the orbit path
     test_orbit_path = \
         solary.auxiliary.parse.get_test_file_path(
-            test_paths_config['general_astrodyn']['base_class_orbit'])
+            '../' + test_paths_config['general_astrodyn']['base_class_orbit'])
 
     # Read and parse the orbit file and return a values and units dictionary
     test_orbit_values, test_orbit_units = \
@@ -37,3 +37,6 @@ def test_read_orbit():
 
     assert test_orbit_values['peri'] == 1.133
     assert test_orbit_units['spatial'] == 'AU'
+
+
+test_read_orbit()

@@ -7,7 +7,7 @@ __version__ = "deploy"
 
 from . import _config
 
-from . import tests
+# from . import tests
 
 from . import auxiliary
 from . import general

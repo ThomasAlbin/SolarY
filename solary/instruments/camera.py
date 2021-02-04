@@ -50,15 +50,17 @@ class CCD:
     full_well : int or float
         Number of max. electrons per pixel.
 
+    """
+
+    """
+    (Sphinx complains)
     Static Properties
     -----------------
     chip_size : list
         List with the size of the CCD chip in each dimension (x, y). Given in mm.
     pixel_size_sq_m : float
         Size of a single pixel, assuming a square shaped pixel. Given in m^2.
-
     """
-
 
     def __init__(self, ccd_config: t.Dict[str, t.Any]):
         """

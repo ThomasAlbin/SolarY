@@ -62,7 +62,10 @@ class ReflectorCCD(Reflector, CCD):
     ----------
     _photo_flux_v : float
         Photon flux of a 0 mag star in V-Band.
+    """
 
+    """
+    (sphinx complains)
     Static Properties
     -----------------
     fov : list

@@ -55,7 +55,10 @@ class Reflector:
         the quantum efficiency of a camera system. Dimensionless and defined between 0 and 1.
     focal_length : float
         Focal length of the system. Given in m.
+    """
 
+    """
+    (sphinx complains)
     Static Properties
     -----------------
     main_mirror_area : float

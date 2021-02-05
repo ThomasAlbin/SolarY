@@ -36,6 +36,7 @@ def get_constants() -> configparser.ConfigParser:
 
     return config
 
+
 def get_paths(test: bool=False) -> configparser.ConfigParser:
     """
     Function to get the paths.dir file from the _config directory
@@ -61,6 +62,33 @@ def get_paths(test: bool=False) -> configparser.ConfigParser:
         paths_ini_path = os.path.join(ROOT_DIR, '../', 'tests/_resources/_config', 'test_paths.ini')
     else:
         paths_ini_path = os.path.join(ROOT_DIR, '_config', 'paths.ini')
+
+    # Read and parse the config file
+    config.read(paths_ini_path)
+
+    return config
+
+def get_spice_kernels(ktype: str) -> configparser.ConfigParser:
+    """
+    TBW
+
+    Parameters
+    ----------
+    ktype : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    None.
+
+    """
+
+    # Set the config parser
+    config = configparser.ConfigParser()
+
+    kernel_dict = {'generic': 'generic.ini'}
+
+    paths_ini_path = os.path.join(ROOT_DIR, '_config', 'SPICE', kernel_dict.get(ktype))
 
     # Read and parse the config file
     config.read(paths_ini_path)

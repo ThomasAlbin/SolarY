@@ -37,7 +37,7 @@ def get_constants() -> configparser.ConfigParser:
     return config
 
 
-def get_paths(test: bool=False) -> configparser.ConfigParser:
+def get_paths(test: bool = False) -> configparser.ConfigParser:
     """
     Function to get the paths.dir file from the _config directory
 
@@ -70,27 +70,31 @@ def get_paths(test: bool=False) -> configparser.ConfigParser:
 
 def get_spice_kernels(ktype: str) -> configparser.ConfigParser:
     """
-    TBW
+    Function to get the kernel information from the _config directory
 
     Parameters
     ----------
     ktype : str
-        DESCRIPTION.
+        SPICE Kernel type (e.g., "generic").
 
     Returns
     -------
-    None.
+    config : configparser.ConfigParser
+        Configuration Parser that contains miscellaneous kernel information like the URL, type,
+        directory and filename.
 
     """
 
     # Set the config parser
     config = configparser.ConfigParser()
 
+    # Current kernel dictionary that encodes the present config files
     kernel_dict = {'generic': 'generic.ini'}
 
-    paths_ini_path = os.path.join(ROOT_DIR, '_config', 'SPICE', kernel_dict.get(ktype))
+    # Get the corresponding kernel config filepath
+    ini_path = os.path.join(ROOT_DIR, '_config', 'SPICE', kernel_dict.get(ktype))
 
     # Read and parse the config file
-    config.read(paths_ini_path)
+    config.read(ini_path)
 
     return config

@@ -1,7 +1,4 @@
-"""
-physp.py
-
-This script contains miscellaneous functions to describe and derive physical and instrinsic
+"""This script contains miscellaneous functions to describe and derive physical and instrinsic
 parameters of asteroids.
 
 """
@@ -31,7 +28,9 @@ def ast_size(albedo: float, abs_mag: float) -> float:
     [1] Chesley, Steven R.; Chodas, Paul W.; Milani, Andrea; Valsecchi, Giovanni B.; Yeomans,
         Donald K. (October 2002). Quantifying the Risk Posed by Potential Earth Impacts. Icarus.
         159 (2): 425
+
     [2] https://cneos.jpl.nasa.gov/tools/ast_size_est.html
+
     [3] http://www.physics.sfasu.edu/astro/asteroids/sizemagnitude.html
 
     Examples
@@ -40,7 +39,6 @@ def ast_size(albedo: float, abs_mag: float) -> float:
     >>> ast_radius = solary.asteroid.physp.ast_size(albedo=0.15, abs_mag=10)
     >>> ast_radius
     17.157
-
     """
 
     # Compute the diameter in km

@@ -7,31 +7,11 @@ Script that contains miscellaneous functions and classes for / of camera system 
 import typing as t
 # Import standard libraries
 import json
+from pathlib import Path
+from dataclasses import dataclass
 
 
-def read_ccd_config(config_filepath: str) -> t.Dict[str, t.Any]:
-    """
-    Function to read the configuration file for a CCD system.
-
-    Parameters
-    ----------
-    config_filepath : str
-        File path of the configuration file.
-
-    Returns
-    -------
-    ccd_config : dict
-        CCD configuration.
-
-    """
-
-    # Open the file path and load / read it as a JSON
-    with open(config_filepath) as temp_obj:
-        ccd_config = json.load(temp_obj)
-
-    return ccd_config
-
-
+@dataclass
 class CCD:
     """
     Class that defines ande describes a CCD camera. Properties are derived from the user's input
@@ -52,44 +32,19 @@ class CCD:
 
     """
 
-    """
-    (Sphinx complains)
-    Static Properties
-    -----------------
-    chip_size : list
-        List with the size of the CCD chip in each dimension (x, y). Given in mm.
-    pixel_size_sq_m : float
-        Size of a single pixel, assuming a square shaped pixel. Given in m^2.
-    """
+    pixels: list  # type t.List[int, int]
+    pixel_size: float
+    dark_noise: float
+    readout_noise: float
+    full_well: t.Union[int, float]
+    quantum_eff: float
 
-    def __init__(self, ccd_config: t.Dict[str, t.Any]):
-        """
-        Init function.
-
-        Parameters
-        ----------
-        ccd_config : dict
-            CCD configuration dictionary.
-
-        Returns
-        -------
-        None.
-
-        """
-
-        # Placeholders for the static attributes
-        self.pixel_size = ccd_config["pixel_size"]  # type: float
-        self.pixels = ccd_config["pixels"]  # type: t.Tuple[float, float]
-        self.dark_noise = ccd_config["dark_noise"]  # type: float
-        self.readout_noise = ccd_config["readout_noise"]  # type: float
-        self.full_well = ccd_config["full_well"]  # type: float
-        self.quantum_eff = ccd_config["quantum_eff"]  # type: float
-
-        # Set the attributes dynamically in a for loop and set the values accordingly.
-        valid_keys = ['pixels', 'pixel_size', 'dark_noise', 'readout_noise', 'full_well',
-                      'quantum_eff']
-        for key in valid_keys:
-            setattr(self, key, ccd_config.get(key))
+    @staticmethod
+    def load(config_path: t.Union[Path, str]) -> "CCD":
+        """Factory method to construct a CCD object from a JSON file."""
+        with Path(config_path).open(mode="r") as temp_obj:
+            ccd_config = json.load(temp_obj)
+            return CCD(**ccd_config)
 
     @property
     def chip_size(self) -> t.Tuple[float, float]:

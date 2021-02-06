@@ -130,7 +130,7 @@ class ReflectorCCD(Reflector, CCD):
 
         # Init the optics and camera classes accordingly
         Reflector.__init__(self, optics_config)
-        CCD.__init__(self, ccd_config)
+        CCD.__init__(self, **ccd_config)
 
         # Load the constants config file and get the photon flux (Given in m^-2 * s^-1)
         config = solary.auxiliary.config.get_constants()

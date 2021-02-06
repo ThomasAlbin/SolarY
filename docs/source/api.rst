@@ -35,11 +35,7 @@ instruments package
 
 
 .. automodule:: solary.instruments.camera
-    :special-members:
-    :exclude-members: __dict__, __weakref__
     :members:
-    :undoc-members:
-    :show-inheritance:
 
 .. automodule:: solary.instruments.optics
     :special-members:

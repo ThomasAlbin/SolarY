@@ -34,9 +34,9 @@ def fixture_ccd_test_config():
             '../' + test_paths_config['instruments_camera_ccd']['properties'])
 
     # Read and parse the CCD config file and return a dictionary with the properties
-    test_ccd_dict = solary.instruments.camera.read_ccd_config(test_ccd_path)
+    test_ccd_dict = solary.instruments.camera.CCD.load(test_ccd_path)
 
-    return test_ccd_dict
+    return test_ccd_dict.__dict__
 
 
 def test_read_ccd_config(ccd_test_config):
@@ -76,7 +76,7 @@ def test_ccd(ccd_test_config):
     """
 
     # Initiate the CCD class
-    test_ccd_class = solary.instruments.camera.CCD(ccd_test_config)
+    test_ccd_class = solary.instruments.camera.CCD(**ccd_test_config)
 
     # Check the config depending attributes
     assert test_ccd_class.pixels == ccd_test_config['pixels']
@@ -88,10 +88,8 @@ def test_ccd(ccd_test_config):
 
     # Check the first entry of the chip size. Multiply the number of pixels (x dimension) times the
     # pixel size in micro meters. Finally divide by 1000 to get a result in mm.
-    assert test_ccd_class.chip_size[0] == ccd_test_config['pixels'][0] \
-                                          * ccd_test_config['pixel_size'] / 1000.0
+    assert test_ccd_class.chip_size[0] == ccd_test_config['pixels'][0] * ccd_test_config['pixel_size'] / 1000.0
 
     # Check the size of a single pixel in m^2. The pixel size squared leads to micro meter squared.
     # Divide the results by 10^-12.
-    assert test_ccd_class.pixel_size_sq_m == (ccd_test_config['pixel_size'] ** 2.0) \
-                                             * 10.0 ** (-12.0)
+    assert test_ccd_class.pixel_size_sq_m == (ccd_test_config['pixel_size'] ** 2.0) * 10.0 ** (-12.0)

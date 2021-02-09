@@ -55,4 +55,22 @@ def test_get_paths():
     assert 'instruments_optics_reflector' in test_paths_config_sections
 
 
-# test_get_paths()
+def test_get_spice_kernels():
+    """
+    The test function to check the correct parsinf of the SPICE config file.
+
+    Returns
+    -------
+    None.
+
+    """
+
+    # Call the paths config file
+    paths_config = solary.auxiliary.config.get_spice_kernels(ktype='generic')
+
+    # If the reading was successful the config object shall have miscellaneous sections and
+    # corresponding values. One of them is called "leapseconds".  Further, "file" shall always
+    # be present in a section.
+    paths_config_sections = paths_config.sections()
+    assert 'leapseconds' in paths_config_sections
+    assert 'file' in paths_config['leapseconds'].keys()

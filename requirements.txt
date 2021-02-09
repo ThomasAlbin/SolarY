@@ -1,2 +1,4 @@
 certifi
 requests
+pytest
+spiceypy

@@ -46,9 +46,9 @@ def fixture_telescope_test_properties():
         solary.auxiliary.parse.get_test_file_path(
             '../' + test_paths_config['instruments_camera_ccd']['properties'])
 
-    test_ccd = solary.instruments.camera.read_ccd_config(test_ccd_path)
+    test_ccd = solary.instruments.camera.CCD.load(test_ccd_path)
 
-    return test_reflector, test_ccd
+    return test_reflector, test_ccd.__dict__
 
 
 def test_comp_fov():

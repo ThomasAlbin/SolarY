@@ -13,14 +13,15 @@ class CCD:
     Properties are derived from the user's input like e.g., the chip size.
     """
 
-    def __init__(self,
-                 pixels: t.Tuple[int, int],
-                 pixel_size: float,
-                 dark_noise: float,
-                 readout_noise: float,
-                 full_well: t.Union[int, float],
-                 quantum_eff: float
-                 ) -> None:
+    def __init__(
+        self,
+        pixels: t.Tuple[int, int],
+        pixel_size: float,
+        dark_noise: float,
+        readout_noise: float,
+        full_well: t.Union[int, float],
+        quantum_eff: float,
+    ) -> None:
         r"""CCD camera initializer.
 
         Parameters
@@ -95,7 +96,7 @@ class CCD:
         # Compute the chip size in each dimension by multiplying the number of
         # pixels with the pixel size, given in mm.
         for pixel_dim in self.pixels:
-            chip_size.append(pixel_dim*pixel_size_mm)
+            chip_size.append(pixel_dim * pixel_size_mm)
 
         return chip_size[0], chip_size[1]
 

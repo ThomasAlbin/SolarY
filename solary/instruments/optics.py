@@ -1,7 +1,7 @@
 """Implements classes and functions that are needed for optical systems."""
 # pylint: disable=no-member
-import typing as t
 import json
+import typing as t
 from pathlib import Path
 
 import solary
@@ -16,12 +16,13 @@ class Reflector:
     input like e.g. the collector area of a telescope.
     """
 
-    def __init__(self,
-                 main_mirror_dia: float,
-                 sec_mirror_area: float,
-                 optical_throughput: float,
-                 focal_length: float
-                 ) -> None:
+    def __init__(
+        self,
+        main_mirror_dia: float,
+        sec_mirror_area: float,
+        optical_throughput: float,
+        focal_length: float,
+    ) -> None:
         """Init function.
 
         Parameters
@@ -31,9 +32,11 @@ class Reflector:
         sec_mirror_area : float
             Diameter of the secondary mirror. Given in m.
         optical_throughput: float
-            Throughput of the telescope. The Throughput is a combination of the mirror reflectivity,
-            filter transmissivity etc. It describes only the optical system and does no include e.g.,
-            the quantum efficiency of a camera system. Dimensionless and defined between 0 and 1.
+            Throughput of the telescope. The Throughput is a combination of
+            the mirror reflectivity, filter transmissivity etc. It describes
+            only the optical system and does no include e.g., the quantum
+            efficiency of a camera system.
+            Dimensionless and defined between 0 and 1.
         focal_length : float
             Focal length of the system. Given in m.
         """
@@ -94,7 +97,6 @@ class Reflector:
         float
             Main mirror area. Given in m^2.
         """
-
         # Call a sub-module that requires the radius as an input
         return solary.general.geometry.circle_area(self.main_mirror_dia / 2.0)
 

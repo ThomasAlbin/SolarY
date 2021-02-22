@@ -22,7 +22,6 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import sphinx_rtd_theme
-
 from pathlib import Path
 from setuptools.config import read_configuration
 
@@ -58,19 +57,26 @@ metadata = read_configuration(setup_cfg_filename)['metadata']   # type: dict
 # extensions = ['sphinx.ext.autodoc']
 extensions = [
     'sphinx.ext.autodoc',       # include documentation from docstrings
-    'sphinx.ext.todo',          # support for todo items (.. todo::)
-    'sphinx.ext.coverage',      # collect doc coverage stats
-    'sphinx.ext.mathjax',       # render math via Javascript
-    'sphinx.ext.viewcode',      # add links to highlighted source code
-    'sphinx.ext.autosummary',   # Generate autodoc summaries
-    'sphinx.ext.autosectionlabel',
-    'sphinx.ext.napoleon'       # Support for NumPy and Google style docstrings
+    # 'sphinx.ext.todo',          # support for todo items (.. todo::)
+    # 'sphinx.ext.coverage',      # collect doc coverage stats
+    # 'sphinx.ext.mathjax',       # render math via Javascript
+    # 'sphinx.ext.viewcode',      # add links to highlighted source code
+    # 'sphinx.ext.autosummary',   # Generate autodoc summaries
+    # 'sphinx.ext.autosectionlabel',
+    'numpydoc',
+    'sphinx_autodoc_typehints',
+    # 'sphinx_autodoc_napoleon_typehints',
+    # 'sphinx.ext.napoleon'       # Support for NumPy and Google style docstrings
     # 'sphinxcontrib.plantuml',
     # 'sphinxcontrib.mermaid',
     # 'sphinx.ext.numfig',
     # 'rst2pdf.pdfbuilder',
 ]
 autosectionlabel_prefix_document = True
+set_type_checking_flag = True
+#typehints_fully_qualified = True
+#always_document_param_types = True
+#typehints_document_rtype = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

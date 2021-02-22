@@ -11,7 +11,7 @@ Table of Contents
    :maxdepth: 4
    :hidden:
 
-   api.rst
+   api/index.rst
 
 
 Indices and tables

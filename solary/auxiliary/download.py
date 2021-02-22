@@ -1,26 +1,21 @@
-"""
-download.py
-
-This sub-module contains auxiliary functions to download miscellaneous datasets.
-
-"""
-
-# Import standard libraries
+"""Auxiliary functions to download miscellaneous datasets."""
+import typing as t
 import urllib.parse
 import urllib.request
 
-# Import solary
-from . import config
-from . import parse
+from . import config, parse
 
 # Get the file paths
 GENERIC_KERNEL_CONFIG = config.get_spice_kernels(ktype='generic')
 
 
-def spice_generic_kernels():
+def spice_generic_kernels() -> t.Dict[str, str]:
     """
-    Function to download the generic SPICE kernels into the solary data storage directory:
-    ~HOME/solary_data/.
+    Download the generic SPICE kernels into the solary data storage directory.
+
+    The SPICE kernels will be saved to the following directory::
+
+        ~HOME/solary_data/.
 
     Parameters
     ----------
@@ -28,9 +23,9 @@ def spice_generic_kernels():
 
     Returns
     -------
-
+    Dict[str, str]
+        The download file name with the associated MD5 hash.
     """
-
     # Set a placeholder list for the filepaths and corresponding / resulting MD5 values
     kernel_hashes = {}
 
@@ -42,7 +37,7 @@ def spice_generic_kernels():
                                                     GENERIC_KERNEL_CONFIG[kernel]['file'])
 
         # Download the file and store it in the kernels directory
-        downl_file_path, _ = urllib.request.urlretrieve(url=GENERIC_KERNEL_CONFIG[kernel]['url'], \
+        downl_file_path, _ = urllib.request.urlretrieve(url=GENERIC_KERNEL_CONFIG[kernel]['url'],
                                                         filename=download_filename)
 
         # Compute the MD5 hash value

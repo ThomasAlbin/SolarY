@@ -1,11 +1,4 @@
-"""
-config.py
-
-Auxiliary functions for all library relevant configuration files
-
-"""
-
-# Import standard libraries
+"""Auxiliary functions for all library relevant configuration files."""
 import configparser
 import os
 
@@ -15,16 +8,14 @@ from solary import ROOT_DIR
 
 def get_constants() -> configparser.ConfigParser:
     """
-    Function to get the constants.ini file from the _config directory
+    Get the constants.ini file from the _config directory.
 
     Returns
     -------
     config : configparser.ConfigParser
         Configuration Parser that contains miscellaneous constants (like astrodynmical, time,
         etc.)
-
     """
-
     # Set config parser
     config = configparser.ConfigParser()
 
@@ -39,7 +30,7 @@ def get_constants() -> configparser.ConfigParser:
 
 def get_paths(test: bool = False) -> configparser.ConfigParser:
     """
-    Function to get the paths.dir file from the _config directory
+    Get the ``paths.dir`` file from the _config directory.
 
     Parameters
     ----------
@@ -51,9 +42,7 @@ def get_paths(test: bool = False) -> configparser.ConfigParser:
     config : configparser.ConfigParser
         Configuration Parser that contains miscellaneous paths to store / access / etc. downloaded
         files, created database etc.
-
     """
-
     # Set the config parser
     config = configparser.ConfigParser()
 
@@ -68,9 +57,10 @@ def get_paths(test: bool = False) -> configparser.ConfigParser:
 
     return config
 
+
 def get_spice_kernels(ktype: str) -> configparser.ConfigParser:
     """
-    Function to get the kernel information from the _config directory
+    Get the kernel information from the _config directory.
 
     Parameters
     ----------
@@ -82,9 +72,7 @@ def get_spice_kernels(ktype: str) -> configparser.ConfigParser:
     config : configparser.ConfigParser
         Configuration Parser that contains miscellaneous kernel information like the URL, type,
         directory and filename.
-
     """
-
     # Set the config parser
     config = configparser.ConfigParser()
 

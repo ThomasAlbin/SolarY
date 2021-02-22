@@ -1,14 +1,7 @@
-"""
-parse.py
-
-Auxiliary functions for file and path parsing
-
-"""
-
-# Import standard libraries
+"""Auxiliary functions for file and path parsing."""
 import hashlib
-import pathlib
 import os
+import pathlib
 
 # Get the ROOT DIR
 from solary import ROOT_DIR
@@ -27,9 +20,7 @@ def comp_md5(file_name: str) -> str:
     -------
     md5_res : str
         Resulting MD5 hash.
-
     """
-
     # Set the MD5 hashing
     hash_md5 = hashlib.md5()
 
@@ -47,7 +38,9 @@ def comp_md5(file_name: str) -> str:
 
 def setnget_file_path(dl_path: str, filename: str) -> str:
     """
-    Compute the path of a file, depending on its download path. The standard download path is:
+    Compute the path of a file, depending on its download path.
+
+    The standard download path is:
         ~$HOME/
 
     Parameters
@@ -61,9 +54,7 @@ def setnget_file_path(dl_path: str, filename: str) -> str:
     -------
     file_path : str
         Absolute file name path of the given file name and directory.
-
     """
-
     # Get the system's home directory
     home_dir = os.path.expanduser('~')
 
@@ -92,9 +83,7 @@ def get_test_file_path(file_path: str) -> str:
     -------
     compl_test_file_path : str
         Absolute filepath to the testing file.
-
     """
-
     # Join the root directory of SolarY with the given filepath.
     compl_test_file_path = os.path.join(ROOT_DIR, file_path)
 

@@ -1,3 +1,5 @@
+"""TBW."""
+# flake8: noqa
 import os
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 

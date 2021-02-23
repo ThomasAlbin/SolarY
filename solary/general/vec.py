@@ -1,18 +1,13 @@
-"""
-vec.py
-
-Auxiliary functions for vector computations.
-
-"""
-import typing as t
-# Import standard libraries
+"""Auxiliary functions for vector computations."""
 import math
+import typing as t
 
 
 def norm(vector: t.List[float]) -> float:
     """
-    This function computes the norm of a given vector. The current version computes only the
-    Euclidean Norm, respectivels the p2 norm.
+    Compute the norm of a given vector.
+
+    The current version computes only the Euclidean Norm, respectivels the p2 norm.
 
     Parameters
     ----------
@@ -30,9 +25,7 @@ def norm(vector: t.List[float]) -> float:
     >>> vec_norm = solary.general.vec.norm(vector=[3.0, 5.0, -5.9])
     >>> vec_norm
     8.295179322956196
-
     """
-
     # Compute the norm by summing all squared elements
     norm_res = math.sqrt(sum(abs(elem)**2.0 for elem in vector))
 
@@ -41,8 +34,10 @@ def norm(vector: t.List[float]) -> float:
 
 def unify(vector: t.List[float]) -> t.List[float]:
     """
-    This function normalises the input vector. So, the elements of the vector are divided by the
-    norm of the vector. The result is a unit vector with the length 1.
+    Normalise the input vector.
+
+    The elements of the vector are divided by the norm of the vector.
+    The result is a unit vector with the length 1.
 
     Parameters
     ----------
@@ -66,9 +61,7 @@ def unify(vector: t.List[float]) -> t.List[float]:
     >>> vec_norm = solary.general.vec.norm(vector=unit_vec)
     >>> vec_norm
     1.0
-
     """
-
     # Compute the norm of the input vector
     vector_norm = norm(vector)
 
@@ -80,7 +73,7 @@ def unify(vector: t.List[float]) -> t.List[float]:
 
 def dot_prod(vector1: t.List[float], vector2: t.List[float]) -> float:
     """
-    This function computes the dot product between two given vectors.
+    Compute the dot product between two given vectors.
 
     Parameters
     ----------
@@ -102,9 +95,7 @@ def dot_prod(vector1: t.List[float], vector2: t.List[float]) -> float:
 
     >>> dot_product_res
     9.3
-
     """
-
     # Compute dot product
     dotp_res = sum(v1_i * v2_i for v1_i, v2_i in zip(vector1, vector2))
 
@@ -113,8 +104,10 @@ def dot_prod(vector1: t.List[float], vector2: t.List[float]) -> float:
 
 def phase_angle(vector1: t.List[float], vector2: t.List[float]) -> float:
     """
-    This function compute the phase angle between two vectors. The phase angle is the enclosed
-    angle between the vectors at their corresponding point of origin.
+    Compute the phase angle between two vectors.
+
+    The phase angle is the enclosed angle between the vectors at their
+    corresponding point of origin.
 
     The output is given in radians and ranges from 0 to pi.
 
@@ -139,20 +132,18 @@ def phase_angle(vector1: t.List[float], vector2: t.List[float]) -> float:
     >>> ph_angle_deg = math.degrees(ph_angle_rad)
     >>> ph_angle_deg
     45.0
-
     """
-
     # Compute the phase angle by considering the rearranged, known geometric definition of the dot
     # product
-    angle_rad = math.acos(dot_prod(vector1, vector2) \
-                          / (norm(vector1) * norm(vector2)))
+    angle_rad = math.acos(dot_prod(vector1, vector2) / (norm(vector1) * norm(vector2)))
 
     return angle_rad
 
 
 def substract(vector1: t.List[float], vector2: t.List[float]) -> t.List[float]:
     """
-    This function substracts the vector elements of one list with the elements of another list.
+    Substracts the vector elements of one list with the elements of another list.
+
     Alternatively, one can use the Numpy library and Numpy arrays without using this function at
     all.
 
@@ -175,9 +166,7 @@ def substract(vector1: t.List[float], vector2: t.List[float]) -> t.List[float]:
                                                    vector2=[-8.0, 0.0, 1.0])
     >>> vector_diff
     [9.0, 4.0, 1.0]
-
     """
-
     # Set an empty list for the vector difference / substraction
     diff_vector = []
 
@@ -211,9 +200,7 @@ def inverse(vector: t.List[float]) -> t.List[float]:
     >>> inverse_vector = solary.general.vec.inverse(vector=[1.0, 2.0, -3.0])
     >>> inverse_vector
     [-1.0, -2.0, 3.0]
-
     """
-
     # Inverse the vector element entries by multiplying -1.0 to each element
     inv_vector = [-1.0 * vector_elem for vector_elem in vector]
 

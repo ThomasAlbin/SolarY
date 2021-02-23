@@ -5,10 +5,10 @@ Currently implemented sub-systems,
 * optical systems
 * cameras
 """
-
-# Import standard libraries
+import json
 import math
 import typing as t
+from pathlib import Path
 
 import solary
 
@@ -133,6 +133,15 @@ class ReflectorCCD(Reflector, CCD):
         self._aperture = 0.0  # TODO: this should be passed in as an argument
         self._hfdia = 0.0  # TODO: this should be passed in as an argument
         self._exposure_time = 0.0  # TODO: this should be passed in as an argument
+
+    @staticmethod
+    def load_from_json_file(optics_path: t.Union[Path, str], ccd_path: t.Union[Path, str]) -> "ReflectorCCD":
+        """Construct a ReflectorCCD object JSON files."""
+        with Path(optics_path).open(mode="r") as temp_obj:
+            optics_config = json.load(temp_obj)
+        with Path(ccd_path).open(mode="r") as temp_obj:
+            ccd_config = json.load(temp_obj)
+        return ReflectorCCD(optics_config, ccd_config)
 
     @property
     def fov(self) -> t.Tuple[float, float]:

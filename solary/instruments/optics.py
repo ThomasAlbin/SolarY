@@ -19,7 +19,7 @@ class Reflector:
     def __init__(
         self,
         main_mirror_dia: float,
-        sec_mirror_area: float,
+            sec_mirror_dia: float,
         optical_throughput: float,
         focal_length: float,
     ) -> None:
@@ -29,7 +29,7 @@ class Reflector:
         ----------
         main_mirror_dia : float
             Diameter of the main mirror. Given in m.
-        sec_mirror_area : float
+        sec_mirror_dia : float
             Diameter of the secondary mirror. Given in m.
         optical_throughput: float
             Throughput of the telescope. The Throughput is a combination of
@@ -41,7 +41,7 @@ class Reflector:
             Focal length of the system. Given in m.
         """
         self._main_mirror_dia = main_mirror_dia
-        self._sec_mirror_dia = sec_mirror_area
+        self._sec_mirror_dia = sec_mirror_dia
         self._optical_throughput = optical_throughput
         self._focal_length = focal_length
 

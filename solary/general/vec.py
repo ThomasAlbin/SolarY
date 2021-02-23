@@ -27,7 +27,7 @@ def norm(vector: t.List[float]) -> float:
     8.295179322956196
     """
     # Compute the norm by summing all squared elements
-    norm_res = math.sqrt(sum(abs(elem)**2.0 for elem in vector))
+    norm_res = math.sqrt(sum(abs(elem) ** 2.0 for elem in vector))
 
     return norm_res
 

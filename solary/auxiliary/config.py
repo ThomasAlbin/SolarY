@@ -20,7 +20,7 @@ def get_constants() -> configparser.ConfigParser:
     config = configparser.ConfigParser()
 
     # Get the constants ini file
-    constants_ini_path = os.path.join(ROOT_DIR, '_config', 'constants.ini')
+    constants_ini_path = os.path.join(ROOT_DIR, "_config", "constants.ini")
 
     # Read and parse the config file
     config.read(constants_ini_path)
@@ -48,9 +48,11 @@ def get_paths(test: bool = False) -> configparser.ConfigParser:
 
     # Get the paths ini file, differentiate between prod and test
     if test:
-        paths_ini_path = os.path.join(ROOT_DIR, '../', 'tests/_resources/_config', 'test_paths.ini')
+        paths_ini_path = os.path.join(
+            ROOT_DIR, "../", "tests/_resources/_config", "test_paths.ini"
+        )
     else:
-        paths_ini_path = os.path.join(ROOT_DIR, '_config', 'paths.ini')
+        paths_ini_path = os.path.join(ROOT_DIR, "_config", "paths.ini")
 
     # Read and parse the config file
     config.read(paths_ini_path)
@@ -77,10 +79,10 @@ def get_spice_kernels(ktype: str) -> configparser.ConfigParser:
     config = configparser.ConfigParser()
 
     # Current kernel dictionary that encodes the present config files
-    kernel_dict = {'generic': 'generic.ini'}
+    kernel_dict = {"generic": "generic.ini"}
 
     # Get the corresponding kernel config filepath
-    ini_path = os.path.join(ROOT_DIR, '_config', 'SPICE', kernel_dict.get(ktype))
+    ini_path = os.path.join(ROOT_DIR, "_config", "SPICE", kernel_dict.get(ktype))
 
     # Read and parse the config file
     config.read(ini_path)

@@ -1,7 +1,5 @@
 """NEO data download, parsing and database creation functions are part of this sub-module."""
-import typing as t
 import gzip
-
 # import urllib.parse
 # import urllib.request
 import os
@@ -9,8 +7,10 @@ import re
 import shutil
 import sqlite3
 import time
-import requests
+import typing as t
 from pathlib import Path
+
+import requests
 
 import solary
 

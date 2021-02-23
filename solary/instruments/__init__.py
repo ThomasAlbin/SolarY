@@ -1,5 +1,3 @@
 """TBW."""
 # flake8: noqa
-from . import camera
-from . import optics
-from . import telescope
+from . import camera, optics, telescope

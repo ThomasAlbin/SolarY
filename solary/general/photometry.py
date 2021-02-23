@@ -36,7 +36,7 @@ def appmag2irr(app_mag: t.Union[int, float]) -> float:
     # Load the configuration file that contains the zero point bolometric
     # irradiance
     config = solary.auxiliary.config.get_constants()
-    appmag_irr_i0 = float(config['photometry']['appmag_irr_i0'])
+    appmag_irr_i0 = float(config["photometry"]["appmag_irr_i0"])
 
     # Convert apparent magnitude to irradiance
     irradiance = 10.0 ** (-0.4 * app_mag + math.log10(appmag_irr_i0))
@@ -133,13 +133,13 @@ def phase_func(index: int, phase_angle: float) -> float:
     0.5283212147726485
     """
     # Dictionaries that contain the A and B constants, depending on the index version
-    a_factor = {1: 3.33,
-                2: 1.87}
-    b_factor = {1: 0.63,
-                2: 1.22}
+    a_factor = {1: 3.33, 2: 1.87}
+    b_factor = {1: 0.63, 2: 1.22}
 
     # Phase function
-    phi = math.exp(-1.0 * a_factor[index] * ((math.tan(0.5 * phase_angle) ** b_factor[index])))
+    phi = math.exp(
+        -1.0 * a_factor[index] * ((math.tan(0.5 * phase_angle) ** b_factor[index]))
+    )
 
     # Return the phase function result
     return phi
@@ -192,18 +192,20 @@ def reduc_mag(abs_mag: float, phase_angle: float, slope_g: float = 0.15) -> floa
     11.720766748872016
     """
     # Compute the reduced magnitude based on the equations given in the references [1]
-    reduced_magnitude = abs_mag - 2.5 * math.log10((1.0 - slope_g)
-                                                   * phase_func(index=1, phase_angle=phase_angle)
-                                                   + slope_g
-                                                   * phase_func(index=2, phase_angle=phase_angle))
+    reduced_magnitude = abs_mag - 2.5 * math.log10(
+        (1.0 - slope_g) * phase_func(index=1, phase_angle=phase_angle)
+        + slope_g * phase_func(index=2, phase_angle=phase_angle)
+    )
 
     return reduced_magnitude
 
 
-def hg_app_mag(abs_mag: float,
-               vec_obj2obs: t.Union[t.List[float], t.Tuple[float, float, float]],
-               vec_obj2ill: t.Union[t.List[float], t.Tuple[float, float, float]],
-               slope_g: float = 0.15) -> float:
+def hg_app_mag(
+    abs_mag: float,
+    vec_obj2obs: t.Union[t.List[float], t.Tuple[float, float, float]],
+    vec_obj2ill: t.Union[t.List[float], t.Tuple[float, float, float]],
+    slope_g: float = 0.15,
+) -> float:
     """
     Compute the visual / apparent magnitude of an asteroid.
 

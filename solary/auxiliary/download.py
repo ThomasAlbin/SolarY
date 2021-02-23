@@ -6,7 +6,7 @@ import urllib.request
 from . import config, parse
 
 # Get the file paths
-GENERIC_KERNEL_CONFIG = config.get_spice_kernels(ktype='generic')
+GENERIC_KERNEL_CONFIG = config.get_spice_kernels(ktype="generic")
 
 
 def spice_generic_kernels() -> t.Dict[str, str]:
@@ -33,12 +33,14 @@ def spice_generic_kernels() -> t.Dict[str, str]:
     for kernel in GENERIC_KERNEL_CONFIG.sections():
 
         # Set the download filepath
-        download_filename = parse.setnget_file_path(GENERIC_KERNEL_CONFIG[kernel]['dir'],
-                                                    GENERIC_KERNEL_CONFIG[kernel]['file'])
+        download_filename = parse.setnget_file_path(
+            GENERIC_KERNEL_CONFIG[kernel]["dir"], GENERIC_KERNEL_CONFIG[kernel]["file"]
+        )
 
         # Download the file and store it in the kernels directory
-        downl_file_path, _ = urllib.request.urlretrieve(url=GENERIC_KERNEL_CONFIG[kernel]['url'],
-                                                        filename=download_filename)
+        downl_file_path, _ = urllib.request.urlretrieve(
+            url=GENERIC_KERNEL_CONFIG[kernel]["url"], filename=download_filename
+        )
 
         # Compute the MD5 hash value
         md5_hash = parse.comp_md5(downl_file_path)

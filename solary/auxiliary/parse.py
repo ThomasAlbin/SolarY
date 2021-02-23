@@ -26,8 +26,8 @@ def comp_md5(file_name: str) -> str:
 
     # Open the file in binary mode (read-only) and parse it in 65,536 byte chunks (in case of
     # large files, the loading will not exceed the usable RAM)
-    with open(file_name, 'rb') as f_temp:
-        for _seq in iter(lambda: f_temp.read(65536), b''):
+    with open(file_name, "rb") as f_temp:
+        for _seq in iter(lambda: f_temp.read(65536), b""):
             hash_md5.update(_seq)
 
     # Digest the MD5 result
@@ -56,7 +56,7 @@ def setnget_file_path(dl_path: str, filename: str) -> str:
         Absolute file name path of the given file name and directory.
     """
     # Get the system's home directory
-    home_dir = os.path.expanduser('~')
+    home_dir = os.path.expanduser("~")
 
     # Join the home directory path with the download path
     compl_dl_path = os.path.join(home_dir, dl_path)

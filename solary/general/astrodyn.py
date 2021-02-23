@@ -5,11 +5,12 @@ import typing as t
 import solary
 
 
-def tisserand(sem_maj_axis_obj: float,
-              inc: float,
-              ecc: float,
-              sem_maj_axis_planet: t.Optional[float] = None
-              ) -> float:
+def tisserand(
+    sem_maj_axis_obj: float,
+    inc: float,
+    ecc: float,
+    sem_maj_axis_planet: t.Optional[float] = None,
+) -> float:
     """
     Compute the Tisserand parameter of an object w.r.t. a larger object.
 
@@ -59,10 +60,12 @@ def tisserand(sem_maj_axis_obj: float,
 
         # Get the constants config file
         config = solary.auxiliary.config.get_constants()
-        sem_maj_axis_planet = float(config['planets']['sem_maj_axis_jup'])
+        sem_maj_axis_planet = float(config["planets"]["sem_maj_axis_jup"])
 
     # Compute the tisserand parameter
-    tisserand_parameter = (sem_maj_axis_planet / sem_maj_axis_obj) + 2.0 * math.cos(inc) * math.sqrt((sem_maj_axis_obj / sem_maj_axis_planet) * (1.0 - ecc**2.0))
+    tisserand_parameter = (sem_maj_axis_planet / sem_maj_axis_obj) + 2.0 * math.cos(
+        inc
+    ) * math.sqrt((sem_maj_axis_obj / sem_maj_axis_planet) * (1.0 - ecc ** 2.0))
 
     return tisserand_parameter
 
@@ -147,7 +150,9 @@ def jd2mjd(juldate: float) -> float:
     return m_juldate
 
 
-def sphere_of_influence(sem_maj_axis: float, minor_mass: float, major_mass: float) -> float:
+def sphere_of_influence(
+    sem_maj_axis: float, minor_mass: float, major_mass: float
+) -> float:
     """
     Compute the Sphere of Influence (SOI).
 
@@ -207,7 +212,9 @@ class Orbit:
         Apoapsis. Given in the same units as peri.
     """
 
-    def __init__(self, orbit_values: t.Dict[str, float], orbit_units: t.Dict[str, float]) -> None:
+    def __init__(
+        self, orbit_values: t.Dict[str, float], orbit_units: t.Dict[str, float]
+    ) -> None:
         """
         Init function.
 
@@ -244,7 +251,7 @@ class Orbit:
             Semi-major axis. Given in the same spatial dimension as the input parameters.
         """
         # Compute the semi-major axis
-        _semi_maj_axis = self.peri / (1.0-self.ecc)
+        _semi_maj_axis = self.peri / (1.0 - self.ecc)
 
         return _semi_maj_axis
 

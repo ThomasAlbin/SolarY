@@ -6,3 +6,6 @@ dist*
 *.cat
 *.db
 *.dat
+.tox/.package.lock
+.coverage
+*htmlcov*

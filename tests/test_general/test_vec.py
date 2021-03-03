@@ -66,7 +66,11 @@ def test_unify():
 
     # Example #3
     unit_vec3 = SolarY.general.vec.unify(vector=[5.0, 5.0, 5.0])
-    assert pytest.approx(unit_vec3) == [1.0 / math.sqrt(3), 1.0 / math.sqrt(3), 1.0 / math.sqrt(3)]
+    assert pytest.approx(unit_vec3) == [
+        1.0 / math.sqrt(3),
+        1.0 / math.sqrt(3),
+        1.0 / math.sqrt(3),
+    ]
 
 
 def test_dot_prod():
@@ -80,18 +84,17 @@ def test_dot_prod():
     """
 
     # Example #1
-    dot_res1 = SolarY.general.vec.dot_prod(vector1=[1.0, 2.0, 3.0], \
-                                           vector2=[-2.0, 5.0, 8.0])
+    dot_res1 = SolarY.general.vec.dot_prod(
+        vector1=[1.0, 2.0, 3.0], vector2=[-2.0, 5.0, 8.0]
+    )
     assert dot_res1 == 32.0
 
     # Example #2
-    dot_res2 = SolarY.general.vec.dot_prod(vector1=[-10.0, 20.0], \
-                                           vector2=[-1.0, 0.0])
+    dot_res2 = SolarY.general.vec.dot_prod(vector1=[-10.0, 20.0], vector2=[-1.0, 0.0])
     assert dot_res2 == 10.0
 
     # Example #3
-    dot_res3 = SolarY.general.vec.dot_prod(vector1=[23.0, 10.0], \
-                                           vector2=[2.0, 0.01])
+    dot_res3 = SolarY.general.vec.dot_prod(vector1=[23.0, 10.0], vector2=[2.0, 0.01])
     assert dot_res3 == 46.1
 
 
@@ -106,18 +109,15 @@ def test_phase_angle():
     """
 
     # Example #1: Phase angle of 90 degrees
-    angle_res1 = SolarY.general.vec.phase_angle(vector1=[1.0, 0.0], \
-                                                vector2=[0.0, 1.0])
+    angle_res1 = SolarY.general.vec.phase_angle(vector1=[1.0, 0.0], vector2=[0.0, 1.0])
     assert angle_res1 == math.pi / 2.0
 
     # Example #2: Phase angle of 180 degrees
-    angle_res2 = SolarY.general.vec.phase_angle(vector1=[1.0, 0.0], \
-                                                vector2=[-1.0, 0.0])
+    angle_res2 = SolarY.general.vec.phase_angle(vector1=[1.0, 0.0], vector2=[-1.0, 0.0])
     assert angle_res2 == math.pi
 
     # Example #3: Phase angle of 0 degrees
-    angle_res3 = SolarY.general.vec.phase_angle(vector1=[1.0, 0.0], \
-                                                vector2=[1.0, 0.0])
+    angle_res3 = SolarY.general.vec.phase_angle(vector1=[1.0, 0.0], vector2=[1.0, 0.0])
     assert angle_res3 == 0.0
 
 
@@ -132,13 +132,11 @@ def test_substract():
     """
 
     # Example #1
-    vec_diff1 = SolarY.general.vec.substract(vector1=[4.0, 7.0], \
-                                             vector2=[5.0, 1.0])
+    vec_diff1 = SolarY.general.vec.substract(vector1=[4.0, 7.0], vector2=[5.0, 1.0])
     assert vec_diff1 == [-1.0, 6.0]
 
     # Example #2
-    vec_diff2 = SolarY.general.vec.substract(vector1=[-4.0, -4.0], \
-                                             vector2=[-5.0, 9.0])
+    vec_diff2 = SolarY.general.vec.substract(vector1=[-4.0, -4.0], vector2=[-5.0, 9.0])
     assert vec_diff2 == [1.0, -13.0]
 
 

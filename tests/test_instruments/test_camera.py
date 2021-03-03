@@ -13,7 +13,7 @@ import SolarY
 
 
 # Define a test fixture that is being used in all tests. The fixture loads configuration files.
-@pytest.fixture(name='ccd_test_config')
+@pytest.fixture(name="ccd_test_config")
 def fixture_ccd_test_config():
     """
     Fixture to load the test configuration files.
@@ -29,9 +29,9 @@ def fixture_ccd_test_config():
     test_paths_config = SolarY.auxiliary.config.get_paths(test=True)
 
     # Get the path to the CCD config file
-    test_ccd_path = \
-        SolarY.auxiliary.parse.get_test_file_path(
-            '../' + test_paths_config['instruments_camera_ccd']['properties'])
+    test_ccd_path = SolarY.auxiliary.parse.get_test_file_path(
+        "../" + test_paths_config["instruments_camera_ccd"]["properties"]
+    )
 
     # Read and parse the CCD config file and return a dictionary with the properties
     test_ccd_dict = SolarY.instruments.camera.CCD.load_from_json_file(test_ccd_path)
@@ -89,8 +89,13 @@ def test_ccd(ccd_test_config):
 
     # Check the first entry of the chip size. Multiply the number of pixels (x dimension) times the
     # pixel size in micro meters. Finally divide by 1000 to get a result in mm.
-    assert ccd_test_config.chip_size[0] == ccd_test_config.pixels[0] * ccd_test_config.pixel_size / 1000.0
+    assert (
+        ccd_test_config.chip_size[0]
+        == ccd_test_config.pixels[0] * ccd_test_config.pixel_size / 1000.0
+    )
 
     # Check the size of a single pixel in m^2. The pixel size squared leads to micro meter squared.
     # Divide the results by 10^-12.
-    assert ccd_test_config.pixel_size_sq_m == (ccd_test_config.pixel_size ** 2.0) * 10.0 ** (-12.0)
+    assert ccd_test_config.pixel_size_sq_m == (
+        ccd_test_config.pixel_size ** 2.0
+    ) * 10.0 ** (-12.0)

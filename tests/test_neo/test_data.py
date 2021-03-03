@@ -48,12 +48,12 @@ def test_download():
 
     # Execute the download function and check if the download status was "OK"
     dl_status, _ = SolarY.neo.data.download()
-    assert dl_status == 'OK'
+    assert dl_status == "OK"
 
     # Execute the donwload a second time get also the row expectation (internally it compares the
     # results with the _get_neodys_neo_nr function)
     dl_status, row_exp = SolarY.neo.data.download(row_exp=True)
-    assert dl_status == 'OK'
+    assert dl_status == "OK"
     assert isinstance(row_exp, int)
     assert row_exp >= 0
 
@@ -73,9 +73,9 @@ def test_read_neodys():
 
     # The first entry must be (433) Erors; with its semi-major axis givne in AU and the
     # eccentricity
-    assert neo_dict_data[0]['Name'] == '433'
-    assert pytest.approx(neo_dict_data[0]['SemMajAxis_AU'], abs=1e-2) == 1.46
-    assert pytest.approx(neo_dict_data[0]['Ecc_'], abs=1e-2) == 0.22
+    assert neo_dict_data[0]["Name"] == "433"
+    assert pytest.approx(neo_dict_data[0]["SemMajAxis_AU"], abs=1e-2) == 1.46
+    assert pytest.approx(neo_dict_data[0]["Ecc_"], abs=1e-2) == 0.22
 
 
 def test_NEOdysDatabase():
@@ -98,23 +98,25 @@ def test_NEOdysDatabase():
     neo_sqlite.create()
 
     # Get now the data of (433) Eros
-    query_res_cur = neo_sqlite.cur.execute('SELECT Name, SemMajAxis_AU, ECC_ ' \
-                                           'FROM main WHERE Name = "433"')
+    query_res_cur = neo_sqlite.cur.execute(
+        "SELECT Name, SemMajAxis_AU, ECC_ " 'FROM main WHERE Name = "433"'
+    )
     query_res = query_res_cur.fetchone()
 
     # Perform assertion tests on Eros' data
-    assert query_res[0] == '433'
+    assert query_res[0] == "433"
     assert pytest.approx(query_res[1], abs=1e-2) == 1.46
     assert pytest.approx(query_res[2], abs=1e-2) == 0.22
 
     # Compute the derived orbital elements and the the aphelion and perihelion data of Eros
     neo_sqlite.create_deriv_orb()
-    query_res_cur = neo_sqlite.cur.execute('SELECT Name, Aphel_AU, Perihel_AU ' \
-                                           'FROM main WHERE Name = "433"')
+    query_res_cur = neo_sqlite.cur.execute(
+        "SELECT Name, Aphel_AU, Perihel_AU " 'FROM main WHERE Name = "433"'
+    )
     query_res = query_res_cur.fetchone()
 
     # Perform assertion tests on Eros' derived results
-    assert query_res[0] == '433'
+    assert query_res[0] == "433"
     assert pytest.approx(query_res[1], abs=1e-3) == 1.783
     assert pytest.approx(query_res[2], abs=1e-3) == 1.133
 
@@ -122,21 +124,21 @@ def test_NEOdysDatabase():
     # database is deleted; the update function is executed and then the number of rows is compared
     # with the expectation.
     # First: get the current number of rows from the database
-    query_res_cur = neo_sqlite.cur.execute('SELECT COUNT(*) FROM main')
+    query_res_cur = neo_sqlite.cur.execute("SELECT COUNT(*) FROM main")
     original_count = query_res_cur.fetchone()[0]
 
     # Delete Eros and get the number of rows
     neo_sqlite.cur.execute('DELETE FROM main WHERE Name="433"')
     neo_sqlite.con.commit()
-    query_res_cur = neo_sqlite.cur.execute('SELECT COUNT(*) FROM main')
+    query_res_cur = neo_sqlite.cur.execute("SELECT COUNT(*) FROM main")
     manip_count = query_res_cur.fetchone()[0]
 
     # The modified database should have 1 entry less than before
-    assert manip_count == original_count-1
+    assert manip_count == original_count - 1
 
     # Update the database and get the number of counts
     neo_sqlite.update()
-    query_res_cur = neo_sqlite.cur.execute('SELECT COUNT(*) FROM main')
+    query_res_cur = neo_sqlite.cur.execute("SELECT COUNT(*) FROM main")
     update_count = query_res_cur.fetchone()[0]
 
     # Now the updated database must have the same number of rows as before
@@ -158,7 +160,7 @@ def test_download_granvik2018():
 
     # Download the data and compare the MD5 hash of the downloaded file with the expectation
     md5_hash = SolarY.neo.data.download_granvik2018()
-    assert md5_hash == '521ddfdc18545c736fee36dbc4879d5e'
+    assert md5_hash == "521ddfdc18545c736fee36dbc4879d5e"
 
 
 def test_read_granvik2018():
@@ -174,13 +176,13 @@ def test_read_granvik2018():
     # Read the data and perform some assertions (expectations for the very first entry that has
     # been inspected before)
     neo_dict_data = SolarY.neo.data.read_granvik2018()
-    assert pytest.approx(neo_dict_data[0]['SemMajAxis_AU']) == 2.57498121
-    assert pytest.approx(neo_dict_data[0]['Ecc_']) == 0.783616960
-    assert pytest.approx(neo_dict_data[0]['Incl_deg']) == 33.5207634
-    assert pytest.approx(neo_dict_data[0]['LongAscNode_deg']) == 278.480591
-    assert pytest.approx(neo_dict_data[0]['ArgP_deg']) == 75.9520569
-    assert pytest.approx(neo_dict_data[0]['MeanAnom_deg']) == 103.833748
-    assert pytest.approx(neo_dict_data[0]['AbsMag_']) == 21.0643673
+    assert pytest.approx(neo_dict_data[0]["SemMajAxis_AU"]) == 2.57498121
+    assert pytest.approx(neo_dict_data[0]["Ecc_"]) == 0.783616960
+    assert pytest.approx(neo_dict_data[0]["Incl_deg"]) == 33.5207634
+    assert pytest.approx(neo_dict_data[0]["LongAscNode_deg"]) == 278.480591
+    assert pytest.approx(neo_dict_data[0]["ArgP_deg"]) == 75.9520569
+    assert pytest.approx(neo_dict_data[0]["MeanAnom_deg"]) == 103.833748
+    assert pytest.approx(neo_dict_data[0]["AbsMag_"]) == 21.0643673
 
 
 def test_Granvik2018Database():
@@ -202,22 +204,25 @@ def test_Granvik2018Database():
 
     # Create the main table, get the first entry and verify the results
     granvik2018_sqlite.create()
-    query_res_cur = granvik2018_sqlite.cur.execute('SELECT ID, SemMajAxis_AU, ECC_ ' \
-                                                    'FROM main WHERE ID = 1')
+    query_res_cur = granvik2018_sqlite.cur.execute(
+        "SELECT ID, SemMajAxis_AU, ECC_ " "FROM main WHERE ID = 1"
+    )
     query_res = query_res_cur.fetchone()
     assert query_res[1] == 2.57498121
     assert query_res[2] == 0.783616960
 
     # Create the dervied orbital elements and perform a verfication step
     granvik2018_sqlite.create_deriv_orb()
-    query_res_cur = granvik2018_sqlite.cur.execute('SELECT ID, Aphel_AU, Perihel_AU ' \
-                                                    'FROM main WHERE ID = 1')
+    query_res_cur = granvik2018_sqlite.cur.execute(
+        "SELECT ID, Aphel_AU, Perihel_AU " "FROM main WHERE ID = 1"
+    )
     query_res = query_res_cur.fetchone()
     assert query_res[1] == 4.592780157837321
     assert query_res[2] == 0.5571822621626783
 
     # Close the Granvik database
     granvik2018_sqlite.close()
+
 
 # test_download()
 # test_download_granvik2018()

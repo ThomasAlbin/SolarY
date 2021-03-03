@@ -1,0 +1,27 @@
+# Pre-commit (https://pre-commit.com)
+# Install:
+#   pip install pre-commit
+#   or
+#   conda install pre-commit
+# Add a pre-commit configuration:
+#   $ pre-commit install
+# (Optional) Run against all files
+#   $ pre-commit run --all-files
+
+repos:
+  # isort should run before black as black sometimes tweaks the isort output
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.7.0
+    hooks:
+      - id: isort
+
+  # https://github.com/python/black#version-control-integration
+  - repo: https://github.com/python/black
+    rev: 20.8b1
+    hooks:
+      - id: black
+
+  - repo: https://github.com/keewis/blackdoc
+    rev: v0.3.2
+    hooks:
+      - id: blackdoc

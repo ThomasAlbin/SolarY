@@ -30,6 +30,7 @@ def test_circle_area():
     circle_area_res1 = SolarY.general.geometry.circle_area(radius=2.0)
     assert circle_area_res1 == math.pi * 4.0
 
+
 def test_fwhm2std():
     """
     Testing the FWHM to standard deviation computation

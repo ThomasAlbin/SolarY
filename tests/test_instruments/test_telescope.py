@@ -109,16 +109,24 @@ def test_reflectorccd(telescope_test_obj):
 
     # Test if constants config has been loaded
     config = SolarY.auxiliary.config.get_constants()
-    assert telescope_test_obj._photon_flux_v == float(config["photometry"]["photon_flux_V"])
+    assert telescope_test_obj._photon_flux_v == float(
+        config["photometry"]["photon_flux_V"]
+    )
 
     # Test now the telescope specific properties, FOV
     assert pytest.approx(telescope_test_obj.fov[0], abs=0.1) == 1266.8
     assert pytest.approx(telescope_test_obj.fov[1], abs=0.1) == 1271.8
 
     # Check iFOV
-    assert telescope_test_obj.ifov[0] == telescope_test_obj.fov[0] / telescope_test_obj.pixels[0]
+    assert (
+        telescope_test_obj.ifov[0]
+        == telescope_test_obj.fov[0] / telescope_test_obj.pixels[0]
+    )
 
-    assert telescope_test_obj.ifov[1] == telescope_test_obj.fov[1] / telescope_test_obj.pixels[1]
+    assert (
+        telescope_test_obj.ifov[1]
+        == telescope_test_obj.fov[1] / telescope_test_obj.pixels[1]
+    )
 
     # Set aperture in arcsec
     telescope_test_obj.aperture = photometric_aperture
@@ -143,10 +151,13 @@ def test_reflectorccd(telescope_test_obj):
 
     # Compute the light fraction in aperture
     assert (
-            telescope_test_obj._ratio_light_aperture
+        telescope_test_obj._ratio_light_aperture
         == math.erf(
             (telescope_test_obj.aperture)
-            / (SolarY.general.geometry.fwhm2std(telescope_test_obj.hfdia) * math.sqrt(2))
+            / (
+                SolarY.general.geometry.fwhm2std(telescope_test_obj.hfdia)
+                * math.sqrt(2)
+            )
         )
         ** 2.0
     )
@@ -179,7 +190,9 @@ def test_reflectorccd(telescope_test_obj):
         * telescope_test_obj.collect_area
         * telescope_test_obj.quantum_eff
         * telescope_test_obj.optical_throughput
-        * (telescope_test_obj.pixels_in_aperture / math.prod(telescope_test_obj.pixels)),
+        * (
+            telescope_test_obj.pixels_in_aperture / math.prod(telescope_test_obj.pixels)
+        ),
         0,
     )
 

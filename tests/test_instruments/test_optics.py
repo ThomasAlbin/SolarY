@@ -14,7 +14,7 @@ import SolarY
 
 
 # Define a test fixture that is being used in all tests. The fixture loads configuration files.
-@pytest.fixture(name='reflector_test_optics')
+@pytest.fixture(name="reflector_test_optics")
 def fixture_reflector_test_optics():
     """
     Fixture to load the test configuration files.
@@ -30,12 +30,14 @@ def fixture_reflector_test_optics():
     test_paths_config = SolarY.auxiliary.config.get_paths(test=True)
 
     # Get the path to the relfector config file
-    test_reflector_path = \
-        SolarY.auxiliary.parse.get_test_file_path(
-            '../' + test_paths_config['instruments_optics_reflector']['properties'])
+    test_reflector_path = SolarY.auxiliary.parse.get_test_file_path(
+        "../" + test_paths_config["instruments_optics_reflector"]["properties"]
+    )
 
     # Read and parse the reflector config file and return a dictionary with the properties
-    test_reflector_obj = SolarY.instruments.optics.Reflector.load_from_json_file(test_reflector_path)
+    test_reflector_obj = SolarY.instruments.optics.Reflector.load_from_json_file(
+        test_reflector_path
+    )
 
     return test_reflector_obj
 
@@ -87,13 +89,21 @@ def test_reflector(reflector_test_optics):
     assert reflector_test_optics.focal_length == 10.0
 
     # Check the main mirror area that depends on the diameter of the main mirror
-    assert reflector_test_optics.main_mirror_area == \
-           SolarY.general.geometry.circle_area(radius=reflector_test_optics.main_mirror_dia / 2.0)
+    assert (
+        reflector_test_optics.main_mirror_area
+        == SolarY.general.geometry.circle_area(
+            radius=reflector_test_optics.main_mirror_dia / 2.0
+        )
+    )
 
     # Check the secondary mirror area that depends on the diameter of the secondary mirror
-    assert reflector_test_optics.sec_mirror_area == \
-           SolarY.general.geometry.circle_area(radius=reflector_test_optics.sec_mirror_dia / 2.0)
+    assert reflector_test_optics.sec_mirror_area == SolarY.general.geometry.circle_area(
+        radius=reflector_test_optics.sec_mirror_dia / 2.0
+    )
 
     # Check now the total collect area
-    assert reflector_test_optics.collect_area == \
-           reflector_test_optics.main_mirror_area - reflector_test_optics.sec_mirror_area
+    assert (
+        reflector_test_optics.collect_area
+        == reflector_test_optics.main_mirror_area
+        - reflector_test_optics.sec_mirror_area
+    )

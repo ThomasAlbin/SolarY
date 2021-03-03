@@ -67,42 +67,6 @@ class ReflectorCCD(Reflector, CCD):
     solary.instruments.camera.CCD
     """
 
-    """
-    (sphinx complains)
-    Static Properties
-    -----------------
-    fov : list
-        FOV values (x and y dimension of the CCD chip). Given in arcsec.
-    ifov_res : list
-        iFOV values (x and y dimension of the CCD chip). Given in arcsec / pixel.
-
-    Dynamic Properties
-    ------------------
-    aperture : float
-        Aperture for photometric / astrometric purposes. Given in arcsec.
-    hfdia : float
-        Half Flux Diameter. Given in arcsec.
-    exposure_time : float
-        Exposure time. Given in s.
-    pixels_in_aperture : int
-        Number of pixels within the aperture (rounded).
-    dark_esignal_aperture : float
-        Number of dark current electrons.
-
-    Methods
-    -------
-    object_esignal(mag)
-        Compute the number of CCD electrons that are created by the object's brightness within the
-        photometric aperture.
-    sky_esignal(mag_arcsec_sq)
-        Compute the number of CCD electrons that are created by the background sky brighness within
-        the photometric aperture (considering only the included pixels).
-    object_snr(obj_mag, sky_mag_arcsec_sq)
-        Compute the Signal-To-Noise ratio of an object.
-
-
-    """
-
     def __init__(
         self, optics_config: t.Dict[str, t.Any], ccd_config: t.Dict[str, t.Any]
     ) -> None:

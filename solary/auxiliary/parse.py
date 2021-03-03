@@ -2,12 +2,13 @@
 import hashlib
 import os
 import pathlib
+import typing as t
 
 # Get the ROOT DIR
 from solary import ROOT_DIR
 
 
-def comp_md5(file_name: str) -> str:
+def comp_md5(file_name: t.Union[str, pathlib.Path]) -> str:
     """
     Compute the MD5 hash of a file.
 
@@ -26,7 +27,7 @@ def comp_md5(file_name: str) -> str:
 
     # Open the file in binary mode (read-only) and parse it in 65,536 byte chunks (in case of
     # large files, the loading will not exceed the usable RAM)
-    with open(file_name, "rb") as f_temp:
+    with pathlib.Path(file_name).open(mode="rb") as f_temp:
         for _seq in iter(lambda: f_temp.read(65536), b""):
             hash_md5.update(_seq)
 

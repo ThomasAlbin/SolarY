@@ -134,8 +134,10 @@ class ReflectorCCD(Reflector, CCD):
         self._hfdia = 0.0  # TODO: this should be passed in as an argument
         self._exposure_time = 0.0  # TODO: this should be passed in as an argument
 
-    @staticmethod
-    def load_from_json_file(optics_path: t.Union[Path, str], ccd_path: t.Union[Path, str]) -> "ReflectorCCD":
+    @classmethod
+    def load_from_json_files(
+        cls, optics_path: t.Union[Path, str], ccd_path: t.Union[Path, str]
+    ) -> "ReflectorCCD":
         """Construct a ReflectorCCD object JSON files."""
         with Path(optics_path).open(mode="r") as temp_obj:
             optics_config = json.load(temp_obj)

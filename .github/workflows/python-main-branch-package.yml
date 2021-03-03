@@ -28,12 +28,12 @@ jobs:
     - name: Run Tox + PyTest
       # Run tox using the version of Python in `PATH`
       run: tox -e py
-#    - name: Run Tox + Flake8
-#      run: tox -e flake8
-#    - name: Run Tox + PyLint
-#      run: tox -e pylint
-#    - name: Run Tox + MyPy
-#      run: tox -e mypy
+    - name: Run Tox + Flake8
+      run: tox -e flake8
+    - name: Run Tox + PyLint
+      run: tox -e pylint
+    - name: Run Tox + MyPy
+      run: tox -e mypy
     - name: Run Tox + pydocstyle
       run: tox -e pydocstyle
 #    - name: Run Tox + bandit

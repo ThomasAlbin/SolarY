@@ -48,7 +48,7 @@ def fixture_telescope_test_obj():
 
     test_ccd = solary.instruments.camera.CCD.load_from_json_file(test_ccd_path)
 
-    test_reflector_ccd = solary.instruments.telescope.ReflectorCCD.load_from_json_file(
+    test_reflector_ccd = solary.instruments.telescope.ReflectorCCD.load_from_json_files(
         optics_path=test_reflector_path,
         ccd_path=test_ccd_path,
     )

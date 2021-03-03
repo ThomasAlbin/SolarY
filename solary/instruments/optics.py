@@ -19,7 +19,7 @@ class Reflector:
     def __init__(
         self,
         main_mirror_dia: float,
-            sec_mirror_dia: float,
+        sec_mirror_dia: float,
         optical_throughput: float,
         focal_length: float,
     ) -> None:
@@ -45,8 +45,8 @@ class Reflector:
         self._optical_throughput = optical_throughput
         self._focal_length = focal_length
 
-    @staticmethod
-    def load_from_json_file(config_path: t.Union[Path, str]) -> "Reflector":
+    @classmethod
+    def load_from_json_file(cls, config_path: t.Union[Path, str]) -> t.Any:
         """Construct a Reflector object from a JSON file.
 
         Parameters
@@ -61,7 +61,7 @@ class Reflector:
         """
         with Path(config_path).open(mode="r") as temp_obj:
             config = json.load(temp_obj)
-            return Reflector(**config)
+            return cls(**config)
 
     @property
     def main_mirror_dia(self) -> float:

@@ -82,7 +82,7 @@ def get_spice_kernels(ktype: str) -> configparser.ConfigParser:
     kernel_dict = {"generic": "generic.ini"}
 
     # Get the corresponding kernel config filepath
-    ini_path = os.path.join(ROOT_DIR, "_config", "SPICE", kernel_dict.get(ktype))
+    ini_path = os.path.join(ROOT_DIR, "_config", "SPICE", kernel_dict.get(ktype, ""))
 
     # Read and parse the config file
     config.read(ini_path)

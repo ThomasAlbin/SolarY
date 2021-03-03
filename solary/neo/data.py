@@ -1,5 +1,6 @@
 """NEO data download, parsing and database creation functions are part of this sub-module."""
 import gzip
+
 # import urllib.parse
 # import urllib.request
 import os

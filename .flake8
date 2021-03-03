@@ -1,6 +1,6 @@
 [flake8]
 max-line-length=120
-; max-complexity=10
+max-complexity=10
 
 # E203: Whitespace before ':'
 # E226 missing whitespace around arithmetic operator

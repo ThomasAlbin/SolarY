@@ -47,12 +47,12 @@ class CCD:
         self._full_well = full_well
         self._quantum_eff = quantum_eff
 
-    @staticmethod
-    def load_from_json_file(config_path: t.Union[Path, str]) -> "CCD":
+    @classmethod
+    def load_from_json_file(cls, config_path: t.Union[Path, str]) -> t.Any:
         """Construct a CCD object from a JSON file."""
         with Path(config_path).open(mode="r") as temp_obj:
             ccd_config = json.load(temp_obj)
-            return CCD(**ccd_config)
+            return cls(**ccd_config)
 
     @property
     def pixels(self) -> t.Tuple[int, int]:

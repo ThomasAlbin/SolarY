@@ -10,7 +10,7 @@ import math
 import typing as t
 from pathlib import Path
 
-import solary
+import SolarY
 
 from .camera import CCD
 from .optics import Reflector
@@ -128,7 +128,7 @@ class ReflectorCCD(Reflector, CCD):
         CCD.__init__(self, **ccd_config)
 
         # Load the constants config file and get the photon flux (Given in m^-2 * s^-1)
-        config = solary.auxiliary.config.get_constants()
+        config = SolarY.auxiliary.config.get_constants()
         self._photon_flux_v = float(config["photometry"]["photon_flux_V"])
         self._aperture = 0.0  # TODO: this should be passed in as an argument
         self._hfdia = 0.0  # TODO: this should be passed in as an argument
@@ -282,7 +282,7 @@ class ReflectorCCD(Reflector, CCD):
             Number of pixels within the aperture (rounded).
         """
         # Number of pixels corresponds to the aperture area (assuming a cirlce) divided by the iFOV
-        frac_pixels_in_aperture = solary.general.geometry.circle_area(
+        frac_pixels_in_aperture = SolarY.general.geometry.circle_area(
             0.5 * self.aperture
         ) / math.prod(self.ifov)
 
@@ -306,7 +306,7 @@ class ReflectorCCD(Reflector, CCD):
             Ratio of light within the photometric aperture. Value between 0 and 1.
         """
         # Compute the Gaussian standard deviation of the half flux diameter in arcsec
-        sigma = solary.general.geometry.fwhm2std(self.hfdia)
+        sigma = SolarY.general.geometry.fwhm2std(self.hfdia)
 
         # Compute the ratio, using the error function, the photometric aperture and half flux
         # diameter corresponding standard deviation
@@ -371,7 +371,7 @@ class ReflectorCCD(Reflector, CCD):
         """
         # First, convert the sky surface brightness to an integrated
         # brightness (apply the complete telescope's collection area)
-        total_sky_mag = solary.general.photometry.surmag2intmag(
+        total_sky_mag = SolarY.general.photometry.surmag2intmag(
             surmag=mag_arcsec_sq, area=math.prod(self.fov)
         )
         # Compute the number of electrons:

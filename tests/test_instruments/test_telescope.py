@@ -13,7 +13,7 @@ import math
 import pytest
 
 # Import solary
-import solary
+import SolarY
 
 
 @pytest.fixture(name="telescope_test_obj")
@@ -30,25 +30,25 @@ def fixture_telescope_test_obj():
     """
 
     # Get the test config paths
-    test_paths_config = solary.auxiliary.config.get_paths(test=True)
+    test_paths_config = SolarY.auxiliary.config.get_paths(test=True)
 
     # Load and parse the reflector config
-    test_reflector_path = solary.auxiliary.parse.get_test_file_path(
+    test_reflector_path = SolarY.auxiliary.parse.get_test_file_path(
         "../" + test_paths_config["instruments_optics_reflector"]["properties"]
     )
 
-    test_reflector = solary.instruments.optics.Reflector.load_from_json_file(
+    test_reflector = SolarY.instruments.optics.Reflector.load_from_json_file(
         test_reflector_path
     )
 
     # Load and parse the CCD properties
-    test_ccd_path = solary.auxiliary.parse.get_test_file_path(
+    test_ccd_path = SolarY.auxiliary.parse.get_test_file_path(
         "../" + test_paths_config["instruments_camera_ccd"]["properties"]
     )
 
-    test_ccd = solary.instruments.camera.CCD.load_from_json_file(test_ccd_path)
+    test_ccd = SolarY.instruments.camera.CCD.load_from_json_file(test_ccd_path)
 
-    test_reflector_ccd = solary.instruments.telescope.ReflectorCCD.load_from_json_files(
+    test_reflector_ccd = SolarY.instruments.telescope.ReflectorCCD.load_from_json_files(
         optics_path=test_reflector_path,
         ccd_path=test_ccd_path,
     )
@@ -67,7 +67,7 @@ def test_comp_fov():
 
     # Test sample with a sensor dimension / size of 25.4 mm and a telescope focial length of 1000
     # mm
-    fov1 = solary.instruments.telescope.comp_fov(sensor_dim=25.4, focal_length=1000.0)
+    fov1 = SolarY.instruments.telescope.comp_fov(sensor_dim=25.4, focal_length=1000.0)
     assert pytest.approx(fov1 / 60.0, abs=0.1) == 87.3
 
 
@@ -101,14 +101,14 @@ def test_reflectorccd(telescope_test_obj):
     sky_brightness = 19.0
 
     # Check if the property tuple is correctly formatted
-    assert isinstance(telescope_test_obj, solary.instruments.telescope.ReflectorCCD)
+    assert isinstance(telescope_test_obj, SolarY.instruments.telescope.ReflectorCCD)
 
     # Check attributes
     assert telescope_test_obj.pixels == telescope_test_obj.pixels
     assert telescope_test_obj.main_mirror_dia == telescope_test_obj.main_mirror_dia
 
     # Test if constants config has been loaded
-    config = solary.auxiliary.config.get_constants()
+    config = SolarY.auxiliary.config.get_constants()
     assert telescope_test_obj._photon_flux_v == float(config["photometry"]["photon_flux_V"])
 
     # Test now the telescope specific properties, FOV
@@ -131,7 +131,7 @@ def test_reflectorccd(telescope_test_obj):
     # Check how many pixels are aperture
     assert telescope_test_obj.pixels_in_aperture == int(
         round(
-            solary.general.geometry.circle_area(0.5 * telescope_test_obj.aperture)
+            SolarY.general.geometry.circle_area(0.5 * telescope_test_obj.aperture)
             / math.prod(telescope_test_obj.ifov),
             0,
         )
@@ -146,7 +146,7 @@ def test_reflectorccd(telescope_test_obj):
             telescope_test_obj._ratio_light_aperture
         == math.erf(
             (telescope_test_obj.aperture)
-            / (solary.general.geometry.fwhm2std(telescope_test_obj.hfdia) * math.sqrt(2))
+            / (SolarY.general.geometry.fwhm2std(telescope_test_obj.hfdia) * math.sqrt(2))
         )
         ** 2.0
     )
@@ -169,7 +169,7 @@ def test_reflectorccd(telescope_test_obj):
 
     # Compute sky background signal (expectation)
     # Convert surface brightness to integrated brightness over entire FOV
-    total_sky_mag = solary.general.photometry.surmag2intmag(
+    total_sky_mag = SolarY.general.photometry.surmag2intmag(
         surmag=sky_brightness, area=math.prod(telescope_test_obj.fov)
     )
     exp_sky_esignal = round(

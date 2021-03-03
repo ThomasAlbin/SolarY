@@ -9,7 +9,7 @@ Testing suite for solary/auxiliary/parse.py
 import os
 
 # Import solary
-import solary
+import SolarY
 
 
 def test_comp_md5():
@@ -28,7 +28,7 @@ def test_comp_md5():
     open(mockup_file, 'wb').close()
 
     # Compute the MD5 has and compare the result with the expectation
-    md5_mockup = solary.auxiliary.parse.comp_md5(mockup_file)
+    md5_mockup = SolarY.auxiliary.parse.comp_md5(mockup_file)
     assert md5_mockup == 'd41d8cd98f00b204e9800998ecf8427e'
 
     # Remove the mockup file from the system

@@ -2,7 +2,7 @@
 import math
 import typing as t
 
-import solary
+import SolarY
 
 
 def appmag2irr(app_mag: t.Union[int, float]) -> float:
@@ -28,14 +28,14 @@ def appmag2irr(app_mag: t.Union[int, float]) -> float:
 
     Examples
     --------
-    >>> import solary
-    >>> irradiance = solary.general.photometry.appmag2irr(app_mag=8.0)
+    >>> import SolarY
+    >>> irradiance = SolarY.general.photometry.appmag2irr(app_mag=8.0)
     >>> irradiance
     1.5887638447672732e-11
     """
     # Load the configuration file that contains the zero point bolometric
     # irradiance
-    config = solary.auxiliary.config.get_constants()
+    config = SolarY.auxiliary.config.get_constants()
     appmag_irr_i0 = float(config["photometry"]["appmag_irr_i0"])
 
     # Convert apparent magnitude to irradiance
@@ -124,11 +124,11 @@ def phase_func(index: int, phase_angle: float) -> float:
     Examples
     --------
     >>> import math
-    >>> import solary
-    >>> phi1 = solary.general.photometry.phase_func(index=1, phase_angle=math.pi/4.0)
+    >>> import SolarY
+    >>> phi1 = SolarY.general.photometry.phase_func(index=1, phase_angle=math.pi/4.0)
     >>> phi1
     0.14790968630394927
-    >>> phi2 = solary.general.photometry.phase_func(index=2, phase_angle=math.pi/4.0)
+    >>> phi2 = SolarY.general.photometry.phase_func(index=2, phase_angle=math.pi/4.0)
     >>> phi2
     0.5283212147726485
     """
@@ -177,8 +177,8 @@ def reduc_mag(abs_mag: float, phase_angle: float, slope_g: float = 0.15) -> floa
     Examples
     --------
     >>> import math
-    >>> import solary
-    >>> reduced_magnitude = solary.general.photometry.reduc_mag(abs_mag=10.0, \
+    >>> import SolarY
+    >>> reduced_magnitude = SolarY.general.photometry.reduc_mag(abs_mag=10.0, \
                                                                 phase_angle=math.pi/4.0, \
                                                                 slope_g=0.10)
     >>> reduced_magnitude
@@ -186,7 +186,7 @@ def reduc_mag(abs_mag: float, phase_angle: float, slope_g: float = 0.15) -> floa
 
     Per default, the slope parameter G is set to 0.15 and fits well for most asteroids
 
-    >>> reduced_magnitude = solary.general.photometry.reduc_mag(abs_mag=10.0, \
+    >>> reduced_magnitude = SolarY.general.photometry.reduc_mag(abs_mag=10.0, \
                                                                 phase_angle=math.pi/4.0)
     >>> reduced_magnitude
     11.720766748872016
@@ -237,8 +237,8 @@ def hg_app_mag(
 
     Examples
     --------
-    >>> import solary
-    >>> apparent_magnitude = solary.general.photometry.hg_app_mag(abs_mag=10.0, \
+    >>> import SolarY
+    >>> apparent_magnitude = SolarY.general.photometry.hg_app_mag(abs_mag=10.0, \
                                                                   vec_obj2obs=[-1.0, 0.0, 0.0], \
                                                                   vec_obj2ill=[-2.0, 0.0, 0.0], \
                                                                   slope_g=0.10)
@@ -250,11 +250,11 @@ def hg_app_mag(
     vec_obj2ill = list(vec_obj2ill)
 
     # Compute the length of the two input vectors
-    vec_obj2obs_norm = solary.general.vec.norm(vec_obj2obs)
-    vec_obj2ill_norm = solary.general.vec.norm(vec_obj2ill)
+    vec_obj2obs_norm = SolarY.general.vec.norm(vec_obj2obs)
+    vec_obj2ill_norm = SolarY.general.vec.norm(vec_obj2ill)
 
     # Compute the phase angle of the asteroid
-    obj_phase_angle = solary.general.vec.phase_angle(vec_obj2obs, vec_obj2ill)
+    obj_phase_angle = SolarY.general.vec.phase_angle(vec_obj2obs, vec_obj2ill)
 
     # Compute the reduced magnitude of the asteroid
     red_mag = reduc_mag(abs_mag, obj_phase_angle, slope_g)

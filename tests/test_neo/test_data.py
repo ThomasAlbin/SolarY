@@ -12,7 +12,7 @@ import sqlite3
 import pytest
 
 # Import solary
-import solary
+import SolarY
 
 
 def test__get_neodys_neo_nr():
@@ -26,7 +26,7 @@ def test__get_neodys_neo_nr():
     """
 
     # Call the function to get the number of currently known NEOs.
-    neo_nr = solary.neo.data._get_neodys_neo_nr()
+    neo_nr = SolarY.neo.data._get_neodys_neo_nr()
 
     # Check of the result is an integer
     assert isinstance(neo_nr, int)
@@ -47,12 +47,12 @@ def test_download():
     """
 
     # Execute the download function and check if the download status was "OK"
-    dl_status, _ = solary.neo.data.download()
+    dl_status, _ = SolarY.neo.data.download()
     assert dl_status == 'OK'
 
     # Execute the donwload a second time get also the row expectation (internally it compares the
     # results with the _get_neodys_neo_nr function)
-    dl_status, row_exp = solary.neo.data.download(row_exp=True)
+    dl_status, row_exp = SolarY.neo.data.download(row_exp=True)
     assert dl_status == 'OK'
     assert isinstance(row_exp, int)
     assert row_exp >= 0
@@ -69,7 +69,7 @@ def test_read_neodys():
     """
 
     # Read the data
-    neo_dict_data = solary.neo.data.read_neodys()
+    neo_dict_data = SolarY.neo.data.read_neodys()
 
     # The first entry must be (433) Erors; with its semi-major axis givne in AU and the
     # eccentricity
@@ -89,7 +89,7 @@ def test_NEOdysDatabase():
     """
 
     # Create the database and check if the connection is established and the cursor is set
-    neo_sqlite = solary.neo.data.NEOdysDatabase(new=True)
+    neo_sqlite = SolarY.neo.data.NEOdysDatabase(new=True)
 
     assert isinstance(neo_sqlite.con, sqlite3.Connection)
     assert isinstance(neo_sqlite.cur, sqlite3.Cursor)
@@ -157,7 +157,7 @@ def test_download_granvik2018():
     """
 
     # Download the data and compare the MD5 hash of the downloaded file with the expectation
-    md5_hash = solary.neo.data.download_granvik2018()
+    md5_hash = SolarY.neo.data.download_granvik2018()
     assert md5_hash == '521ddfdc18545c736fee36dbc4879d5e'
 
 
@@ -173,7 +173,7 @@ def test_read_granvik2018():
 
     # Read the data and perform some assertions (expectations for the very first entry that has
     # been inspected before)
-    neo_dict_data = solary.neo.data.read_granvik2018()
+    neo_dict_data = SolarY.neo.data.read_granvik2018()
     assert pytest.approx(neo_dict_data[0]['SemMajAxis_AU']) == 2.57498121
     assert pytest.approx(neo_dict_data[0]['Ecc_']) == 0.783616960
     assert pytest.approx(neo_dict_data[0]['Incl_deg']) == 33.5207634
@@ -194,7 +194,7 @@ def test_Granvik2018Database():
     """
 
     # Create the database
-    granvik2018_sqlite = solary.neo.data.Granvik2018Database(new=True)
+    granvik2018_sqlite = SolarY.neo.data.Granvik2018Database(new=True)
 
     # Check if a connection has been established and if a cursor has been set
     assert isinstance(granvik2018_sqlite.con, sqlite3.Connection)

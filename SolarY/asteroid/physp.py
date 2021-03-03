@@ -30,8 +30,8 @@ def ast_size(albedo: float, abs_mag: float) -> float:
 
     Examples
     --------
-    >>> import solary
-    >>> ast_radius = solary.asteroid.physp.ast_size(albedo=0.15, abs_mag=10)
+    >>> import SolarY
+    >>> ast_radius = SolarY.asteroid.physp.ast_size(albedo=0.15, abs_mag=10)
     >>> ast_radius
     17.157
     """

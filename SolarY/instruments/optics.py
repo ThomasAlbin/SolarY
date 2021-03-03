@@ -4,7 +4,7 @@ import json
 import typing as t
 from pathlib import Path
 
-import solary
+import SolarY
 
 
 class Reflector:
@@ -98,13 +98,13 @@ class Reflector:
             Main mirror area. Given in m^2.
         """
         # Call a sub-module that requires the radius as an input
-        return solary.general.geometry.circle_area(self.main_mirror_dia / 2.0)
+        return SolarY.general.geometry.circle_area(self.main_mirror_dia / 2.0)
 
     @property
     def sec_mirror_area(self) -> float:
         """Get the secondary mirror area in m^2, assuming a circular shaped mirror."""
         # Call a sub-module that requires the radius as an input
-        return solary.general.geometry.circle_area(self.sec_mirror_dia / 2.0)
+        return SolarY.general.geometry.circle_area(self.sec_mirror_dia / 2.0)
 
     @property
     def collect_area(self) -> float:

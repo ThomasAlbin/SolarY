@@ -3,7 +3,7 @@ import configparser
 import os
 
 # Import the ROOT directory of SolarY
-from solary import ROOT_DIR
+from SolarY import ROOT_DIR
 
 
 def get_constants() -> configparser.ConfigParser:

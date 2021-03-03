@@ -21,8 +21,8 @@ def norm(vector: t.List[float]) -> float:
 
     Examples
     --------
-    >>> import solary
-    >>> vec_norm = solary.general.vec.norm(vector=[3.0, 5.0, -5.9])
+    >>> import SolarY
+    >>> vec_norm = SolarY.general.vec.norm(vector=[3.0, 5.0, -5.9])
     >>> vec_norm
     8.295179322956196
     """
@@ -51,14 +51,14 @@ def unify(vector: t.List[float]) -> t.List[float]:
 
     Examples
     --------
-    >>> import solary
-    >>> unit_vec = solary.general.vec.unify(vector=[1.0, 5.0, 10.0])
+    >>> import SolarY
+    >>> unit_vec = SolarY.general.vec.unify(vector=[1.0, 5.0, 10.0])
     >>> unit_vec
     [0.0890870806374748, 0.44543540318737396, 0.8908708063747479]
 
     Now check the norm of the resulting vector
 
-    >>> vec_norm = solary.general.vec.norm(vector=unit_vec)
+    >>> vec_norm = SolarY.general.vec.norm(vector=unit_vec)
     >>> vec_norm
     1.0
     """
@@ -89,8 +89,8 @@ def dot_prod(vector1: t.List[float], vector2: t.List[float]) -> float:
 
     Examples
     --------
-    >>> import solary
-    >>> dot_product_res = solary.general.vec.dot_prod(vector1=[1.5, -4.0, 8.0], \
+    >>> import SolarY
+    >>> dot_product_res = SolarY.general.vec.dot_prod(vector1=[1.5, -4.0, 8.0], \
                                                       vector2=[-5.0, -4.20, 0.0])
 
     >>> dot_product_res
@@ -126,8 +126,8 @@ def phase_angle(vector1: t.List[float], vector2: t.List[float]) -> float:
     Examples
     --------
     >>> import math
-    >>> import solary
-    >>> ph_angle_rad = solary.general.vec.phase_angle(vector1=[1.0, 0.0], \
+    >>> import SolarY
+    >>> ph_angle_rad = SolarY.general.vec.phase_angle(vector1=[1.0, 0.0], \
                                                       vector2=[1.0, 1.0])
     >>> ph_angle_deg = math.degrees(ph_angle_rad)
     >>> ph_angle_deg
@@ -161,8 +161,8 @@ def substract(vector1: t.List[float], vector2: t.List[float]) -> t.List[float]:
 
     Examples
     --------
-    >>> import solary
-    >>> vector_diff = solary.general.vec.substract(vector1=[1.0, 4.0, 2.0], \
+    >>> import SolarY
+    >>> vector_diff = SolarY.general.vec.substract(vector1=[1.0, 4.0, 2.0], \
                                                    vector2=[-8.0, 0.0, 1.0])
     >>> vector_diff
     [9.0, 4.0, 1.0]
@@ -196,8 +196,8 @@ def inverse(vector: t.List[float]) -> t.List[float]:
 
     Examples
     --------
-    >>> import solary
-    >>> inverse_vector = solary.general.vec.inverse(vector=[1.0, 2.0, -3.0])
+    >>> import SolarY
+    >>> inverse_vector = SolarY.general.vec.inverse(vector=[1.0, 2.0, -3.0])
     >>> inverse_vector
     [-1.0, -2.0, 3.0]
     """

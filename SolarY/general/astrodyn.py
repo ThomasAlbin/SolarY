@@ -2,7 +2,7 @@
 import math
 import typing as t
 
-import solary
+import SolarY
 
 
 def tisserand(
@@ -47,8 +47,8 @@ def tisserand(
     have been obtained from https://ssd.jpl.nasa.gov/sbdb.cgi?sstr=67P
 
     >>> import math
-    >>> import solary
-    >>> tisserand_tsch_geras_67p = solary.general.astrodyn.tisserand(sem_maj_axis_obj=3.46, \
+    >>> import SolarY
+    >>> tisserand_tsch_geras_67p = SolarY.general.astrodyn.tisserand(sem_maj_axis_obj=3.46, \
                                                                      inc=math.radians(7.03), \
                                                                      ecc=0.64)
     >>> tisserand_tsch_geras_67p
@@ -59,7 +59,7 @@ def tisserand(
     if not sem_maj_axis_planet:
 
         # Get the constants config file
-        config = solary.auxiliary.config.get_constants()
+        config = SolarY.auxiliary.config.get_constants()
         sem_maj_axis_planet = float(config["planets"]["sem_maj_axis_jup"])
 
     # Compute the tisserand parameter

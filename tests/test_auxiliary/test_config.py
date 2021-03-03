@@ -6,7 +6,7 @@ Testing suite for solary/auxiliary/config.py
 """
 
 # Import solary
-import solary
+import SolarY
 
 
 def test_get_constants():
@@ -20,7 +20,7 @@ def test_get_constants():
     """
 
     # Call the constants get function
-    constant_config = solary.auxiliary.config.get_constants()
+    constant_config = SolarY.auxiliary.config.get_constants()
 
     # If the reading was successful the config object shall have miscellaneous sections and
     # corresponding values. One of them is called "constants"
@@ -39,7 +39,7 @@ def test_get_paths():
     """
 
     # Call the paths config file
-    paths_config = solary.auxiliary.config.get_paths()
+    paths_config = SolarY.auxiliary.config.get_paths()
 
     # If the reading was successful the config object shall have miscellaneous sections and
     # corresponding values. One of them is called "neo"
@@ -47,7 +47,7 @@ def test_get_paths():
     assert 'neo' in paths_config_sections
 
     # Testing now the test config
-    test_paths_config = solary.auxiliary.config.get_paths(test=True)
+    test_paths_config = SolarY.auxiliary.config.get_paths(test=True)
 
     # If the reading was successful the config object shall have miscellaneous sections and
     # corresponding values. One of them contains "instruments_telescope_optical"
@@ -66,7 +66,7 @@ def test_get_spice_kernels():
     """
 
     # Call the paths config file
-    paths_config = solary.auxiliary.config.get_spice_kernels(ktype='generic')
+    paths_config = SolarY.auxiliary.config.get_spice_kernels(ktype='generic')
 
     # If the reading was successful the config object shall have miscellaneous sections and
     # corresponding values. One of them is called "leapseconds".  Further, "file" shall always

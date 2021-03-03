@@ -5,7 +5,7 @@ import pathlib
 import typing as t
 
 # Get the ROOT DIR
-from solary import ROOT_DIR
+from SolarY import ROOT_DIR
 
 
 def comp_md5(file_name: t.Union[str, pathlib.Path]) -> str:

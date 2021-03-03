@@ -9,7 +9,7 @@ Testing suite for solary/instruments/camera.py
 import pytest
 
 # Import solary
-import solary
+import SolarY
 
 
 # Define a test fixture that is being used in all tests. The fixture loads configuration files.
@@ -26,15 +26,15 @@ def fixture_ccd_test_config():
     """
 
     # Get the test config file paths
-    test_paths_config = solary.auxiliary.config.get_paths(test=True)
+    test_paths_config = SolarY.auxiliary.config.get_paths(test=True)
 
     # Get the path to the CCD config file
     test_ccd_path = \
-        solary.auxiliary.parse.get_test_file_path(
+        SolarY.auxiliary.parse.get_test_file_path(
             '../' + test_paths_config['instruments_camera_ccd']['properties'])
 
     # Read and parse the CCD config file and return a dictionary with the properties
-    test_ccd_dict = solary.instruments.camera.CCD.load_from_json_file(test_ccd_path)
+    test_ccd_dict = SolarY.instruments.camera.CCD.load_from_json_file(test_ccd_path)
 
     return test_ccd_dict
 
@@ -55,7 +55,7 @@ def test_read_ccd_config(ccd_test_config):
     """
 
     # Check if the fixture load is a dictionary
-    assert isinstance(ccd_test_config, solary.instruments.camera.CCD)
+    assert isinstance(ccd_test_config, SolarY.instruments.camera.CCD)
 
     # Check the pixels
     assert ccd_test_config.pixels == [4096, 4112]

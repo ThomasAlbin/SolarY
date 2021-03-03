@@ -90,8 +90,9 @@ def dot_prod(vector1: t.List[float], vector2: t.List[float]) -> float:
     Examples
     --------
     >>> import SolarY
-    >>> dot_product_res = SolarY.general.vec.dot_prod(vector1=[1.5, -4.0, 8.0], \
-                                                      vector2=[-5.0, -4.20, 0.0])
+    >>> dot_product_res = SolarY.general.vec.dot_prod(
+    ...     vector1=[1.5, -4.0, 8.0], vector2=[-5.0, -4.20, 0.0]
+    ... )
 
     >>> dot_product_res
     9.3
@@ -127,8 +128,9 @@ def phase_angle(vector1: t.List[float], vector2: t.List[float]) -> float:
     --------
     >>> import math
     >>> import SolarY
-    >>> ph_angle_rad = SolarY.general.vec.phase_angle(vector1=[1.0, 0.0], \
-                                                      vector2=[1.0, 1.0])
+    >>> ph_angle_rad = SolarY.general.vec.phase_angle(
+    ...     vector1=[1.0, 0.0], vector2=[1.0, 1.0]
+    ... )
     >>> ph_angle_deg = math.degrees(ph_angle_rad)
     >>> ph_angle_deg
     45.0
@@ -162,8 +164,9 @@ def substract(vector1: t.List[float], vector2: t.List[float]) -> t.List[float]:
     Examples
     --------
     >>> import SolarY
-    >>> vector_diff = SolarY.general.vec.substract(vector1=[1.0, 4.0, 2.0], \
-                                                   vector2=[-8.0, 0.0, 1.0])
+    >>> vector_diff = SolarY.general.vec.substract(
+    ...     vector1=[1.0, 4.0, 2.0], vector2=[-8.0, 0.0, 1.0]
+    ... )
     >>> vector_diff
     [9.0, 4.0, 1.0]
     """

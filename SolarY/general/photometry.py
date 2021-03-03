@@ -125,10 +125,10 @@ def phase_func(index: int, phase_angle: float) -> float:
     --------
     >>> import math
     >>> import SolarY
-    >>> phi1 = SolarY.general.photometry.phase_func(index=1, phase_angle=math.pi/4.0)
+    >>> phi1 = SolarY.general.photometry.phase_func(index=1, phase_angle=math.pi / 4.0)
     >>> phi1
     0.14790968630394927
-    >>> phi2 = SolarY.general.photometry.phase_func(index=2, phase_angle=math.pi/4.0)
+    >>> phi2 = SolarY.general.photometry.phase_func(index=2, phase_angle=math.pi / 4.0)
     >>> phi2
     0.5283212147726485
     """
@@ -178,16 +178,17 @@ def reduc_mag(abs_mag: float, phase_angle: float, slope_g: float = 0.15) -> floa
     --------
     >>> import math
     >>> import SolarY
-    >>> reduced_magnitude = SolarY.general.photometry.reduc_mag(abs_mag=10.0, \
-                                                                phase_angle=math.pi/4.0, \
-                                                                slope_g=0.10)
+    >>> reduced_magnitude = SolarY.general.photometry.reduc_mag(
+    ...     abs_mag=10.0, phase_angle=math.pi / 4.0, slope_g=0.10
+    ... )
     >>> reduced_magnitude
     11.826504643588578
 
     Per default, the slope parameter G is set to 0.15 and fits well for most asteroids
 
-    >>> reduced_magnitude = SolarY.general.photometry.reduc_mag(abs_mag=10.0, \
-                                                                phase_angle=math.pi/4.0)
+    >>> reduced_magnitude = SolarY.general.photometry.reduc_mag(
+    ...     abs_mag=10.0, phase_angle=math.pi / 4.0
+    ... )
     >>> reduced_magnitude
     11.720766748872016
     """
@@ -238,10 +239,12 @@ def hg_app_mag(
     Examples
     --------
     >>> import SolarY
-    >>> apparent_magnitude = SolarY.general.photometry.hg_app_mag(abs_mag=10.0, \
-                                                                  vec_obj2obs=[-1.0, 0.0, 0.0], \
-                                                                  vec_obj2ill=[-2.0, 0.0, 0.0], \
-                                                                  slope_g=0.10)
+    >>> apparent_magnitude = SolarY.general.photometry.hg_app_mag(
+    ...     abs_mag=10.0,
+    ...     vec_obj2obs=[-1.0, 0.0, 0.0],
+    ...     vec_obj2ill=[-2.0, 0.0, 0.0],
+    ...     slope_g=0.10,
+    ... )
     >>> apparent_magnitude
     11.505149978319906
 

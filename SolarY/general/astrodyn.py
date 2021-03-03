@@ -48,9 +48,9 @@ def tisserand(
 
     >>> import math
     >>> import SolarY
-    >>> tisserand_tsch_geras_67p = SolarY.general.astrodyn.tisserand(sem_maj_axis_obj=3.46, \
-                                                                     inc=math.radians(7.03), \
-                                                                     ecc=0.64)
+    >>> tisserand_tsch_geras_67p = SolarY.general.astrodyn.tisserand(
+    ...     sem_maj_axis_obj=3.46, inc=math.radians(7.03), ecc=0.64
+    ... )
     >>> tisserand_tsch_geras_67p
     2.747580043374075
     """

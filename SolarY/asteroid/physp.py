@@ -1,9 +1,4 @@
-"""This script contains miscellaneous functions to describe and derive physical and instrinsic
-parameters of asteroids.
-
-"""
-
-# Import standard modules
+"""Functions to describe and derive physical and instrinsic parameters of asteroids."""
 import math
 
 
@@ -35,12 +30,11 @@ def ast_size(albedo: float, abs_mag: float) -> float:
 
     Examples
     --------
-    >>> import solary
-    >>> ast_radius = solary.asteroid.physp.ast_size(albedo=0.15, abs_mag=10)
+    >>> import SolarY
+    >>> ast_radius = SolarY.asteroid.physp.ast_size(albedo=0.15, abs_mag=10)
     >>> ast_radius
     17.157
     """
-
     # Compute the diameter in km
     diameter = (1329.0 / math.sqrt(albedo)) * 10.0 ** (-0.2 * abs_mag)
 

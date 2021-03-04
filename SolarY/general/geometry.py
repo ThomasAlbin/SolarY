@@ -1,11 +1,4 @@
-"""
-geometry.py
-
-Auxiliary functions for geometric purposes.
-
-"""
-
-# Import standard libraries
+"""Auxiliary functions for geometric purposes."""
 import math
 
 
@@ -22,9 +15,7 @@ def circle_area(radius: float) -> float:
     -------
     area : float
         Area of the circle, given in the input dimension^2.
-
     """
-
     # Compute the area of a circle
     area = math.pi * (radius ** 2.0)
 
@@ -44,9 +35,7 @@ def fwhm2std(fwhm: float) -> float:
     -------
     gauss_sigma : float
         Standard deviation assuming a Gaussian distribution.
-
     """
-
     # Compute the standard deviation
     gauss_sigma = fwhm / (2.0 * math.sqrt(2.0 * math.log(2)))
 

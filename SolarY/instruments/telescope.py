@@ -1,26 +1,25 @@
+"""Implements telescope classes that mostly consists of base classes.
+
+Currently implemented sub-systems,
+
+* optical systems
+* cameras
 """
-telescope.py
-
-Script that contains telescope classes that mostly consists of base classes (e.g., optical systems
-                                                                             cameras, etc.)
-
-"""
-
-# Import standard libraries
-import typing as t
+import json
 import math
+import typing as t
+from pathlib import Path
 
-# Import solary
-import solary
+import SolarY
 
-# Import the camera and optics script from the same directory
-from .optics import Reflector
 from .camera import CCD
+from .optics import Reflector
 
 
 def comp_fov(sensor_dim: float, focal_length: float) -> float:
-    """
-    Compute the Field-Of-View (FOV) depending on a camera's chip size and telescope's focal length.
+    """Compute the Field-Of-View (FOV).
+
+    This is dependent on the camera's chip size and telescope's focal length.
     See [1].
 
     Parameters
@@ -39,9 +38,7 @@ def comp_fov(sensor_dim: float, focal_length: float) -> float:
     ----------
     [1] https://www.celestron.com/blogs/knowledgebase/
         how-do-i-determine-the-field-of-view-for-my-ccd-chip-and-telescope; 04.Jan.2021
-
     """
-
     # Compute the FOV. The equation, provided by [1], has been converted from imperial to SI.
     fov_arcsec = (3436.62 * sensor_dim / focal_length) * 60.0
 
@@ -49,7 +46,8 @@ def comp_fov(sensor_dim: float, focal_length: float) -> float:
 
 
 class ReflectorCCD(Reflector, CCD):
-    """
+    """Reflector telescope with camera system.
+
     Class of a reflector telescope with a CCD camera system. This class loads config files and sets
     attributes of a telescope system. Further, one can set observationsl settings like e.g., the
     exposure time. Functions allow one to compute the Signal-To-Noise ratio of an object.
@@ -62,49 +60,16 @@ class ReflectorCCD(Reflector, CCD):
     ----------
     _photo_flux_v : float
         Photon flux of a 0 mag star in V-Band.
-    """
-
-    """
-    (sphinx complains)
-    Static Properties
-    -----------------
-    fov : list
-        FOV values (x and y dimension of the CCD chip). Given in arcsec.
-    ifov_res : list
-        iFOV values (x and y dimension of the CCD chip). Given in arcsec / pixel.
-
-    Dynamic Properties
-    ------------------
-    aperture : float
-        Aperture for photometric / astrometric purposes. Given in arcsec.
-    hfdia : float
-        Half Flux Diameter. Given in arcsec.
-    exposure_time : float
-        Exposure time. Given in s.
-    pixels_in_aperture : int
-        Number of pixels within the aperture (rounded).
-    dark_esignal_aperture : float
-        Number of dark current electrons.
-
-    Methods
-    -------
-    object_esignal(mag)
-        Compute the number of CCD electrons that are created by the object's brightness within the
-        photometric aperture.
-    sky_esignal(mag_arcsec_sq)
-        Compute the number of CCD electrons that are created by the background sky brighness within
-        the photometric aperture (considering only the included pixels).
-    object_snr(obj_mag, sky_mag_arcsec_sq)
-        Compute the Signal-To-Noise ratio of an object.
 
     See Also
     --------
     solary.instruments.optics.Reflector
     solary.instruments.camera.CCD
-
     """
 
-    def __init__(self, optics_config: t.Dict[str, t.Any], ccd_config: t.Dict[str, t.Any]) -> None:
+    def __init__(
+        self, optics_config: t.Dict[str, t.Any], ccd_config: t.Dict[str, t.Any]
+    ) -> None:
         """
         Init function.
 
@@ -115,27 +80,34 @@ class ReflectorCCD(Reflector, CCD):
         ccd_config : dict
             CCD config.
 
-        Returns
-        -------
-        None.
-
-        See also
+        See Also
         --------
         solary.instruments.optics.Reflector :
             The Reflector base class that contains the optics attributes and properties.
         solary.instruments.camera.CCD :
             The CCD base class that contains the camera attributes and properties.
-
         """
-
         # Init the optics and camera classes accordingly
-        Reflector.__init__(self, optics_config)
+        Reflector.__init__(self, **optics_config)
         CCD.__init__(self, **ccd_config)
 
         # Load the constants config file and get the photon flux (Given in m^-2 * s^-1)
-        config = solary.auxiliary.config.get_constants()
-        self._photon_flux_v = float(config['photometry']['photon_flux_V'])
+        config = SolarY.auxiliary.config.get_constants()
+        self._photon_flux_v = float(config["photometry"]["photon_flux_V"])
+        self._aperture = 0.0  # TODO: this should be passed in as an argument
+        self._hfdia = 0.0  # TODO: this should be passed in as an argument
+        self._exposure_time = 0.0  # TODO: this should be passed in as an argument
 
+    @classmethod
+    def load_from_json_files(
+        cls, optics_path: t.Union[Path, str], ccd_path: t.Union[Path, str]
+    ) -> "ReflectorCCD":
+        """Construct a ReflectorCCD object JSON files."""
+        with Path(optics_path).open(mode="r") as temp_obj:
+            optics_config = json.load(temp_obj)
+        with Path(ccd_path).open(mode="r") as temp_obj:
+            ccd_config = json.load(temp_obj)
+        return ReflectorCCD(optics_config, ccd_config)
 
     @property
     def fov(self) -> t.Tuple[float, float]:
@@ -146,19 +118,18 @@ class ReflectorCCD(Reflector, CCD):
         -------
         fov_res : list
             FOV values (x and y dimension of the CCD chip). Given in arcsec.
-
         """
-
         # Placholder list for the results
         fov_res = []
 
         # Iterate through the chip size list (given in mm) and multiply the focal length that is
         # given in meters with 1000 to convert it to mm.
         for chip_dim in self.chip_size:
-            fov_res.append(comp_fov(sensor_dim=chip_dim, focal_length=self.focal_length*1000.0))
+            fov_res.append(
+                comp_fov(sensor_dim=chip_dim, focal_length=self.focal_length * 1000.0)
+            )
 
         return fov_res[0], fov_res[1]
-
 
     @property
     def ifov(self) -> t.Tuple[float, float]:
@@ -169,9 +140,7 @@ class ReflectorCCD(Reflector, CCD):
         -------
         ifov_res : list
             iFOV values (x and y dimension of the CCD chip). Given in arcsec / pixel.
-
         """
-
         # Placeholder list for the iFOV results
         ifov_res = []
 
@@ -182,7 +151,6 @@ class ReflectorCCD(Reflector, CCD):
 
         return ifov_res[0], ifov_res[1]
 
-
     @property
     def aperture(self) -> float:
         """
@@ -192,15 +160,13 @@ class ReflectorCCD(Reflector, CCD):
         -------
         float
             Photometry aperture. Given in arcsec.
-
         """
         return self._aperture
-
 
     @aperture.setter
     def aperture(self, apert: float) -> None:
         """
-        Set the aperture
+        Set the aperture.
 
         Parameters
         ----------
@@ -210,10 +176,8 @@ class ReflectorCCD(Reflector, CCD):
         Returns
         -------
         None.
-
         """
         self._aperture = apert
-
 
     @property
     def hfdia(self) -> float:
@@ -224,11 +188,8 @@ class ReflectorCCD(Reflector, CCD):
         -------
         float
             Half Flux Diameter. Given in arcsec.
-
         """
-
         return self._hfdia
-
 
     @hfdia.setter
     def hfdia(self, halfflux_dia: float) -> None:
@@ -243,10 +204,8 @@ class ReflectorCCD(Reflector, CCD):
         Returns
         -------
         None.
-
         """
         self._hfdia = halfflux_dia
-
 
     @property
     def exposure_time(self) -> float:
@@ -257,10 +216,8 @@ class ReflectorCCD(Reflector, CCD):
         -------
         float
             Exposure time. Given in s.
-
         """
         return self._exposure_time
-
 
     @exposure_time.setter
     def exposure_time(self, exp_time: float) -> None:
@@ -275,10 +232,8 @@ class ReflectorCCD(Reflector, CCD):
         Returns
         -------
         None.
-
         """
         self._exposure_time = exp_time
-
 
     @property
     def pixels_in_aperture(self) -> int:
@@ -289,23 +244,22 @@ class ReflectorCCD(Reflector, CCD):
         -------
         pixels_in_aperture : int
             Number of pixels within the aperture (rounded).
-
         """
-
         # Number of pixels corresponds to the aperture area (assuming a cirlce) divided by the iFOV
-        frac_pixels_in_aperture = solary.general.geometry.circle_area(0.5 * self.aperture) \
-                                  / math.prod(self.ifov)
+        frac_pixels_in_aperture = SolarY.general.geometry.circle_area(
+            0.5 * self.aperture
+        ) / math.prod(self.ifov)
 
         # Round the result
         pixels_in_aperture = int(round(frac_pixels_in_aperture, 0))
 
         return pixels_in_aperture
 
-
     @property
     def _ratio_light_aperture(self) -> float:
         """
         Get the ratio of light that is collected within the photometric aperture.
+
         Assumption: the light of an object is Gaussian distributed (in both directions equally);
                     the ration within the photometric aperture can be perfectly described by the
                     error functon.
@@ -314,11 +268,9 @@ class ReflectorCCD(Reflector, CCD):
         -------
         _ratio : float
             Ratio of light within the photometric aperture. Value between 0 and 1.
-
         """
-
         # Compute the Gaussian standard deviation of the half flux diameter in arcsec
-        sigma = solary.general.geometry.fwhm2std(self.hfdia)
+        sigma = SolarY.general.geometry.fwhm2std(self.hfdia)
 
         # Compute the ratio, using the error function, the photometric aperture and half flux
         # diameter corresponding standard deviation
@@ -326,11 +278,11 @@ class ReflectorCCD(Reflector, CCD):
 
         return _ratio
 
-
     def object_esignal(self, mag: float) -> float:
-        """
-        Function to compute the number of the object's corresponding electrons that are created
-        within the photometric aperture on the CCD.
+        """Return the object's signal in electrons.
+
+        This function compute the number of the object's corresponding electrons that are
+        created within the photometric aperture on the CCD.
 
         Parameters
         ----------
@@ -341,9 +293,7 @@ class ReflectorCCD(Reflector, CCD):
         -------
         obj_sig_aper : float
             Number of electrons that are created within the aperture.
-
         """
-
         # Compute the number of electrons:
         #    1. Scale by the magnitude
         #    2. Multiply by the photon flux in V-band
@@ -352,24 +302,26 @@ class ReflectorCCD(Reflector, CCD):
         #    5. Multiply by the light ratio within the aperture
         #    6. Multiply by the quantum efficiency
         #    7. Multiply by the optical throughput
-        obj_sig_aper = 10.0 ** (-0.4 * mag) \
-                       * self._photon_flux_v \
-                       * self.exposure_time \
-                       * self.collect_area \
-                       * self._ratio_light_aperture \
-                       * self.quantum_eff \
-                       * self.optical_throughput
+        obj_sig_aper = (
+            10.0 ** (-0.4 * mag)
+            * self._photon_flux_v
+            * self.exposure_time
+            * self.collect_area
+            * self._ratio_light_aperture
+            * self.quantum_eff
+            * self.optical_throughput
+        )
 
         # Round the result
         obj_sig_aper = round(obj_sig_aper, 0)
 
         return obj_sig_aper
 
-
     def sky_esignal(self, mag_arcsec_sq: float) -> float:
-        """
-        Function to compute the number of electrons within the photometric aperture caused by the
-        background sky brightness.
+        """Return the sky brightness signal in electrons.
+
+        Compute the number of electrons within the photometric aperture
+        caused by the background sky brightness.
 
         Parameters
         ----------
@@ -380,14 +332,12 @@ class ReflectorCCD(Reflector, CCD):
         -------
         sky_sig_aper : float
             Number of electrons that are created within the aperture.
-
         """
-
-        # First, convert the sky surface brightness to an integrated brightness (apply the complete
-        # telescope's collection area)
-        total_sky_mag = solary.general.photometry.surmag2intmag(surmag=mag_arcsec_sq, \
-                                                                area=math.prod(self.fov))
-
+        # First, convert the sky surface brightness to an integrated
+        # brightness (apply the complete telescope's collection area)
+        total_sky_mag = SolarY.general.photometry.surmag2intmag(
+            surmag=mag_arcsec_sq, area=math.prod(self.fov)
+        )
         # Compute the number of electrons:
         #    1. Scale by the magnitude
         #    2. Multiply by the photon flux in V-band
@@ -397,32 +347,31 @@ class ReflectorCCD(Reflector, CCD):
         #       pixels (discrete ratio)
         #    6. Multiply by the quantum efficiency
         #    7. Multiply by the optical throughput
-        sky_sig_aper = 10.0 ** (-0.4 * total_sky_mag) \
-                       * self._photon_flux_v \
-                       * self.exposure_time \
-                       * self.collect_area \
-                       * (self.pixels_in_aperture / math.prod(self.pixels)) \
-                       * self.quantum_eff \
-                       * self.optical_throughput
+        sky_sig_aper = (
+            10.0 ** (-0.4 * total_sky_mag)
+            * self._photon_flux_v
+            * self.exposure_time
+            * self.collect_area
+            * (self.pixels_in_aperture / math.prod(self.pixels))
+            * self.quantum_eff
+            * self.optical_throughput
+        )
 
         # Round the result
         sky_sig_aper = round(sky_sig_aper, 0)
 
         return sky_sig_aper
 
-
     @property
     def dark_esignal_aperture(self) -> float:
         """
-        Get the number of dark current induced electrons within the aperture
+        Get the number of dark current induced electrons within the aperture.
 
         Returns
         -------
         dark_sig_aper : float
             Number of dark current electrons.
-
         """
-
         # Compute the number of dark current electrons (Noise * exposure time * number of pixels
         # within the photometric aperture)
         dark_sig_aper = self.dark_noise * self.exposure_time * self.pixels_in_aperture
@@ -431,7 +380,6 @@ class ReflectorCCD(Reflector, CCD):
         dark_sig_aper = round(dark_sig_aper, 0)
 
         return dark_sig_aper
-
 
     def object_snr(self, obj_mag: float, sky_mag_arcsec_sq: float) -> float:
         """
@@ -448,18 +396,18 @@ class ReflectorCCD(Reflector, CCD):
         -------
         snr : float
             SNR of the object.
-
         """
-
         # Compute the signal of the object (electrons within the photometric aperture)
         signal = self.object_esignal(mag=obj_mag)
 
         # Compute the noise
-        noise = math.sqrt(signal
-                          + self.sky_esignal(mag_arcsec_sq=sky_mag_arcsec_sq)
-                          + self.dark_esignal_aperture)
+        noise = math.sqrt(
+            signal
+            + self.sky_esignal(mag_arcsec_sq=sky_mag_arcsec_sq)
+            + self.dark_esignal_aperture
+        )
 
         # Determine the SNR
-        snr = signal/noise
+        snr = signal / noise
 
         return snr

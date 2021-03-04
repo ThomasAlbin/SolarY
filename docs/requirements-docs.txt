@@ -2,4 +2,7 @@ sphinx
 sphinx-rtd-theme
 sphinxcontrib-plantuml
 sphinxcontrib-mermaid
-sphinxcontrib-napoleon
+# sphinxcontrib-napoleon
+sphinx-autodoc-typehints
+# sphinx-autodoc-napoleon-typehints
+numpydoc

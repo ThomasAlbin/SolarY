@@ -1,20 +1,14 @@
-"""
-parse.py
-
-Auxiliary functions for file and path parsing
-
-"""
-
-# Import standard libraries
+"""Auxiliary functions for file and path parsing."""
 import hashlib
-import pathlib
 import os
+import pathlib
+import typing as t
 
 # Get the ROOT DIR
-from solary import ROOT_DIR
+from SolarY import ROOT_DIR
 
 
-def comp_md5(file_name: str) -> str:
+def comp_md5(file_name: t.Union[str, pathlib.Path]) -> str:
     """
     Compute the MD5 hash of a file.
 
@@ -27,16 +21,14 @@ def comp_md5(file_name: str) -> str:
     -------
     md5_res : str
         Resulting MD5 hash.
-
     """
-
     # Set the MD5 hashing
     hash_md5 = hashlib.md5()
 
     # Open the file in binary mode (read-only) and parse it in 65,536 byte chunks (in case of
     # large files, the loading will not exceed the usable RAM)
-    with open(file_name, 'rb') as f_temp:
-        for _seq in iter(lambda: f_temp.read(65536), b''):
+    with pathlib.Path(file_name).open(mode="rb") as f_temp:
+        for _seq in iter(lambda: f_temp.read(65536), b""):
             hash_md5.update(_seq)
 
     # Digest the MD5 result
@@ -47,7 +39,9 @@ def comp_md5(file_name: str) -> str:
 
 def setnget_file_path(dl_path: str, filename: str) -> str:
     """
-    Compute the path of a file, depending on its download path. The standard download path is:
+    Compute the path of a file, depending on its download path.
+
+    The standard download path is:
         ~$HOME/
 
     Parameters
@@ -61,11 +55,9 @@ def setnget_file_path(dl_path: str, filename: str) -> str:
     -------
     file_path : str
         Absolute file name path of the given file name and directory.
-
     """
-
     # Get the system's home directory
-    home_dir = os.path.expanduser('~')
+    home_dir = os.path.expanduser("~")
 
     # Join the home directory path with the download path
     compl_dl_path = os.path.join(home_dir, dl_path)
@@ -92,9 +84,7 @@ def get_test_file_path(file_path: str) -> str:
     -------
     compl_test_file_path : str
         Absolute filepath to the testing file.
-
     """
-
     # Join the root directory of SolarY with the given filepath.
     compl_test_file_path = os.path.join(ROOT_DIR, file_path)
 

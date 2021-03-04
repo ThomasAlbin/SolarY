@@ -34,4 +34,4 @@ https://github.com/pypa/sampleproject
 # Always prefer setuptools over distutils
 from setuptools import setup
 
-setup(package_data={"solary": ["py.typed"]})
+setup(package_data={"SolarY": ["py.typed"]})

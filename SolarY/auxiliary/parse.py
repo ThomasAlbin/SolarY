@@ -84,7 +84,7 @@ def get_test_file_path(file_path: str) -> str:
         Absolute filepath to the testing file.
     """
     # Join the root directory of SolarY with the given filepath.
-    ROOT_DIR = resources.import_module("SolarY").__path__[0]
-    compl_test_file_path = os.path.join(ROOT_DIR, file_path)
+    root_dir = resources.import_module("SolarY").__path__[0]
+    compl_test_file_path = os.path.join(root_dir, file_path)
 
     return compl_test_file_path

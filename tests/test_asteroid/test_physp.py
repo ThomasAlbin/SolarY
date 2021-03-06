@@ -9,7 +9,7 @@ Testing suite for solary/asteroid/physp
 import pytest
 
 # Import solary
-import SolarY
+import SolarY.asteroid
 
 
 def test_ast_size():

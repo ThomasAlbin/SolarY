@@ -1,9 +1,9 @@
 """Auxiliary functions for all library relevant configuration files."""
 import configparser
 import os
+from importlib import resources
 
-# Import the ROOT directory of SolarY
-from SolarY import ROOT_DIR
+ROOT_DIR = resources.import_module("SolarY").__path__[0]
 
 
 def get_constants() -> configparser.ConfigParser:

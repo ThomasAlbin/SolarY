@@ -2,7 +2,8 @@
 import math
 import typing as t
 
-import SolarY
+from .. import auxiliary as solary_auxiliary
+from . import vec
 
 
 def appmag2irr(app_mag: t.Union[int, float]) -> float:
@@ -35,7 +36,7 @@ def appmag2irr(app_mag: t.Union[int, float]) -> float:
     """
     # Load the configuration file that contains the zero point bolometric
     # irradiance
-    config = SolarY.auxiliary.config.get_constants()
+    config = solary_auxiliary.config.get_constants()
     appmag_irr_i0 = float(config["photometry"]["appmag_irr_i0"])
 
     # Convert apparent magnitude to irradiance
@@ -253,11 +254,11 @@ def hg_app_mag(
     vec_obj2ill = list(vec_obj2ill)
 
     # Compute the length of the two input vectors
-    vec_obj2obs_norm = SolarY.general.vec.norm(vec_obj2obs)
-    vec_obj2ill_norm = SolarY.general.vec.norm(vec_obj2ill)
+    vec_obj2obs_norm = vec.norm(vec_obj2obs)
+    vec_obj2ill_norm = vec.norm(vec_obj2ill)
 
     # Compute the phase angle of the asteroid
-    obj_phase_angle = SolarY.general.vec.phase_angle(vec_obj2obs, vec_obj2ill)
+    obj_phase_angle = vec.phase_angle(vec_obj2obs, vec_obj2ill)
 
     # Compute the reduced magnitude of the asteroid
     red_mag = reduc_mag(abs_mag, obj_phase_angle, slope_g)

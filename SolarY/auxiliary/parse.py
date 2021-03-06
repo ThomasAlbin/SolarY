@@ -3,7 +3,8 @@ import hashlib
 import os
 import pathlib
 import typing as t
-from importlib import resources
+
+from .config import root_dir
 
 
 def comp_md5(file_name: t.Union[str, pathlib.Path]) -> str:
@@ -84,7 +85,7 @@ def get_test_file_path(file_path: str) -> str:
         Absolute filepath to the testing file.
     """
     # Join the root directory of SolarY with the given filepath.
-    root_dir = resources.import_module("SolarY").__path__[0]
+    # root_dir = os.path.dirname(importlib.import_module("SolarY").__file__)
     compl_test_file_path = os.path.join(root_dir, file_path)
 
     return compl_test_file_path

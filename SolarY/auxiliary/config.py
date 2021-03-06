@@ -1,9 +1,9 @@
 """Auxiliary functions for all library relevant configuration files."""
 import configparser
+import importlib
 import os
-from importlib import resources
 
-ROOT_DIR = resources.import_module("SolarY").__path__[0]
+root_dir = os.path.dirname(importlib.import_module("SolarY").__file__)
 
 
 def get_constants() -> configparser.ConfigParser:
@@ -20,7 +20,7 @@ def get_constants() -> configparser.ConfigParser:
     config = configparser.ConfigParser()
 
     # Get the constants ini file
-    constants_ini_path = os.path.join(ROOT_DIR, "_config", "constants.ini")
+    constants_ini_path = os.path.join(root_dir, "_config", "constants.ini")
 
     # Read and parse the config file
     config.read(constants_ini_path)
@@ -49,10 +49,10 @@ def get_paths(test: bool = False) -> configparser.ConfigParser:
     # Get the paths ini file, differentiate between prod and test
     if test:
         paths_ini_path = os.path.join(
-            ROOT_DIR, "../", "tests/_resources/_config", "test_paths.ini"
+            root_dir, "../", "tests/_resources/_config", "test_paths.ini"
         )
     else:
-        paths_ini_path = os.path.join(ROOT_DIR, "_config", "paths.ini")
+        paths_ini_path = os.path.join(root_dir, "_config", "paths.ini")
 
     # Read and parse the config file
     config.read(paths_ini_path)
@@ -82,7 +82,7 @@ def get_spice_kernels(ktype: str) -> configparser.ConfigParser:
     kernel_dict = {"generic": "generic.ini"}
 
     # Get the corresponding kernel config filepath
-    ini_path = os.path.join(ROOT_DIR, "_config", "SPICE", kernel_dict.get(ktype, ""))
+    ini_path = os.path.join(root_dir, "_config", "SPICE", kernel_dict.get(ktype, ""))
 
     # Read and parse the config file
     config.read(ini_path)

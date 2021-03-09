@@ -2,7 +2,7 @@
 import math
 import typing as t
 
-import SolarY
+from .. import auxiliary as solary_auxiliary
 
 
 def tisserand(
@@ -59,7 +59,7 @@ def tisserand(
     if not sem_maj_axis_planet:
 
         # Get the constants config file
-        config = SolarY.auxiliary.config.get_constants()
+        config = solary_auxiliary.config.get_constants()
         sem_maj_axis_planet = float(config["planets"]["sem_maj_axis_jup"])
 
     # Compute the tisserand parameter

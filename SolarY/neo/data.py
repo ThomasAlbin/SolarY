@@ -1,8 +1,5 @@
 """NEO data download, parsing and database creation functions are part of this sub-module."""
 import gzip
-
-# import urllib.parse
-# import urllib.request
 import os
 import re
 import shutil
@@ -13,10 +10,11 @@ from pathlib import Path
 
 import requests
 
-import SolarY
+from .. import auxiliary as solary_auxiliary
+from .. import general as solary_general
 
 # Get the file paths
-PATH_CONFIG = SolarY.auxiliary.config.get_paths()
+PATH_CONFIG = solary_auxiliary.config.get_paths()
 
 
 def _get_neodys_neo_nr() -> int:
@@ -79,7 +77,7 @@ def download(row_exp: t.Optional[bool] = None) -> t.Tuple[str, t.Optional[int]]:
     -1- Link to the NEODyS data: https://newton.spacedys.com/neodys/index.php?pc=1.0
     """
     # Set the complete filepath. The file is stored in the user's home directory
-    download_filename = SolarY.auxiliary.parse.setnget_file_path(
+    download_filename = solary_auxiliary.parse.setnget_file_path(
         PATH_CONFIG["neo"]["neodys_raw_dir"], PATH_CONFIG["neo"]["neodys_raw_file"]
     )
 
@@ -127,7 +125,7 @@ def read_neodys() -> t.List[t.Dict[str, t.Any]]:
         List of dictionaries that contains the NEO data from the NEODyS download.
     """
     # Set the download file path. The file shall be stored in the home direoctry
-    path_filename = SolarY.auxiliary.parse.setnget_file_path(
+    path_filename = solary_auxiliary.parse.setnget_file_path(
         PATH_CONFIG["neo"]["neodys_raw_dir"], PATH_CONFIG["neo"]["neodys_raw_file"]
     )
 
@@ -207,7 +205,7 @@ class NEOdysDatabase:
             The default is False.
         """
         # Set / Get an SQLite database path + filename
-        self.db_filename = SolarY.auxiliary.parse.setnget_file_path(
+        self.db_filename = solary_auxiliary.parse.setnget_file_path(
             PATH_CONFIG["neo"]["neodys_db_dir"], PATH_CONFIG["neo"]["neodys_db_file"]
         )
 
@@ -315,10 +313,10 @@ class NEOdysDatabase:
             _neo_deriv_param_dict.append(
                 {
                     "Name": _neo_data_line_f[0],
-                    "Aphel_AU": SolarY.general.astrodyn.kep_apoapsis(
+                    "Aphel_AU": solary_general.astrodyn.kep_apoapsis(
                         sem_maj_axis=_neo_data_line_f[1], ecc=_neo_data_line_f[2]
                     ),
-                    "Perihel_AU": SolarY.general.astrodyn.kep_periapsis(
+                    "Perihel_AU": solary_general.astrodyn.kep_periapsis(
                         sem_maj_axis=_neo_data_line_f[1], ecc=_neo_data_line_f[2]
                     ),
                 }
@@ -362,7 +360,7 @@ def download_granvik2018() -> str:
     -2- https://www.mv.helsinki.fi/home/mgranvik/data/Granvik+_2018_Icarus/
     """
     # Set the download path to the home directory
-    download_filename = SolarY.auxiliary.parse.setnget_file_path(
+    download_filename = solary_auxiliary.parse.setnget_file_path(
         PATH_CONFIG["neo"]["granvik2018_raw_dir"],
         PATH_CONFIG["neo"]["granvik2018_raw_file"],
     )
@@ -392,7 +390,7 @@ def download_granvik2018() -> str:
     os.remove(downl_file_path)
 
     # Compute the MD5 hash
-    md5_hash = SolarY.auxiliary.parse.comp_md5(unzip_file_path)
+    md5_hash = solary_auxiliary.parse.comp_md5(unzip_file_path)
 
     return md5_hash
 
@@ -410,7 +408,7 @@ def read_granvik2018() -> t.List[t.Dict[str, t.Any]]:
         List of dictionaries that contains the NEO data from the downloaded model data.
     """
     # Set the download path of the model file
-    path_filename = SolarY.auxiliary.parse.setnget_file_path(
+    path_filename = solary_auxiliary.parse.setnget_file_path(
         PATH_CONFIG["neo"]["granvik2018_raw_dir"],
         PATH_CONFIG["neo"]["granvik2018_unzip_file"],
     )
@@ -488,7 +486,7 @@ class Granvik2018Database:
             directory. The default is False.
         """
         # Set the database path to the home directory
-        self.db_filename = SolarY.auxiliary.parse.setnget_file_path(
+        self.db_filename = solary_auxiliary.parse.setnget_file_path(
             PATH_CONFIG["neo"]["granvik2018_db_dir"],
             PATH_CONFIG["neo"]["granvik2018_db_file"],
         )
@@ -585,10 +583,10 @@ class Granvik2018Database:
             _neo_deriv_param_dict.append(
                 {
                     "ID": _neo_data_line_f[0],
-                    "Aphel_AU": SolarY.general.astrodyn.kep_apoapsis(
+                    "Aphel_AU": solary_general.astrodyn.kep_apoapsis(
                         sem_maj_axis=_neo_data_line_f[1], ecc=_neo_data_line_f[2]
                     ),
-                    "Perihel_AU": SolarY.general.astrodyn.kep_periapsis(
+                    "Perihel_AU": solary_general.astrodyn.kep_periapsis(
                         sem_maj_axis=_neo_data_line_f[1], ecc=_neo_data_line_f[2]
                     ),
                 }

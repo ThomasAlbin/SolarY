@@ -40,7 +40,7 @@ numfig_format = {
 # print('Adding project source directory to PYTHON_PATH: %s' % SRC_DIR)
 # sys.path.append(SRC_DIR)
 
-print("Imported package: solary")
+print("Imported package: SolarY")
 
 plantuml = "java -jar /usr/local/plantuml/plantuml.jar"
 

@@ -13,3 +13,4 @@ __date__ = get_versions()["date"]  # type: ignore
 __project__ = "SolarY"
 __author__ = "Dr.-Ing. Thomas Albin"
 # __version__ = "deploy"
+del get_versions

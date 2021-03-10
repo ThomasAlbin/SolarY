@@ -1,7 +1,7 @@
 """
 test_photometry.py
 
-Testing suite for solary/general/photometry.py
+Testing suite for SolarY/general/photometry.py
 
 """
 
@@ -11,7 +11,6 @@ import math
 # Import installed libraries
 import pytest
 
-# Import solary
 import SolarY
 
 

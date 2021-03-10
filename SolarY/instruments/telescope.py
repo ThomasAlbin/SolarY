@@ -63,8 +63,8 @@ class ReflectorCCD(Reflector, CCD):
 
     See Also
     --------
-    solary.instruments.optics.Reflector
-    solary.instruments.camera.CCD
+    SolarY.instruments.optics.Reflector
+    SolarY.instruments.camera.CCD
     """
 
     def __init__(
@@ -82,9 +82,9 @@ class ReflectorCCD(Reflector, CCD):
 
         See Also
         --------
-        solary.instruments.optics.Reflector :
+        SolarY.instruments.optics.Reflector :
             The Reflector base class that contains the optics attributes and properties.
-        solary.instruments.camera.CCD :
+        SolarY.instruments.camera.CCD :
             The CCD base class that contains the camera attributes and properties.
         """
         # Init the optics and camera classes accordingly

@@ -203,13 +203,6 @@ class Orbit:
     units_dict : dict
         Dictionary that contains the keys "spatial" and "angle" that provide the units "km", "AU"
         and "rad" and "deg" respectively.
-
-    Static Properties
-    -----------------
-    sem_maj_axis : float
-        Semi-major axis. Given in the same units as peri.
-    apo : float
-        Apoapsis. Given in the same units as peri.
     """
 
     def __init__(

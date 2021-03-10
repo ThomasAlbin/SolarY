@@ -1,11 +1,9 @@
 """
 test_download.py
 
-Testing suite for solary/auxiliary/download.py
+Testing suite for SolarY/auxiliary/download.py
 
 """
-
-# Import solary
 import SolarY
 
 

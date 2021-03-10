@@ -4,7 +4,7 @@ General
 Astrodyn
 --------
 
-.. automodule:: solary.general.astrodyn
+.. automodule:: SolarY.general.astrodyn
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__
@@ -13,7 +13,7 @@ Astrodyn
 Geometry
 --------
 
-.. automodule:: solary.general.geometry
+.. automodule:: SolarY.general.geometry
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__
@@ -22,7 +22,7 @@ Geometry
 Photometry
 ----------
 
-.. automodule:: solary.general.photometry
+.. automodule:: SolarY.general.photometry
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__
@@ -30,7 +30,7 @@ Photometry
 Vec
 ---
 
-.. automodule:: solary.general.vec
+.. automodule:: SolarY.general.vec
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__

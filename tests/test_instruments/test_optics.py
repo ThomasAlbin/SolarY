@@ -2,14 +2,13 @@
 """
 test_optics.py
 
-Testing suite for solary/instruments/optics.py
+Testing suite for SolarY/instruments/optics.py
 
 """
 
 # Import installed libraries
 import pytest
 
-# Import solary
 import SolarY
 
 
@@ -21,7 +20,7 @@ def fixture_reflector_test_optics():
 
     Returns
     -------
-    test_reflector_obj : solary.instruments.optics.Reflector
+    test_reflector_obj : SolarY.instruments.optics.Reflector
         Reflector object.
 
     """
@@ -48,7 +47,7 @@ def test_read_optical_config(reflector_test_optics):
 
     Parameters
     ----------
-    reflector_test_optics : solary.instruments.optics.Reflector
+    reflector_test_optics : SolarY.instruments.optics.Reflector
         Reflector object.
 
     Returns
@@ -70,7 +69,7 @@ def test_reflector(reflector_test_optics):
 
     Parameters
     ----------
-    reflector_test_optics : solary.instruments.optics.Reflector
+    reflector_test_optics : SolarY.instruments.optics.Reflector
         Reflector object.
 
     Returns
@@ -80,7 +79,7 @@ def test_reflector(reflector_test_optics):
     """
 
     # Initiate the Reflector class
-    # test_reflector_class = solary.instruments.optics.Reflector(reflector_test_optics)
+    # test_reflector_class = SolarY.instruments.optics.Reflector(reflector_test_optics)
 
     # Check if the instances of the class correspond to the config file
     assert reflector_test_optics.main_mirror_dia == 1.0

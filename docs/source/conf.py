@@ -79,6 +79,11 @@ extensions = [
     # 'sphinx.ext.numfig',
     # 'rst2pdf.pdfbuilder',
 ]
+numpydoc_show_class_members = False
+# generate autosummary even if no references
+# autosummary_generate = True
+# autosummary_imported_members = True
+
 autosectionlabel_prefix_document = True
 set_type_checking_flag = True
 # typehints_fully_qualified = True

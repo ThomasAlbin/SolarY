@@ -1,17 +1,13 @@
 """
 test_astrodyn.py
 
-Testing suite for solary/general/astrodyn.py
+Testing suite for SolarY/general/astrodyn.py
 
 """
-
-# Import standard libraries
 import math
 
-# Import installed libraries
 import pytest
 
-# Import solary
 import SolarY
 
 

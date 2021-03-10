@@ -2,17 +2,13 @@
 """
 test_telescope.py
 
-Testing suite for solary/instruments/telescope.py
+Testing suite for SolarY/instruments/telescope.py
 
 """
-
-# Import standard libraries
 import math
 
-# Import installed libraries
 import pytest
 
-# Import solary
 import SolarY
 
 
@@ -24,7 +20,7 @@ def fixture_telescope_test_obj():
 
     Returns
     -------
-    test_reflector_ccd : solary.instruments.telescope.ReflectorCCD
+    test_reflector_ccd : SolarY.instruments.telescope.ReflectorCCD
         Reflector test object.
 
     """
@@ -78,7 +74,7 @@ def test_reflectorccd(telescope_test_obj):
 
     Parameters
     ----------
-    test_reflector_ccd : solary.instruments.telescope.ReflectorCCD
+    test_reflector_ccd : SolarY.instruments.telescope.ReflectorCCD
         Reflector test object.
 
     Returns

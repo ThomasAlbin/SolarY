@@ -1,14 +1,11 @@
 """
 test_physp.py
 
-Testing suite for solary/asteroid/physp
+Testing suite for SolarY/asteroid/physp
 
 """
-
-# Import installed modules
 import pytest
 
-# Import solary
 import SolarY.asteroid
 
 

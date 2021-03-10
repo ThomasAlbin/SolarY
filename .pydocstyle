@@ -1,0 +1,4 @@
+[pydocstyle]
+convention=numpy
+match=(?!_version).*.py
+add-ignore=D202,D105

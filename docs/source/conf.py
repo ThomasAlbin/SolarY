@@ -40,7 +40,7 @@ numfig_format = {
 # print('Adding project source directory to PYTHON_PATH: %s' % SRC_DIR)
 # sys.path.append(SRC_DIR)
 
-print("Imported package: solary")
+print("Imported package: SolarY")
 
 plantuml = "java -jar /usr/local/plantuml/plantuml.jar"
 
@@ -79,6 +79,11 @@ extensions = [
     # 'sphinx.ext.numfig',
     # 'rst2pdf.pdfbuilder',
 ]
+numpydoc_show_class_members = False
+# generate autosummary even if no references
+# autosummary_generate = True
+# autosummary_imported_members = True
+
 autosectionlabel_prefix_document = True
 set_type_checking_flag = True
 # typehints_fully_qualified = True

@@ -1,14 +1,13 @@
 """
 test_geometry.py
 
-Testing suite for solary/general/geometry.py
+Testing suite for SolarY/general/geometry.py
 
 """
 
 # Import standard libraries
 import math
 
-# Import solary
 import SolarY
 
 

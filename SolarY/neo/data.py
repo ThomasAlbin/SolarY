@@ -186,8 +186,8 @@ class NEOdysDatabase:
 
     See Also
     --------
-    solary.neo.data.download(row_exp=None)
-    solary.neo.data.read_neodys()
+    SolarY.neo.data.download
+    SolarY.neo.data.read_neodys
     """
 
     def __init__(self, new: bool = False) -> None:
@@ -354,10 +354,10 @@ def download_granvik2018() -> str:
 
     References
     ----------
-    -1- Granvik, Morbidelli, Jedicke, Bolin, Bottke, Beshore, Vokrouhlicky, Nesvorny, and Michel
-        (2018). Debiased orbit and absolute-magnitude distributions for near-Earth objects.
-        Accepted for publication in Icarus.
-    -2- https://www.mv.helsinki.fi/home/mgranvik/data/Granvik+_2018_Icarus/
+    1. Granvik, Morbidelli, Jedicke, Bolin, Bottke, Beshore, Vokrouhlicky, Nesvorny, and Michel
+       (2018). Debiased orbit and absolute-magnitude distributions for near-Earth objects.
+       Accepted for publication in Icarus.
+    2. https://www.mv.helsinki.fi/home/mgranvik/data/Granvik+_2018_Icarus/
     """
     # Set the download path to the home directory
     download_filename = solary_auxiliary.parse.setnget_file_path(
@@ -467,8 +467,8 @@ class Granvik2018Database:
 
     See Also
     --------
-    solary.neo.data.download_granvik2018()
-    solary.neo.data.read_granvik2018()
+    SolarY.neo.data.download_granvik2018
+    SolarY.neo.data.read_granvik2018
     """
 
     def __init__(self, new: bool = False):

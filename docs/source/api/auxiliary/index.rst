@@ -4,7 +4,7 @@ Auxiliary
 Config
 ------
 
-.. automodule:: solary.auxiliary.config
+.. automodule:: SolarY.auxiliary.config
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__
@@ -13,7 +13,7 @@ Config
 Download
 --------
 
-.. automodule:: solary.auxiliary.download
+.. automodule:: SolarY.auxiliary.download
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__
@@ -22,7 +22,7 @@ Download
 Parse
 -----
 
-.. automodule:: solary.auxiliary.parse
+.. automodule:: SolarY.auxiliary.parse
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__
@@ -30,7 +30,7 @@ Parse
 Reader
 ------
 
-.. automodule:: solary.auxiliary.reader
+.. automodule:: SolarY.auxiliary.reader
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__

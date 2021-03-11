@@ -1,14 +1,11 @@
 """
 test_parse.py
 
-Testing suite for solary/auxiliary/parse.py
+Testing suite for SolarY/auxiliary/parse.py
 
 """
-
-# Import standard libraries
 import os
 
-# Import solary
 import SolarY
 
 

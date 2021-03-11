@@ -1,11 +1,9 @@
 """
 test_config.py
 
-Testing suite for solary/auxiliary/config.py
+Testing suite for SolarY/auxiliary/config.py
 
 """
-
-# Import solary
 import SolarY
 
 

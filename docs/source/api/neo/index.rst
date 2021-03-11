@@ -4,7 +4,7 @@ NEO
 Data
 ----
 
-.. automodule:: solary.neo.data
+.. automodule:: SolarY.neo.data
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__

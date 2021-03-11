@@ -1,17 +1,13 @@
 """
 test_data.py
 
-Testing suite for solary/neo/data.py
+Testing suite for SolarY/neo/data.py
 
 """
-
-# Import standard libraries
 import sqlite3
 
-# Import installed libraries
 import pytest
 
-# Import solary
 import SolarY
 
 

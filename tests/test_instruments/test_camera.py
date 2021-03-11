@@ -1,14 +1,13 @@
 """
 test_camera.py
 
-Testing suite for solary/instruments/camera.py
+Testing suite for SolarY/instruments/camera.py
 
 """
 
 # Import installed libraries
 import pytest
 
-# Import solary
 import SolarY
 
 
@@ -45,7 +44,7 @@ def test_read_ccd_config(ccd_test_config):
 
     Parameters
     ----------
-    ccd_test_config : solary.instruments.camera.CCD
+    ccd_test_config : SolarY.instruments.camera.CCD
         CCD config object.
 
     Returns
@@ -67,7 +66,7 @@ def test_ccd(ccd_test_config):
 
     Parameters
     ----------
-    ccd_test_config : solary.instruments.camera.CCD
+    ccd_test_config : SolarY.instruments.camera.CCD
         CCD config object.
 
     Returns
@@ -77,7 +76,7 @@ def test_ccd(ccd_test_config):
     """
 
     # Initiate the CCD class
-    # test_ccd_class = solary.instruments.camera.CCD(**ccd_test_config)
+    # test_ccd_class = SolarY.instruments.camera.CCD(**ccd_test_config)
 
     # Check the config depending attributes
     assert ccd_test_config.pixels == [4096, 4112]

@@ -1,7 +1,7 @@
 """
 test_vec.py
 
-Testing suite for solary/general/vec.py
+Testing suite for SolarY/general/vec.py
 
 """
 
@@ -11,7 +11,6 @@ import math
 # Import installed libraries
 import pytest
 
-# Import solary
 import SolarY
 
 

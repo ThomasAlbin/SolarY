@@ -4,7 +4,7 @@ Instruments
 Camera
 ------
 
-.. automodule:: solary.instruments.camera
+.. automodule:: SolarY.instruments.camera
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__
@@ -13,7 +13,7 @@ Camera
 Optics
 ------
 
-.. automodule:: solary.instruments.optics
+.. automodule:: SolarY.instruments.optics
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__
@@ -22,7 +22,7 @@ Optics
 Telescope
 ---------
 
-.. automodule:: solary.instruments.telescope
+.. automodule:: SolarY.instruments.telescope
     :members:
     :special-members:
     :exclude-members: __dict__, __weakref__

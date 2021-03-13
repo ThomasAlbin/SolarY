@@ -5,7 +5,6 @@ Currently implemented sub-systems,
 * optical systems
 * cameras
 """
-import json
 import math
 import typing as t
 from pathlib import Path
@@ -45,7 +44,7 @@ def comp_fov(sensor_dim: float, focal_length: float) -> float:
     return fov_arcsec
 
 
-class ReflectorCCD(Reflector, CCD):
+class ReflectorCCD:
     """Reflector telescope with camera system.
 
     Class of a reflector telescope with a CCD camera system. This class loads config files and sets
@@ -67,18 +66,16 @@ class ReflectorCCD(Reflector, CCD):
     SolarY.instruments.camera.CCD
     """
 
-    def __init__(
-        self, optics_config: t.Dict[str, t.Any], ccd_config: t.Dict[str, t.Any]
-    ) -> None:
+    def __init__(self, optics: Reflector, ccd: CCD) -> None:
         """
         Init function.
 
         Parameters
         ----------
-        optics_config : dict
-            Reflector config.
-        ccd_config : dict
-            CCD config.
+        optics : Reflector
+            Reflector object.
+        ccd : CCD
+            CCD object.
 
         See Also
         --------
@@ -87,9 +84,11 @@ class ReflectorCCD(Reflector, CCD):
         SolarY.instruments.camera.CCD :
             The CCD base class that contains the camera attributes and properties.
         """
-        # Init the optics and camera classes accordingly
-        Reflector.__init__(self, **optics_config)
-        CCD.__init__(self, **ccd_config)
+        # # Init the optics and camera classes accordingly
+        # Reflector.__init__(self, **optics_config)
+        # CCD.__init__(self, **ccd_config)
+        self._ccd = ccd
+        self._optics = optics
 
         # Load the constants config file and get the photon flux (Given in m^-2 * s^-1)
         config = solary_auxiliary.config.get_constants()
@@ -103,11 +102,20 @@ class ReflectorCCD(Reflector, CCD):
         cls, optics_path: t.Union[Path, str], ccd_path: t.Union[Path, str]
     ) -> "ReflectorCCD":
         """Construct a ReflectorCCD object JSON files."""
-        with Path(optics_path).open(mode="r") as temp_obj:
-            optics_config = json.load(temp_obj)
-        with Path(ccd_path).open(mode="r") as temp_obj:
-            ccd_config = json.load(temp_obj)
-        return ReflectorCCD(optics_config, ccd_config)
+        ccd = CCD.load_from_json_file(ccd_path)
+        optics = Reflector.load_from_json_file(optics_path)
+
+        return ReflectorCCD(optics=optics, ccd=ccd)
+
+    @property
+    def ccd(self) -> CCD:
+        """Get the CCD object instance."""
+        return self._ccd
+
+    @property
+    def optics(self) -> Reflector:
+        """Get the Reflector optics object instance."""
+        return self._optics
 
     @property
     def fov(self) -> t.Tuple[float, float]:
@@ -124,9 +132,11 @@ class ReflectorCCD(Reflector, CCD):
 
         # Iterate through the chip size list (given in mm) and multiply the focal length that is
         # given in meters with 1000 to convert it to mm.
-        for chip_dim in self.chip_size:
+        for chip_dim in self.ccd.chip_size:
             fov_res.append(
-                comp_fov(sensor_dim=chip_dim, focal_length=self.focal_length * 1000.0)
+                comp_fov(
+                    sensor_dim=chip_dim, focal_length=self.optics.focal_length * 1000.0
+                )
             )
 
         return fov_res[0], fov_res[1]
@@ -146,7 +156,7 @@ class ReflectorCCD(Reflector, CCD):
 
         # Iterate through the FOV values and number of pixels. Divide the FOV dimension by the
         # corresponding number of pixels
-        for fov_dim, pixel_dim in zip(self.fov, self.pixels):
+        for fov_dim, pixel_dim in zip(self.fov, self.ccd.pixels):
             ifov_res.append(fov_dim / pixel_dim)
 
         return ifov_res[0], ifov_res[1]
@@ -306,10 +316,10 @@ class ReflectorCCD(Reflector, CCD):
             10.0 ** (-0.4 * mag)
             * self._photon_flux_v
             * self.exposure_time
-            * self.collect_area
+            * self.optics.collect_area
             * self._ratio_light_aperture
-            * self.quantum_eff
-            * self.optical_throughput
+            * self.ccd.quantum_eff
+            * self.optics.optical_throughput
         )
 
         # Round the result
@@ -351,10 +361,10 @@ class ReflectorCCD(Reflector, CCD):
             10.0 ** (-0.4 * total_sky_mag)
             * self._photon_flux_v
             * self.exposure_time
-            * self.collect_area
-            * (self.pixels_in_aperture / math.prod(self.pixels))
-            * self.quantum_eff
-            * self.optical_throughput
+            * self.optics.collect_area
+            * (self.pixels_in_aperture / math.prod(self.ccd.pixels))
+            * self.ccd.quantum_eff
+            * self.optics.optical_throughput
         )
 
         # Round the result
@@ -374,7 +384,9 @@ class ReflectorCCD(Reflector, CCD):
         """
         # Compute the number of dark current electrons (Noise * exposure time * number of pixels
         # within the photometric aperture)
-        dark_sig_aper = self.dark_noise * self.exposure_time * self.pixels_in_aperture
+        dark_sig_aper = (
+            self.ccd.dark_noise * self.exposure_time * self.pixels_in_aperture
+        )
 
         # Round the result
         dark_sig_aper = round(dark_sig_aper, 0)

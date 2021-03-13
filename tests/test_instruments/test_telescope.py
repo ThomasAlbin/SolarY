@@ -100,8 +100,11 @@ def test_reflectorccd(telescope_test_obj):
     assert isinstance(telescope_test_obj, SolarY.instruments.telescope.ReflectorCCD)
 
     # Check attributes
-    assert telescope_test_obj.pixels == telescope_test_obj.pixels
-    assert telescope_test_obj.main_mirror_dia == telescope_test_obj.main_mirror_dia
+    assert telescope_test_obj.ccd.pixels == telescope_test_obj.ccd.pixels
+    assert (
+        telescope_test_obj.optics.main_mirror_dia
+        == telescope_test_obj.optics.main_mirror_dia
+    )
 
     # Test if constants config has been loaded
     config = SolarY.auxiliary.config.get_constants()
@@ -116,12 +119,12 @@ def test_reflectorccd(telescope_test_obj):
     # Check iFOV
     assert (
         telescope_test_obj.ifov[0]
-        == telescope_test_obj.fov[0] / telescope_test_obj.pixels[0]
+        == telescope_test_obj.fov[0] / telescope_test_obj.ccd.pixels[0]
     )
 
     assert (
         telescope_test_obj.ifov[1]
-        == telescope_test_obj.fov[1] / telescope_test_obj.pixels[1]
+        == telescope_test_obj.fov[1] / telescope_test_obj.ccd.pixels[1]
     )
 
     # Set aperture in arcsec
@@ -163,9 +166,9 @@ def test_reflectorccd(telescope_test_obj):
         10.0 ** (-0.4 * object_brightness)
         * float(config["photometry"]["photon_flux_V"])
         * expos_time
-        * telescope_test_obj.collect_area
-        * telescope_test_obj.quantum_eff
-        * telescope_test_obj.optical_throughput
+        * telescope_test_obj.optics.collect_area
+        * telescope_test_obj.ccd.quantum_eff
+        * telescope_test_obj.optics.optical_throughput
         * telescope_test_obj._ratio_light_aperture,
         0,
     )
@@ -183,11 +186,12 @@ def test_reflectorccd(telescope_test_obj):
         10.0 ** (-0.4 * total_sky_mag)
         * float(config["photometry"]["photon_flux_V"])
         * expos_time
-        * telescope_test_obj.collect_area
-        * telescope_test_obj.quantum_eff
-        * telescope_test_obj.optical_throughput
+        * telescope_test_obj.optics.collect_area
+        * telescope_test_obj.ccd.quantum_eff
+        * telescope_test_obj.optics.optical_throughput
         * (
-            telescope_test_obj.pixels_in_aperture / math.prod(telescope_test_obj.pixels)
+            telescope_test_obj.pixels_in_aperture
+            / math.prod(telescope_test_obj.ccd.pixels)
         ),
         0,
     )
@@ -198,7 +202,7 @@ def test_reflectorccd(telescope_test_obj):
 
     # Test the dark current
     assert telescope_test_obj.dark_esignal_aperture == round(
-        float(telescope_test_obj.dark_noise)
+        float(telescope_test_obj.ccd.dark_noise)
         * expos_time
         * telescope_test_obj.pixels_in_aperture,
         0,

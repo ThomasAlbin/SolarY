@@ -38,7 +38,7 @@ def spice_generic_kernels() -> t.Dict[str, str]:
         )
 
         # Download the file and store it in the kernels directory
-        downl_file_path, _ = urllib.request.urlretrieve(
+        downl_file_path, _ = urllib.request.urlretrieve( #nosec - no issue since static URL
             url=GENERIC_KERNEL_CONFIG[kernel]["url"], filename=download_filename
         )
 

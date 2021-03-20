@@ -349,8 +349,8 @@ def download_granvik2018() -> str:
 
     Returns
     -------
-    md5_hash : str
-        MD5 hash of the downloaded file.
+    sha256_hash : str
+        SHA256 hash of the downloaded file.
 
     References
     ----------
@@ -389,10 +389,10 @@ def download_granvik2018() -> str:
     # Delete the gzip file
     os.remove(downl_file_path)
 
-    # Compute the MD5 hash
-    md5_hash = solary_auxiliary.parse.comp_md5(unzip_file_path)
+    # Compute the SHA256 hash
+    sha256_hash = solary_auxiliary.parse.comp_sha256(unzip_file_path)
 
-    return md5_hash
+    return sha256_hash
 
 
 def read_granvik2018() -> t.List[t.Dict[str, t.Any]]:

@@ -155,8 +155,8 @@ def test_download_granvik2018():
     """
 
     # Download the data and compare the MD5 hash of the downloaded file with the expectation
-    md5_hash = SolarY.neo.data.download_granvik2018()
-    assert md5_hash == "521ddfdc18545c736fee36dbc4879d5e"
+    sha256_hash = SolarY.neo.data.download_granvik2018()
+    assert sha256_hash == "759390f9fec799290eea14ef322dbfbdd05c00c2770e49765a43199f2cf9cc6e"
 
 
 def test_read_granvik2018():

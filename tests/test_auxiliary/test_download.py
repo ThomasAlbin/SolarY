@@ -32,11 +32,11 @@ def test_spice_generic_kernels():
             paths_config[kernel]["dir"], paths_config[kernel]["file"]
         )
 
-        # Assign the filepath as a dict key and set the MD5 hash as the corresponding value
-        exp_kernel_dict[_download_filename] = paths_config[kernel]["md5"]
+        # Assign the filepath as a dict key and set the SHA256 hash as the corresponding value
+        exp_kernel_dict[_download_filename] = paths_config[kernel]["sha256"]
 
     # Execute the SPICE download function. The resulting dictionary contains the resulting
-    # filepaths and MD5 hashes that shall ...
+    # filepaths and SHA256 hashes that shall ...
     res_dl_kernel_dict = SolarY.auxiliary.download.spice_generic_kernels()
 
     # ... correspond with the expectations

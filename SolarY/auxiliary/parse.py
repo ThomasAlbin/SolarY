@@ -7,9 +7,9 @@ import typing as t
 from .config import root_dir
 
 
-def comp_md5(file_name: t.Union[str, pathlib.Path]) -> str:
+def comp_sha256(file_name: t.Union[str, pathlib.Path]) -> str:
     """
-    Compute the MD5 hash of a file.
+    Compute the SHA256 hash of a file.
 
     Parameters
     ----------
@@ -18,22 +18,22 @@ def comp_md5(file_name: t.Union[str, pathlib.Path]) -> str:
 
     Returns
     -------
-    md5_res : str
-        Resulting MD5 hash.
+    sha256_res : str
+        Resulting SHA256 hash.
     """
     # Set the MD5 hashing
-    hash_md5 = hashlib.md5()
+    hash_sha256 = hashlib.sha256()
 
     # Open the file in binary mode (read-only) and parse it in 65,536 byte chunks (in case of
     # large files, the loading will not exceed the usable RAM)
     with pathlib.Path(file_name).open(mode="rb") as f_temp:
         for _seq in iter(lambda: f_temp.read(65536), b""):
-            hash_md5.update(_seq)
+            hash_sha256.update(_seq)
 
     # Digest the MD5 result
-    md5_res = hash_md5.hexdigest()
+    sha256_res = hash_sha256.hexdigest()
 
-    return md5_res
+    return sha256_res
 
 
 def setnget_file_path(dl_path: str, filename: str) -> str:

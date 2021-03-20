@@ -38,12 +38,12 @@ def spice_generic_kernels() -> t.Dict[str, str]:
         )
 
         # Download the file and store it in the kernels directory
-        downl_file_path, _ = urllib.request.urlretrieve(
+        downl_file_path, _ = urllib.request.urlretrieve(  # nosec - no issue since static URL
             url=GENERIC_KERNEL_CONFIG[kernel]["url"], filename=download_filename
         )
 
         # Compute the MD5 hash value
-        md5_hash = parse.comp_md5(downl_file_path)
+        md5_hash = parse.comp_sha256(downl_file_path)
 
         # Append the filepath and MD5 in the dictionary
         kernel_hashes[download_filename] = md5_hash

@@ -36,5 +36,5 @@ jobs:
       run: tox -e mypy
     - name: Run Tox + pydocstyle
       run: tox -e pydocstyle
-#    - name: Run Tox + bandit
-#      run: tox -e bandit
+    - name: Run Tox + bandit
+      run: tox -e bandit

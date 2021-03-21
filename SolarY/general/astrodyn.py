@@ -179,6 +179,7 @@ def sphere_of_influence(
     return soi_radius
 
 
+# TODO: This class is under development!
 class Orbit:
     """
     The Orbit class is a base class for further classes.

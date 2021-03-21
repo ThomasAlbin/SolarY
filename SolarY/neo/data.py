@@ -12,6 +12,7 @@ import requests
 
 from .. import auxiliary as solary_auxiliary
 from .. import general as solary_general
+from . import astrodyn
 
 # Get the file paths
 PATH_CONFIG = solary_auxiliary.config.get_paths()
@@ -330,11 +331,45 @@ class NEOdysDatabase:
         )
         self.con.commit()
 
+    def create_neo_class(self) -> None:
+        """Compute and insert the NEO classification into the database."""
+        # Add a new column in the main table
+        self._create_col(table="main", col_name="NEOClass", col_type="Text")
+
+        # Get the orbital elements to compute the NEO class
+        self.cur.execute("SELECT Name, SemMajAxis_AU, Perihel_AU, Aphel_AU FROM main")
+
+        # Fetch the data
+        _neo_data = self.cur.fetchall()
+
+        # Iterate throuh the results, compute the NEO class and put in into the results
+        _neo_class_param_dict = []
+        for _neo_data_line_f in _neo_data:
+            _neo_class_param_dict.append(
+                {
+                    "Name": _neo_data_line_f[0],
+                    "NEOClass": astrodyn.neo_class(
+                        sem_maj_axis_au=_neo_data_line_f[1],
+                        peri_helio_au=_neo_data_line_f[2],
+                        ap_helio_au=_neo_data_line_f[3]
+                    )
+                }
+            )
+
+        # Insert the data into the main table
+        self.cur.executemany(
+            "UPDATE main SET NEOClass = :NEOClass "
+            "WHERE Name = :Name",
+            _neo_class_param_dict,
+        )
+        self.con.commit()
+
     def update(self) -> None:
         """Update the NEODyS Database with all content."""
         # Call the create functions that insert new data
         self.create()
         self.create_deriv_orb()
+        self.create_neo_class()
 
     def close(self) -> None:
         """Close the SQLite NEODyS database."""
@@ -597,6 +632,39 @@ class Granvik2018Database:
             "UPDATE main SET Aphel_AU = :Aphel_AU, Perihel_AU = :Perihel_AU "
             "WHERE ID = :ID",
             _neo_deriv_param_dict,
+        )
+        self.con.commit()
+
+    def create_neo_class(self) -> None:
+        """Compute and insert the NEO classification into the database."""
+        # Add a new column in the main table
+        self._create_col(table="main", col_name="NEOClass", col_type="Text")
+
+        # Get the orbital elements to compute the NEO class
+        self.cur.execute("SELECT ID, SemMajAxis_AU, Perihel_AU, Aphel_AU FROM main")
+
+        # Fetch the data
+        _neo_data = self.cur.fetchall()
+
+        # Iterate throuh the results, compute the NEO class and put in into the results
+        _neo_class_param_dict = []
+        for _neo_data_line_f in _neo_data:
+            _neo_class_param_dict.append(
+                {
+                    "ID": _neo_data_line_f[0],
+                    "NEOClass": astrodyn.neo_class(
+                        sem_maj_axis_au=_neo_data_line_f[1],
+                        peri_helio_au=_neo_data_line_f[2],
+                        ap_helio_au=_neo_data_line_f[3]
+                    )
+                }
+            )
+
+        # Insert the data into the main table
+        self.cur.executemany(
+            "UPDATE main SET NEOClass = :NEOClass "
+            "WHERE ID = :ID",
+            _neo_class_param_dict,
         )
         self.con.commit()
 

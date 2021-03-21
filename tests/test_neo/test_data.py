@@ -116,6 +116,17 @@ def test_NEOdysDatabase():
     assert pytest.approx(query_res[1], abs=1e-3) == 1.783
     assert pytest.approx(query_res[2], abs=1e-3) == 1.133
 
+    # Compute the NEO class and check the result for Eros
+    neo_sqlite.create_neo_class()
+    query_res_cur = neo_sqlite.cur.execute(
+        "SELECT Name, NEOClass " 'FROM main WHERE Name = "433"'
+    )
+    query_res = query_res_cur.fetchone()
+
+    # Perform assertion tests on Eros' derived results
+    assert query_res[0] == "433"
+    assert query_res[1] == "Amor"
+
     # Now the test check if the update functionality works. For this purpose, the first row from the
     # database is deleted; the update function is executed and then the number of rows is compared
     # with the expectation.
@@ -215,6 +226,14 @@ def test_Granvik2018Database():
     query_res = query_res_cur.fetchone()
     assert query_res[1] == 4.592780157837321
     assert query_res[2] == 0.5571822621626783
+
+    # Create the NEO class and perform a verfication step
+    granvik2018_sqlite.create_neo_class()
+    query_res_cur = granvik2018_sqlite.cur.execute(
+        "SELECT ID, NEOClass " "FROM main WHERE ID = 1"
+    )
+    query_res = query_res_cur.fetchone()
+    assert query_res[1] == 'Apollo'
 
     # Close the Granvik database
     granvik2018_sqlite.close()

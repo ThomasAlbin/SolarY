@@ -93,9 +93,12 @@ class ReflectorCCD:
         # Load the constants config file and get the photon flux (Given in m^-2 * s^-1)
         config = solary_auxiliary.config.get_constants()
         self._photon_flux_v = float(config["photometry"]["photon_flux_V"])
-        self._aperture = 0.0  # TODO: this should be passed in as an argument
-        self._hfdia = 0.0  # TODO: this should be passed in as an argument
-        self._exposure_time = 0.0  # TODO: this should be passed in as an argument
+
+        # Aperture, Halfflux Dia and the exposure time must be set afterwards, since these values
+        # are analysis / observation depending!
+        self._aperture = None
+        self._hfdia = None
+        self._exposure_time = None
 
     @classmethod
     def load_from_json_files(

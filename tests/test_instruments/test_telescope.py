@@ -33,7 +33,7 @@ def fixture_telescope_test_obj():
         "../" + test_paths_config["instruments_optics_reflector"]["properties"]
     )
 
-    test_reflector = SolarY.instruments.optics.Reflector.load_from_json_file(
+    _ = SolarY.instruments.optics.Reflector.load_from_json_file(
         test_reflector_path
     )
 
@@ -42,7 +42,7 @@ def fixture_telescope_test_obj():
         "../" + test_paths_config["instruments_camera_ccd"]["properties"]
     )
 
-    test_ccd = SolarY.instruments.camera.CCD.load_from_json_file(test_ccd_path)
+    _ = SolarY.instruments.camera.CCD.load_from_json_file(test_ccd_path)
 
     test_reflector_ccd = SolarY.instruments.telescope.ReflectorCCD.load_from_json_files(
         optics_path=test_reflector_path,

@@ -2,7 +2,7 @@
 import math
 import typing as t
 
-from .. import auxiliary as solary_auxiliary
+from ... import auxiliary as solary_auxiliary
 
 
 def tisserand(
@@ -177,88 +177,3 @@ def sphere_of_influence(
     soi_radius = sem_maj_axis * ((minor_mass / major_mass) ** (2.0 / 5.0))
 
     return soi_radius
-
-
-class Orbit:
-    """
-    The Orbit class is a base class for further classes.
-
-    Basic orbital computations are performed that are object type agnostic
-    (like computating the apoapsis of an object). The base class requires
-    the values of an orbit as well as the corresponding units for the spatial
-    and angle information.
-
-    Attributes
-    ----------
-    peri : float
-        Periapsis. Given in any spatial dimension.
-    ecc : float
-        Eccentricity.
-    incl : float
-        Inclination. Given in degrees or radians.
-    long_asc_node : float
-        Longitude of ascending node. Given in the same units as incl.
-    arg_peri : float
-        Argument of periapsis. Given in the same uniuts as incl.
-    units_dict : dict
-        Dictionary that contains the keys "spatial" and "angle" that provide the units "km", "AU"
-        and "rad" and "deg" respectively.
-    """
-
-    def __init__(
-        self, orbit_values: t.Dict[str, float], orbit_units: t.Dict[str, float]
-    ) -> None:
-        """
-        Init function.
-
-        Parameters
-        ----------
-        orbit_values : dict
-            Dictionary that contains the orbit's values. The spatial and angle unit are given by
-            the orbit_units dictionary
-        orbit_units : dict
-            Dictionary that contains the orbit's values corresponding units (spatial and angle).
-
-        Returns
-        -------
-        None.
-        """
-        # Setting attribute placeholders
-        self.peri = orbit_values["peri"]  # type: float
-        self.ecc = orbit_values["ecc"]  # type: float
-        self.incl = orbit_values["incl"]  # type: float
-        self.long_asc_node = orbit_values["long_asc_node"]  # type: float
-        self.arg_peri = orbit_values["arg_peri"]  # type: float
-
-        # Set the units dictionary
-        self.units_dict = orbit_units
-
-    @property
-    def semi_maj_axis(self) -> float:
-        """
-        Get the semi-major axis.
-
-        Returns
-        -------
-        _semi_maj_axis : float
-            Semi-major axis. Given in the same spatial dimension as the input parameters.
-        """
-        # Compute the semi-major axis
-        _semi_maj_axis = self.peri / (1.0 - self.ecc)
-
-        return _semi_maj_axis
-
-    @property
-    def apo(self) -> float:
-        """
-        Get the apoapsis.
-
-        Returns
-        -------
-        _apo : float
-            Apoapsis. Given in the the same spatial dimension as the input parameters.
-        """
-        # Comput the apoapsis
-        _apo = kep_apoapsis(sem_maj_axis=self.semi_maj_axis, ecc=self.ecc)
-
-        return _apo

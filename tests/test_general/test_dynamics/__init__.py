@@ -1,1 +1,1 @@
-from . import test_astrodyn
+from . import test_properties, test_orbit

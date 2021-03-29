@@ -1,43 +1,9 @@
-"""
-test_astrodyn.py
-
-Testing suite for SolarY/general/astrodyn.py
-
-"""
+"""Testing suite for SolarY/general/dyanmics/properties.py"""
 import math
 
 import pytest
 
 import SolarY
-
-
-@pytest.fixture(name="test_orbit_data")
-def fixture_test_orbit_data():
-    """
-    Fixture to load orbit example data.
-
-    Returns
-    -------
-    test_orbit_values : dict
-        Dictionary that contains the values.
-    test_orbit_units : dict
-        Dictionary that contains the units.
-
-    """
-
-    # Get the test config file paths
-    test_paths_config = SolarY.auxiliary.config.get_paths(test=True)
-
-    test_orbit_path = SolarY.auxiliary.parse.get_test_file_path(
-        "../" + test_paths_config["general_astrodyn"]["base_class_orbit"]
-    )
-
-    test_orbit_values, test_orbit_units = SolarY.auxiliary.reader.read_orbit(
-        test_orbit_path
-    )
-
-    return test_orbit_values, test_orbit_units
-
 
 def test_tisserand():
     """
@@ -167,48 +133,3 @@ def test_sphere_of_influence():
 
     # Assertion test with the SOI's expectation
     assert pytest.approx(soi_res_earth, abs=1e4) == 925000.0
-
-
-# def test_orbit(test_orbit_data):
-#     """
-#     Test function to check the orbit base class
-
-#     Parameters
-#     ----------
-#     test_orbit_data : tuple
-#         Tuple that contains 2 dictionaries; the orbit values and units.
-
-#     Returns
-#     -------
-#     None.
-
-#     """
-
-#     # Check if the fixture is loaded correctly
-#     assert isinstance(test_orbit_data, tuple)
-
-#     # Split the tuple into the 2 dictionaries
-#     test_orbit_values, test_orbit_units = test_orbit_data
-
-#     # Initiate the class
-#     test_orbit_class = SolarY.general.dynamics.properties.Orbit(
-#         orbit_values=test_orbit_values, orbit_units=test_orbit_units
-#     )
-
-#     # Check if the instances of the class correspond with the pre-defined settings
-#     assert test_orbit_class.peri == test_orbit_values["peri"]
-#     assert test_orbit_class.ecc == test_orbit_values["ecc"]
-#     assert test_orbit_class.incl == test_orbit_values["incl"]
-#     assert test_orbit_class.long_asc_node == test_orbit_values["long_asc_node"]
-#     assert test_orbit_class.arg_peri == test_orbit_values["arg_peri"]
-
-#     # Check the property: semi major axis
-#     assert test_orbit_class.semi_maj_axis == test_orbit_values["peri"] / (
-#         1.0 - test_orbit_values["ecc"]
-#     )
-
-#     # Check the property: apoapsis
-#     assert (
-#         test_orbit_class.apo
-#         == (1.0 + test_orbit_values["ecc"]) * test_orbit_class.semi_maj_axis
-#     )

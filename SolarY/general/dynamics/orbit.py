@@ -4,6 +4,7 @@ import datetime
 import typing as t
 
 from . import properties
+from ... import auxiliary as solary_auxiliary
 
 naif_ids = {'SSB': 0,
             'Sun': 10}
@@ -61,6 +62,8 @@ class State:
 
 
 @dataclass
-class Object:
+class Object(Orbit):
     
-    pass
+    def state_vec(self, m0, t0):
+        
+        generic_kernel_info = solary_auxiliary.config.get_spice_kernels('generic')

@@ -150,6 +150,12 @@ def jd2mjd(juldate: float) -> float:
     return m_juldate
 
 
+def time2et(timestr: str) -> float:
+    """TBW"""
+    
+    pass
+
+
 def sphere_of_influence(
     sem_maj_axis: float, minor_mass: float, major_mass: float
 ) -> float:

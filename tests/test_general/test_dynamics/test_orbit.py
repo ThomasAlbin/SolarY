@@ -30,6 +30,14 @@ def fixture_test_orbit_data():
     test_orbit_values, test_orbit_units = SolarY.auxiliary.reader.read_orbit(
         test_orbit_path
     )
+    
+    constant_config = SolarY.auxiliary.config.get_constants()
+    one_au_in_km = float(constant_config['constants']['one_au'])
+
+    test_orbit_values['peri'] = test_orbit_values['peri'] * one_au_in_km
+    test_orbit_values['incl'] = math.radians(test_orbit_values['incl'])
+    test_orbit_values['long_asc_node'] = math.radians(test_orbit_values['long_asc_node'])
+    test_orbit_values['arg_peri'] = math.radians(test_orbit_values['arg_peri'])
 
     return test_orbit_values, test_orbit_units
 
@@ -43,12 +51,6 @@ def test_orbit(test_orbit_data):
     one_au_in_km = float(constant_config['constants']['one_au'])
 
     assert sun_grav_param >= 1.30e+11
-
-    test_orbit_values['peri'] = test_orbit_values['peri'] * one_au_in_km
-    test_orbit_values['incl'] = math.radians(test_orbit_values['incl'])
-    test_orbit_values['long_asc_node'] = math.radians(test_orbit_values['long_asc_node'])
-    test_orbit_values['arg_peri'] = math.radians(test_orbit_values['arg_peri'])
-
     
     orbit_class = SolarY.general.dynamics.orbit.Orbit(rp=test_orbit_values['peri'],
                                                       ecc=test_orbit_values['ecc'],
@@ -73,3 +75,22 @@ def test_orbit(test_orbit_data):
     assert orbit_class.apo == (1.0 + test_orbit_values['ecc']) * orbit_class.semi_maj_axis
     
     assert orbit_class.center_id == 0
+    
+def test_object(test_orbit_data):
+
+    test_orbit_values, _ = test_orbit_data    
+
+    constant_config = SolarY.auxiliary.config.get_constants()
+    
+    sun_grav_param = float(constant_config['constants']['gm_sun'])
+    
+    object_class = SolarY.general.dynamics.orbit.Object(rp=test_orbit_values['peri'],
+                                                        ecc=test_orbit_values['ecc'],
+                                                        inc=test_orbit_values['incl'],
+                                                        lnode=test_orbit_values['long_asc_node'],
+                                                        argp=test_orbit_values['arg_peri'],
+                                                        ref='ECLIPJ2000',
+                                                        center='SSB',
+                                                        grav_param=sun_grav_param)
+    
+    object_class.state_vec()

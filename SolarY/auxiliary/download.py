@@ -42,10 +42,10 @@ def spice_generic_kernels() -> t.Dict[str, str]:
             url=GENERIC_KERNEL_CONFIG[kernel]["url"], filename=download_filename
         )
 
-        # Compute the MD5 hash value
-        md5_hash = parse.comp_sha256(downl_file_path)
+        # Compute the sha256 hash value
+        sha256_hash = parse.comp_sha256(downl_file_path)
 
         # Append the filepath and MD5 in the dictionary
-        kernel_hashes[download_filename] = md5_hash
+        kernel_hashes[download_filename] = sha256_hash
 
     return kernel_hashes

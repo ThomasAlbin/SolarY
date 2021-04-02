@@ -133,3 +133,14 @@ def test_sphere_of_influence():
 
     # Assertion test with the SOI's expectation
     assert pytest.approx(soi_res_earth, abs=1e4) == 925000.0
+
+
+def test_time2et():
+    
+    test_et = SolarY.general.dynamics.properties.time2et(timestr="2000-01-01T12:00:00")
+    
+    assert pytest.approx(test_et, abs=1e-0) == 64
+    
+    test_et2 = SolarY.general.dynamics.properties.time2et(timestr="2010-10-101T12:00:00")
+
+    assert pytest.approx(test_et2, abs=1e0) == 347846466

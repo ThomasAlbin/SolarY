@@ -4,6 +4,7 @@ import typing as t
 
 from ... import auxiliary as solary_auxiliary
 
+import spiceypy
 
 def tisserand(
     sem_maj_axis_obj: float,
@@ -150,12 +151,6 @@ def jd2mjd(juldate: float) -> float:
     return m_juldate
 
 
-def time2et(timestr: str) -> float:
-    """TBW"""
-    
-    pass
-
-
 def sphere_of_influence(
     sem_maj_axis: float, minor_mass: float, major_mass: float
 ) -> float:
@@ -183,3 +178,22 @@ def sphere_of_influence(
     soi_radius = sem_maj_axis * ((minor_mass / major_mass) ** (2.0 / 5.0))
 
     return soi_radius
+
+
+def time2et(timestr: str) -> float:
+    """TBW"""
+    
+    spice_config = solary_auxiliary.config.get_spice_kernels(ktype='generic')
+    
+    lsk_path = spice_config["leapseconds"]["dir"]
+    lsk_file = spice_config["leapseconds"]["file"]
+    
+    generic_lsk_fp = \
+        solary_auxiliary.parse.setnget_file_path(dl_path=lsk_path,
+                                                 filename=lsk_file)
+    
+    spiceypy.furnsh(generic_lsk_fp)
+
+    ephem_time = spiceypy.utc2et(timestr)
+    
+    return ephem_time

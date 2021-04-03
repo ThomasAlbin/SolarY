@@ -184,28 +184,30 @@ def sphere_of_influence(
 def time2et(timestr: str) -> float:
     """
     Convert a time string to ephermis time (ET).
-    
+
     This function converts a time string, whose list of format is given in
     -1-.
-    
+
     Parameters
     ----------
     timestr : str
         Date time string format. Given in UTC.
-    
+
     Returns
     -------
     ephem_time : float
         Ephemeris Time
-    
+
     References
     ----------
     -1- Link to the time format list: https://naif.jpl.nasa.gov/pub/naif/
     toolkit_docs/FORTRAN/spicelib/utc2et.html#Examples
     """
 
+    # Load the generic SPICE kernels
     solary_auxiliary.config.load_spice_kernels(ktype='generic')
 
+    # Convert the UTC timestring to ET
     ephem_time = spiceypy.utc2et(timestr)
-    
+
     return ephem_time

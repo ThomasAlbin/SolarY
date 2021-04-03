@@ -55,7 +55,7 @@ def test_get_paths():
 
 def test_get_spice_kernels():
     """
-    The test function to check the correct parsinf of the SPICE config file.
+    Test function to check the correct parsinf of the SPICE config file.
 
     Returns
     -------
@@ -72,3 +72,17 @@ def test_get_spice_kernels():
     paths_config_sections = paths_config.sections()
     assert "leapseconds" in paths_config_sections
     assert "file" in paths_config["leapseconds"].keys()
+
+
+def test_load_spice_kernels():
+    """
+    Test function to chek the correct loading of SPICE kernels
+
+    Returns
+    -------
+    None.
+    """
+
+    # Load the generic kernels. If all kernels are present no error should
+    # occur
+    SolarY.auxiliary.config.load_spice_kernels(ktype="generic")

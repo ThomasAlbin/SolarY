@@ -3,6 +3,10 @@ import configparser
 import importlib
 import os
 
+import spiceypy
+
+from .. import auxiliary as solary_auxiliary
+
 root_dir = os.path.dirname(importlib.import_module("SolarY").__file__)
 
 
@@ -88,3 +92,44 @@ def get_spice_kernels(ktype: str) -> configparser.ConfigParser:
     config.read(ini_path)
 
     return config
+
+
+def load_spice_kernels(ktype: str):
+    """
+    Load SPICE kernels.
+
+    Depending on the requests kernel type input the corresponding kernels are loaded. If files are
+    not present they will be downloaded automatically into the home directory.
+
+    Parameters
+    ----------
+    ktype : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    None.
+
+    """
+
+    # Get the kernel file
+    kernel_config = get_spice_kernels(ktype=ktype)
+
+    # Try to parse and load the files
+    try:
+
+        # Iterate through all kernel sections
+        for kernel_t in kernel_config.sections():
+
+            # Extract directory and filename of the kernel file and aprse the filepath
+            path_t = kernel_config[kernel_t]["dir"]
+            file_t = kernel_config[kernel_t]["file"]
+            filepath_t = solary_auxiliary.parse.setnget_file_path(dl_path=path_t, filename=file_t)
+
+            # Load the kernel
+            spiceypy.furnsh(filepath_t)
+
+    # Exception: download the SPICE kernels if they have not been found (currently only generic
+    # ones)
+    except spiceypy.utils.exceptions.SpiceNOSUCHFILE:
+        solary_auxiliary.download.spice_generic_kernels()

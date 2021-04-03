@@ -2,9 +2,10 @@
 import math
 import typing as t
 
+import spiceypy
+
 from ... import auxiliary as solary_auxiliary
 
-import spiceypy
 
 def tisserand(
     sem_maj_axis_obj: float,
@@ -181,18 +182,29 @@ def sphere_of_influence(
 
 
 def time2et(timestr: str) -> float:
-    """TBW"""
+    """
+    Convert a time string to ephermis time (ET).
     
-    spice_config = solary_auxiliary.config.get_spice_kernels(ktype='generic')
+    This function converts a time string, whose list of format is given in
+    -1-.
     
-    lsk_path = spice_config["leapseconds"]["dir"]
-    lsk_file = spice_config["leapseconds"]["file"]
+    Parameters
+    ----------
+    timestr : str
+        Date time string format. Given in UTC.
     
-    generic_lsk_fp = \
-        solary_auxiliary.parse.setnget_file_path(dl_path=lsk_path,
-                                                 filename=lsk_file)
+    Returns
+    -------
+    ephem_time : float
+        Ephemeris Time
     
-    spiceypy.furnsh(generic_lsk_fp)
+    References
+    ----------
+    -1- Link to the time format list: https://naif.jpl.nasa.gov/pub/naif/
+    toolkit_docs/FORTRAN/spicelib/utc2et.html#Examples
+    """
+
+    solary_auxiliary.config.load_spice_kernels(ktype='generic')
 
     ephem_time = spiceypy.utc2et(timestr)
     

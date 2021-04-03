@@ -136,11 +136,24 @@ def test_sphere_of_influence():
 
 
 def test_time2et():
-    
-    test_et = SolarY.general.dynamics.properties.time2et(timestr="2000-01-01T12:00:00")
-    
-    assert pytest.approx(test_et, abs=1e-0) == 64
-    
-    test_et2 = SolarY.general.dynamics.properties.time2et(timestr="2010-10-101T12:00:00")
+    """Test function to check the conversion between a time string and the
+    ephemeris time (ET).
 
-    assert pytest.approx(test_et2, abs=1e0) == 347846466
+    Returns
+    -------
+    None.
+
+    """
+
+    # Define two test strings
+    time_str1 = "2000-01-01T12:00:00"
+    time_str2 = "2010-10-10T12:00:00"
+
+    # Compute the first ET and perform assertion test (within a second
+    # tolerance)
+    test_et = SolarY.general.dynamics.properties.time2et(timestr=time_str1)
+    assert pytest.approx(test_et, abs=1e-0) == 64
+
+    # Second ET and assertion test (within a second tolerance)
+    test_et2 = SolarY.general.dynamics.properties.time2et(timestr=time_str2)
+    assert pytest.approx(test_et2, abs=1e0) == 339984066

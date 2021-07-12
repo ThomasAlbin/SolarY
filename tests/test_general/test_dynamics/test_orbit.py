@@ -91,6 +91,19 @@ def test_object(test_orbit_data):
                                                         argp=test_orbit_values['arg_peri'],
                                                         ref='ECLIPJ2000',
                                                         center='SSB',
-                                                        grav_param=sun_grav_param)
-    
-    object_class.state_vec()
+                                                        grav_param=sun_grav_param,
+                                                        m0=0.0,
+                                                        t0="2020-01-01T12:00:00")
+
+    assert object_class.m0 == 0.0
+    assert object_class.t0 == "2020-01-01T12:00:00"
+    assert object_class.t0_ephem == 631152069.1839217
+
+    object_class.m0 = math.radians(180.0)
+    assert object_class.m0 == math.pi
+
+    object_class.t0 = "2021-01-01T12:00:00"
+    assert object_class.t0 == "2021-01-01T12:00:00"
+    assert object_class.t0_ephem == 662774469.1839432
+
+   # object_class.state_vec()

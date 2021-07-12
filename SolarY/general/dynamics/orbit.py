@@ -1,10 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import dataclasses
 import datetime
 import typing as t
 
+import spiceypy
+
 from . import properties
-from ... import auxiliary as solary_auxiliary
 
 naif_ids = {'SSB': 0,
             'Sun': 10}
@@ -26,7 +27,7 @@ class Orbit:
     @classmethod
     def from_instance(cls, instance):
         return cls(**dataclasses.asdict(instance))
-    
+
     @property
     def semi_maj_axis(self) -> float:
         
@@ -47,7 +48,8 @@ class Orbit:
         _center_id = naif_ids.get(self.center, None)
         
         return _center_id
-    
+
+
 @dataclass
 class State:
     
@@ -64,6 +66,45 @@ class State:
 @dataclass
 class Object(Orbit):
     
-    def state_vec(self, m0, t0):
+    m0: float
+    _m0: float = field(init=False, repr=False)
+    t0: str
+    _t0: str = field(init=False, repr=False)
+
+    @property
+    def m0(self) -> float:
         
-        generic_kernel_info = solary_auxiliary.config.get_spice_kernels('generic')
+        return self._m0
+
+    @m0.setter
+    def m0(self, value: float) -> None:
+
+        self._m0 = value
+
+    @property
+    def t0(self) -> float:
+        
+        return self._t0
+  
+
+    @t0.setter
+    def t0(self, value: str) -> None:
+
+        self._t0 = value  
+  
+    @property
+    def t0_ephem(self):
+        
+        _t0_ephem = properties.time2et(self.t0)
+    
+        return _t0_ephem
+
+    # @property
+    # def state_vec(self, m0, t0):
+        
+    #     _state_vec = spiceypy.conics()
+        
+    #     return _state_vec
+        
+        
+        

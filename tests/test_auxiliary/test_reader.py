@@ -36,8 +36,5 @@ def test_read_orbit():
     assert isinstance(test_orbit_values, dict)
     assert isinstance(test_orbit_units, dict)
 
-    assert test_orbit_values["peri"] == 1.133
+    assert test_orbit_values["peri"] == 2.559
     assert test_orbit_units["spatial"] == "AU"
-
-
-test_read_orbit()

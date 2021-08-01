@@ -76,34 +76,44 @@ def test_orbit(test_orbit_data):
     
     assert orbit_class.center_id == 0
     
-def test_object(test_orbit_data):
+def test_state(test_orbit_data):
 
     test_orbit_values, _ = test_orbit_data    
 
     constant_config = SolarY.auxiliary.config.get_constants()
     
     sun_grav_param = float(constant_config['constants']['gm_sun'])
-    
-    object_class = SolarY.general.dynamics.orbit.Object(rp=test_orbit_values['peri'],
-                                                        ecc=test_orbit_values['ecc'],
-                                                        inc=test_orbit_values['incl'],
-                                                        lnode=test_orbit_values['long_asc_node'],
-                                                        argp=test_orbit_values['arg_peri'],
-                                                        ref='ECLIPJ2000',
-                                                        center='SSB',
-                                                        grav_param=sun_grav_param,
-                                                        m0=0.0,
-                                                        t0="2020-01-01T12:00:00")
+        
+    orbit_class = SolarY.general.dynamics.orbit.Orbit(rp=test_orbit_values['peri'],
+                                                      ecc=test_orbit_values['ecc'],
+                                                      inc=test_orbit_values['incl'],
+                                                      lnode=test_orbit_values['long_asc_node'],
+                                                      argp=test_orbit_values['arg_peri'],
+                                                      ref='ECLIPJ2000',
+                                                      center='SSB',
+                                                      grav_param=sun_grav_param)    
 
-    assert object_class.m0 == 0.0
-    assert object_class.t0 == "2020-01-01T12:00:00"
-    assert object_class.t0_ephem == 631152069.1839217
+    state_class = SolarY.general.dynamics.orbit.State(orbit=orbit_class,
+                                                      m0=math.radians(77.4),
+                                                      t0="2019-04-27T00:00:00",
+                                                      et="2021-08-01T12:00:00")
 
-    object_class.m0 = math.radians(180.0)
-    assert object_class.m0 == math.pi
+    assert state_class.orbit.rp == test_orbit_values['peri']
 
-    object_class.t0 = "2021-01-01T12:00:00"
-    assert object_class.t0 == "2021-01-01T12:00:00"
-    assert object_class.t0_ephem == 662774469.1839432
+    assert state_class.m0 == math.radians(77.4)
+    state_class.m0 = math.radians(77.4)
+    assert state_class.m0 == math.radians(77.4)
 
-   # object_class.state_vec()
+    state_class.t0 = "2019-04-27T00:00:00"
+    assert state_class.t0 == "2019-04-27T00:00:00"
+    assert state_class.t0_ephem == 609595269.1855328
+
+    state_class.et = "2021-08-01T12:00:00"
+    assert state_class.et == "2021-08-01T12:00:00"
+    assert state_class.et_ephem == 681091269.1832587
+
+    ceres_state_exp = [320385504.0, 274563074.0, -50443815.0,
+                       -11.9, 12.5, 2.6]
+
+    assert all([pytest.approx(comp, 0.1) == exp for comp, exp \
+                in zip(state_class.state_vec, ceres_state_exp)])

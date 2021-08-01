@@ -6,23 +6,23 @@ import typing as t
 import spiceypy
 
 from . import properties
+from ... import auxiliary
 
 naif_ids = {'SSB': 0,
             'Sun': 10}
 
-
-@dataclass
 class Orbit:
     
-    rp: float
-    ecc: float
-    inc: float
-    lnode: float
-    argp: float
-    
-    ref: str
-    center: str
-    grav_param: float
+    def __init__(self, rp, ecc, inc, lnode, argp, ref, center, grav_param):
+        self.rp = rp
+        self.ecc = ecc
+        self.inc = inc
+        self.lnode = lnode
+        self.argp = argp
+        
+        self.ref = ref
+        self.center = center
+        self.grav_param = grav_param
     
     @classmethod
     def from_instance(cls, instance):
@@ -50,27 +50,22 @@ class Orbit:
         return _center_id
 
 
-@dataclass
-class State:
+class State():
     
-    position_vec: [float, float, float]
-    velocity_vec: [float, float, float]
+    def __init__(self, orbit: Orbit, m0, t0, et) -> None:
     
-    t0: t.Union[float, str, datetime.datetime]
-
-    ref: str
-    grav_param: float
-
-
-
-@dataclass
-class Object(Orbit):
+        auxiliary.config.load_spice_kernels(ktype="generic")    
     
-    m0: float
-    _m0: float = field(init=False, repr=False)
-    t0: str
-    _t0: str = field(init=False, repr=False)
-
+        self._orbit = orbit
+        self._m0 = m0
+        self._t0 = t0
+        self._et = et
+        
+    @property
+    def orbit(self) -> Orbit:
+        """Get the CCD Orbit instance."""
+        return self._orbit
+        
     @property
     def m0(self) -> float:
         
@@ -99,12 +94,39 @@ class Object(Orbit):
     
         return _t0_ephem
 
-    # @property
-    # def state_vec(self, m0, t0):
+    @property
+    def et(self) -> float:
         
-    #     _state_vec = spiceypy.conics()
+        return self._et
+  
+
+    @et.setter
+    def et(self, value: str) -> None:
+
+        self._et = value  
+  
+    @property
+    def et_ephem(self):
         
-    #     return _state_vec
+        _et_ephem = properties.time2et(self.et)
+    
+        return _et_ephem
+
+    @property
+    def state_vec(self):
+
+
+        _state_vec = spiceypy.conics(elts=[self._orbit.rp, \
+                                      self.orbit.ecc, \
+                                      self.orbit.inc, \
+                                      self.orbit.lnode, \
+                                      self.orbit.argp, \
+                                      self.m0, \
+                                      self.t0_ephem, \
+                                      self.orbit.grav_param,],
+                                     et=self.et_ephem)
+
+        return _state_vec
         
         
         
